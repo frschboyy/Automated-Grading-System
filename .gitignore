@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+megalinter-reports/
+node_modules/

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/assignments")
@@ -25,6 +27,8 @@ public class AssignmentController {
     private final TextExtraction textExtraction;
     private final AssignmentService assignmentService;
     private final RetrieveEvaluationService retrievalService;
+    
+    private static final Logger logger = LoggerFactory.getLogger(AssignmentController.class);
 
     @Autowired
     public AssignmentController(
@@ -41,6 +45,7 @@ public class AssignmentController {
     @GetMapping("/upcoming")
     public List<Assignment> getUnsubmittedAssignments(HttpSession session) {
         Long studentId = (Long) session.getAttribute("id");
+        logger.debug("bbbb");
         return assignmentService.getUpcomingAssignments(studentId);
     }
 
@@ -49,6 +54,12 @@ public class AssignmentController {
     public List<Assignment> getSubmittedAssignments(HttpSession session) {
         Long studentId = (Long) session.getAttribute("id");
         return assignmentService.getSubmittedAssignments(studentId);
+    }
+    
+    //  Fetch all assignments
+    @GetMapping("/all")
+    public List<Assignment> getAllssignments() {
+        return assignmentService.getAllAssignments();
     }
 
     // Endpoint to create a new assignment
@@ -98,7 +109,7 @@ public class AssignmentController {
     }
 
     @PostMapping("/pushAssignmentDetails")
-    public String saveAssignmentDetails(@RequestBody AssignmentDTO details, HttpSession session) {
+    public ResponseEntity<Void> saveAssignmentDetails(@RequestBody AssignmentDTO details, HttpSession session) {
 
         System.out.println(details);
         System.out.println(details.getId());
@@ -113,18 +124,24 @@ public class AssignmentController {
         session.setAttribute("dueDate", details.getDueDate());
         System.out.println("Added to session");
 
-        return "redirect:/submit-page";
+        // Return HTTP 200 - OK response
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/pushEvaluationDetails")
-    public String saveEvaluationDetails(@RequestParam Long assignmentId, HttpSession session) {
+    public ResponseEntity<Void> saveEvaluationDetails(@RequestParam Long assignmentId, HttpSession session) {
         // Fetch evaluation details
         EvaluationDetails details = retrievalService.getEvaluationDetails(assignmentId, (Long) session.getAttribute("id"));
 
         // Save data
         session.setAttribute("grade", details.getGrade());
         session.setAttribute("plagiarism", details.getPlagiarismScore());
+        session.setAttribute("results", details.getResults());
+        logger.debug("Added to session");
+        logger.debug("Evaluation Details 123:" + details.getResults());
         System.out.println("Added to session");
-        return "redirect:/evaluation-page";
+
+        // Return HTTP 200 - OK response
+        return ResponseEntity.ok().build();
     }
 }

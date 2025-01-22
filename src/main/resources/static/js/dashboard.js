@@ -77,7 +77,7 @@ function goToSubmission(id, title, description, dueDate) {
     })
             .then((response) => {
                 if (response.ok) {
-                    window.location.href = "/submit-page";
+                    window.location.href = "/submissions-page";
                 } else {
                     throw new Error("Failed to save assignment details.");
                 }

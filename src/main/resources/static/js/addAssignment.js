@@ -46,6 +46,7 @@ document.getElementById('assignmentForm').addEventListener('submit', function (e
                 alert(successMessage);
                 // Clear form after success
                 document.getElementById('assignmentForm').reset();
+                window.location.href = "/dashboard";
             })
             .catch(error => {
                 loading.style.display = 'none';

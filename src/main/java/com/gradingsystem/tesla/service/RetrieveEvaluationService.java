@@ -18,6 +18,7 @@ public class RetrieveEvaluationService {
         return EvaluationDetails.builder()
                 .plagiarismScore(submission.getSimilarityScore())
                 .grade(submission.getGrade())
+                .results(submission.getEvaluationResults())
                 .build();
     }
 }

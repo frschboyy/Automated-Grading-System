@@ -69,4 +69,9 @@ public class AssignmentService {
 
         return submittedAssignments;
     }
+    
+    //  Get all Assignments
+    public List<Assignment> getAllAssignments() {
+        return assignmentRepository.findAll();
+    }
 }

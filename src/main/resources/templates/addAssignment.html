@@ -9,8 +9,8 @@
     <body>
         <header class="header">
             <h1>Add Assignment</h1>
-            <!-- Log Out Button -->
-            <button class="logout-btn" onclick="logout()">Log Out</button>
+            <!-- Back To Dashboard Button -->
+            <button class="dashboard-btn" onclick="window.location.href = '/';">Dashboard</button>
         </header>
 
         <div class="container">
@@ -44,7 +44,6 @@
             </div>
         </div>
 
-        <script type="text/javascript" th:src="@{/js/logout.js}"></script>
         <script type="text/javascript" th:src="@{/js/addAssignment.js}"></script>
     </body>
 </html>

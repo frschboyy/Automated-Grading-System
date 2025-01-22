@@ -14,6 +14,7 @@ public class DashboardController {
 
     private static final Logger logger = LoggerFactory.getLogger(DashboardController.class);
 
+    @SuppressWarnings("null")
     @GetMapping("/dashboard")
     public String showDashboard(HttpSession session, Model model) {
         Student loggedInStudent = (Student) session.getAttribute("loggedInStudent");

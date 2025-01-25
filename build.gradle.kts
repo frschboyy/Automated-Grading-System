@@ -18,6 +18,8 @@ repositories {
 }
 
 dependencies {
+        //  Dotenv for environment variables
+        implementation("io.github.cdimascio:java-dotenv:5.2.2")
         
         //  Parsing Jackson
         implementation ("com.fasterxml.jackson.core:jackson-databind:2.15.1")

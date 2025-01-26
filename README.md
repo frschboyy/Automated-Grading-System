@@ -1,3 +1,8 @@
+Team Members
+- Francis Chianu - 666560
+- Yanet Niguse - 670530
+- David Gatwal - 666628
+
 Project Background:
 Educational institutions need more efficient grading methods for growing class sizes and complex evaluation needs. Traditional assessment approaches often result in delayed, inconsistent, and subjectively biased grading, negatively impacting student learning experiences and institutional effectiveness. This system plans to address these challenges by leveraging a Large Language Model (LLM) to support automated, transparent, and accurate evaluation of student scripts. It also includes other features necessary for educational institutions such as plagiarism detection, duplicate submissions handling, and detailed feedback, ultimately reducing educators' workload while improving the overall quality of student assessment.
 
@@ -35,11 +40,6 @@ Strategy [phases are not sequential]:
 - Phase 2: Enhancing the system -> We will collaborate to implement enhanced administration features, optimize the existing grading and plagiarism detection mechanisms, improve system performance, and integrate a more suitable database for the application.
 - Phase 3: Testing and QA -> As we work on improving the system, we will explore use cases and leverage different tools to ensure that reliability, usability, and overall quality of the system.
 
-
-Team Members
-Francis Chianu - 666560
-Yanet Niguse - 670530
-David Gatwal - 666628
 
 Roles:
 - Team Lead: Project planning, progress tracking, and coordination

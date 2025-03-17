@@ -32,8 +32,9 @@ jobs:
       - name: Run Tests
         run: ./gradlew test
 
-      - name: Upload Test Results
+      - name: Upload Test Results  # ✅ Moved outside of "run" block
         uses: actions/upload-artifact@v3
         with:
           name: Test-Reports
           path: build/reports/tests/test
+          retention-days: 5

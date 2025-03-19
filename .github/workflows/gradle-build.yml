@@ -1,34 +1,44 @@
-name: Gradle Build
+name: Gradle Build  # Defines the name of the workflow
 
-on: 
-  push:
+on:  # Specifies when the workflow should run
+  push:  # Runs on every push to the main branch
     branches:
       - main
-  pull_request:
+  pull_request:  # Runs on every pull request to the main branch
     branches:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build:  # Defines the build job
+    runs-on: ubuntu-latest  # Specifies the OS for the job
+
     steps:
-      - name: Checkout code
+      - name: Checkout code  # Fetches the latest code from the repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 17  # Installs Java 17 for the project
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: 'temurin'  # Uses the Temurin JDK distribution
           java-version: '17'
 
-      - name: Grant execute permission for gradlew
+      - name: Cache Gradle dependencies  # Caches dependencies to speed up builds
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches  # Path to cache Gradle dependencies
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Grant execute permission for gradlew  # Allows the Gradle wrapper to execute
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build with Gradle  # Builds the project using Gradle
+        run: ./gradlew build --no-daemon
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: my-artifact
-          path: build/libs/
+      - name: Run Tests  # Runs unit tests to verify functionality
+        run: ./gradlew test --no-daemon
+
+      - name: Upload build artifacts  # Saves the final build files if successful
+        if: success()  # Only runs if previous steps succeed
+        

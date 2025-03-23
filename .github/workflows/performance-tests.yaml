@@ -182,6 +182,18 @@ jobs:
           echo "## Performance Test Summary" > report.md
           echo "Tests completed at $(date)" >> report.md
           echo "See artifacts for detailed results" >> report.md
+
+          echo "### JMeter Results" >> report.md
+          echo "Average response time: $(awk -F',' '{ sum += $1; n++ } END { print sum/n }' jmeter-results/normal-load-report.csv) ms" >> report.md
+          echo "Success rate: $(grep -c '"success":true' jmeter-results/normal-load-results.jtl)%" >> report.md
+          echo "" >> report.md
+
+          echo "### Gatling Results" >> report.md
+          # Extract some metrics from Gatling results
+          GATLING_RESULTS=$(find performance-tests/gatling/target/gatling -name "*.log" | sort | tail -1)
+          echo "Max response time: $(grep "response time" $GATLING_RESULTS | awk '{print $6}' | sort -n | tail -1) ms" >> report.md
+
+              
       
       - name: Upload consolidated report
         uses: actions/upload-artifact@v3

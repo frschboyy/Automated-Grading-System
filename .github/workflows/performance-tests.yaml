@@ -43,7 +43,6 @@ jobs:
       - name: Run JMeter Tests
         run: |
           mkdir -p jmeter-results
-          
           # Run normal load test
           ./apache-jmeter-5.5/bin/jmeter -n -t performance-tests/jmeter/api-test-plan.jmx \
             -Jhost=${{ needs.deploy-test-env.outputs.app_url }} \
@@ -53,8 +52,8 @@ jobs:
             -Jreport_path=./jmeter-results/normal-load-report.csv \
             -l ./jmeter-results/normal-load-results.jtl \
             -e -o ./jmeter-results/normal-load-dashboard
-            
-          # Run high load test  
+          
+          # Run high load test
           ./apache-jmeter-5.5/bin/jmeter -n -t performance-tests/jmeter/api-test-plan.jmx \
             -Jhost=${{ needs.deploy-test-env.outputs.app_url }} \
             -Jprotocol=https \
@@ -76,7 +75,6 @@ jobs:
           # This is a simple check based on average response time
           # You can create a more sophisticated script for your needs
           awk -F',' '{ sum += $1; n++ } END { print sum/n }' jmeter-results/normal-load-report.csv > avg_response.txt
-          
           # Fail if average response time is over 2 seconds
           if (( $(cat avg_response.txt) > 2000 )); then
             echo "Average response time exceeds threshold!"
@@ -192,8 +190,6 @@ jobs:
           # Extract some metrics from Gatling results
           GATLING_RESULTS=$(find performance-tests/gatling/target/gatling -name "*.log" | sort | tail -1)
           echo "Max response time: $(grep "response time" $GATLING_RESULTS | awk '{print $6}' | sort -n | tail -1) ms" >> report.md
-
-              
       
       - name: Upload consolidated report
         uses: actions/upload-artifact@v3

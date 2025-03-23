@@ -58,7 +58,7 @@ public class AssignmentController {
     
     //  Fetch all assignments
     @GetMapping("/all")
-    public List<Assignment> getAllssignments() {
+    public List<Assignment> getAllAssignments() {
         return assignmentService.getAllAssignments();
     }
 

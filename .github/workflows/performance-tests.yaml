@@ -1,0 +1,190 @@
+name: Performance Tests
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # schedule:
+  #  - cron: '0 0 * * 1'  # Weekly on Monday at midnight
+
+jobs:
+  deploy-test-env:
+    runs-on: ubuntu-latest
+    outputs:
+      app_url: ${{ steps.deploy.outputs.app_url }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy test environment
+        id: deploy
+        run: |
+          # Deploy your application to a test environment
+          # This is a placeholder - replace with your actual deployment script
+          echo "::set-output name=app_url::https://test-env.example.com"
+
+  jmeter-tests:
+    needs: deploy-test-env
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      
+      - name: Download JMeter
+        run: |
+          wget https://dlcdn.apache.org/jmeter/binaries/apache-jmeter-5.5.tgz
+          tar -xzf apache-jmeter-5.5.tgz
+      
+      - name: Run JMeter Tests
+        run: |
+          mkdir -p jmeter-results
+          
+          # Run normal load test
+          ./apache-jmeter-5.5/bin/jmeter -n -t performance-tests/jmeter/api-test-plan.jmx \
+            -Jhost=${{ needs.deploy-test-env.outputs.app_url }} \
+            -Jprotocol=https \
+            -Jport=443 \
+            -Japi_token=${{ secrets.API_TOKEN }} \
+            -Jreport_path=./jmeter-results/normal-load-report.csv \
+            -l ./jmeter-results/normal-load-results.jtl \
+            -e -o ./jmeter-results/normal-load-dashboard
+            
+          # Run high load test  
+          ./apache-jmeter-5.5/bin/jmeter -n -t performance-tests/jmeter/api-test-plan.jmx \
+            -Jhost=${{ needs.deploy-test-env.outputs.app_url }} \
+            -Jprotocol=https \
+            -Jport=443 \
+            -Japi_token=${{ secrets.API_TOKEN }} \
+            -Jreport_path=./jmeter-results/high-load-report.csv \
+            -l ./jmeter-results/high-load-results.jtl \
+            -e -o ./jmeter-results/high-load-dashboard
+      
+      - name: Archive JMeter results
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-results
+          path: |
+            jmeter-results/
+      
+      - name: Check for performance regressions
+        run: |
+          # This is a simple check based on average response time
+          # You can create a more sophisticated script for your needs
+          awk -F',' '{ sum += $1; n++ } END { print sum/n }' jmeter-results/normal-load-report.csv > avg_response.txt
+          
+          # Fail if average response time is over 2 seconds
+          if (( $(cat avg_response.txt) > 2000 )); then
+            echo "Average response time exceeds threshold!"
+            exit 1
+          fi
+
+  gatling-tests:
+    needs: deploy-test-env
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      
+      - name: Set up SBT
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      
+      - name: Cache SBT
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.sbt
+            ~/.ivy2/cache
+            ~/.coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
+      
+      - name: Run Gatling tests
+        run: |
+          cd performance-tests/gatling
+          sbt "Gatling/testOnly simulations.ApiPerformanceSimulation" \
+            -DbaseUrl=${{ needs.deploy-test-env.outputs.app_url }} \
+            -DapiToken=${{ secrets.API_TOKEN }}
+      
+      - name: Archive Gatling results
+        uses: actions/upload-artifact@v3
+        with:
+          name: gatling-results
+          path: |
+            performance-tests/gatling/target/gatling/
+      
+      - name: Publish performance test report
+        uses: actions/github-script@v6
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Find the latest results directory
+            const resultsDir = 'performance-tests/gatling/target/gatling/';
+            const runs = fs.readdirSync(resultsDir)
+              .filter(f => f.startsWith('apiperformancesimulation'))
+              .sort()
+              .reverse();
+            
+            if (runs.length === 0) {
+              console.log('No Gatling results found');
+              return;
+            }
+            
+            const latestRun = runs[0];
+            const statsFile = path.join(resultsDir, latestRun, 'js/stats.json');
+            
+            if (!fs.existsSync(statsFile)) {
+              console.log(`Stats file not found: ${statsFile}`);
+              return;
+            }
+            
+            const stats = JSON.parse(fs.readFileSync(statsFile, 'utf8'));
+            
+            let comment = '## Performance Test Results\n\n';
+            comment += '| Request | Count | Min | Mean | Max | p95 | Success % |\n';
+            comment += '|---------|-------|-----|------|-----|-----|----------|\n';
+            
+            for (const [name, data] of Object.entries(stats.contents.requests)) {
+              comment += `| ${name} | ${data.count} | ${data.min} | ${Math.round(data.mean)} | ${data.max} | ${data.percentiles['95.0']} | ${(data.successPercentage).toFixed(2)} |\n`;
+            }
+            
+            comment += '\n\n';
+            comment += `[Full Report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  performance-report:
+    needs: [jmeter-tests, gatling-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Generate consolidated report
+        run: |
+          echo "## Performance Test Summary" > report.md
+          echo "Tests completed at $(date)" >> report.md
+          echo "See artifacts for detailed results" >> report.md
+      
+      - name: Upload consolidated report
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-summary
+          path: report.md

@@ -12,6 +12,18 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      SPRING_PROFILES_ACTIVE: test  # Ensures application-test.properties is used
+      TESTDB_URL: jdbc:tc:mysql:8.0:///testdb
+      TESTDB_USERNAME: root
+      TESTDB_PASSWORD: chip1852
+      COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+      COHERE_API_MODEL: command-r-plus
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin
+      SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+      SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
 
     steps:
       - name: Checkout repository

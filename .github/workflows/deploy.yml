@@ -35,6 +35,12 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Debug Environment Variables
+        run: env | sort  # Print all environment variables
+
+      - name: Verify Active Spring Profile
+        run: echo "Active profile is $SPRING_PROFILES_ACTIVE"
+        
       - name: Grant execute permission to Gradle wrapper
         run: chmod +x ./gradlew
 

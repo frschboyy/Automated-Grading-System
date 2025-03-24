@@ -47,6 +47,9 @@ jobs:
           echo "Test DB URL: $TESTDB_URL"
           echo "Test DB Username: $TESTDB_USERNAME"
           echo "Test DB Password: $TESTDB_PASSWORD"
+      
+      - name: Debug API Key
+        run: echo "Cohere API Key: ${{ secrets.COHERE_API_KEY }}"
 
       - name: Grant execute permission to Gradle wrapper
         run: chmod +x ./gradlew

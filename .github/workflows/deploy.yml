@@ -49,7 +49,14 @@ jobs:
           echo "Test DB Password: $TESTDB_PASSWORD"
       
       - name: Debug API Key Length
-        run: echo "Cohere API Key Length: ${#COHERE_API_KEY}"
+        run: |
+          if [ -z "${{ secrets.COHERE_API_KEY }}" ]; then
+            echo "COHERE_API_KEY is NOT set!"
+          else
+            echo "COHERE_API_KEY is set and has a length of ${#COHERE_API_KEY} characters."
+          fi
+        shell: bash
+
 
       - name: Grant execute permission to Gradle wrapper
         run: chmod +x ./gradlew

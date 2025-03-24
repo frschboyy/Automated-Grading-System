@@ -56,7 +56,10 @@ jobs:
             echo "COHERE_API_KEY is set and has a length of ${#COHERE_API_KEY} characters."
           fi
         shell: bash
-
+      
+      - name: Test API Connectivity
+        run: |
+          curl -H "Authorization: Bearer $COHERE_API_KEY" -X POST https://api.cohere.ai/v1/chat || echo "API call failed"
 
       - name: Grant execute permission to Gradle wrapper
         run: chmod +x ./gradlew
@@ -65,7 +68,7 @@ jobs:
         run: ./gradlew bootJar
 
       - name: Run Unit Tests
-        run: ./gradlew test
+        run: SPRING_PROFILES_ACTIVE=test ./gradlew test --stacktrace --info
 
       - name: Run API Integration Tests with Testcontainers
         run: ./gradlew apiTest

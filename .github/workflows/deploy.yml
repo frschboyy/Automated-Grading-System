@@ -40,7 +40,14 @@ jobs:
 
       - name: Verify Active Spring Profile
         run: echo "Active profile is $SPRING_PROFILES_ACTIVE"
-        
+
+      - name: Debug Active Profile and Database URL
+        run: |
+          echo "Active Profile: $SPRING_PROFILES_ACTIVE"
+          echo "Test DB URL: $TESTDB_URL"
+          echo "Test DB Username: $TESTDB_USERNAME"
+          echo "Test DB Password: $TESTDB_PASSWORD"
+
       - name: Grant execute permission to Gradle wrapper
         run: chmod +x ./gradlew
 

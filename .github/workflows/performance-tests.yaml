@@ -19,6 +19,8 @@ jobs:
       - name: Deploy test environment
         id: deploy
         run: |
+          gradle build
+          gradle run
           # Deploy your application to a test environment
           # This is a placeholder - replace with your actual deployment script
           echo "::set-output name=app_url::https://test-env.example.com"

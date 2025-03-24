@@ -3,7 +3,11 @@ name: Deploy Spring Boot to Azure
 on:
   push:
     branches:
-      - main  # Deploy on push to the main branch
+      - main
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   build-and-deploy:
@@ -25,17 +29,49 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bootJar
 
+      - name: Run Unit Tests
+        run: ./gradlew test
+
+      - name: Run API Integration Tests with Testcontainers
+        run: ./gradlew apiTest
+
+      # - name: Run UI Tests (Selenium)
+      #   run: ./gradlew seleniumTest
+
+      # - name: Run Performance Tests
+      #   run: ./gradlew performanceTest
+
+      - name: Upload Test Reports on Failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: build/reports/tests/
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure App Service
+      - name: Deploy to Staging Slot
         uses: azure/webapps-deploy@v2
         with:
           app-name: "grading-system"
           package: build/libs/*.jar
+          slot-name: "staging"
 
       - name: Restart Azure App Service
         run: az webapp restart --name grading-system --resource-group grading-system_group
-        continue-on-error: true
+        continue-on-error: true  # Don't fail the pipeline if restart fails
+
+      - name: Post-deployment Health Check
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://grading-system.azurewebsites.net/health)
+          if [ "$STATUS" -ne 200 ]; then
+            echo "🚨 Deployment failed! Health check returned $STATUS"
+            exit 1
+          fi
+        continue-on-error: false  # Stop deployment if health check fails
+
+      - name: Log Deployment Status
+        run: echo "✅ Deployment completed successfully!"

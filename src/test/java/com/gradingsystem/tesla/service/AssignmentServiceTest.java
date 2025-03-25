@@ -27,6 +27,7 @@ import com.gradingsystem.tesla.model.Assignment;
 import com.gradingsystem.tesla.repository.AssignmentRepository;
 import com.gradingsystem.tesla.service.AssignmentService;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class AssignmentServiceTest {
 

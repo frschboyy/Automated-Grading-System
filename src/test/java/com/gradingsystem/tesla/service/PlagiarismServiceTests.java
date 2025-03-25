@@ -1,4 +1,4 @@
-package com.gradingsystem.tesla.service;
+// package com.gradingsystem.tesla.service;
 
 public class PlagiarismServiceTests {
     

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.gradingsystem.tesla.DTO.EvaluationDetails;
 import com.gradingsystem.tesla.DTO.SubmissionDTO;
@@ -20,6 +21,7 @@ import com.gradingsystem.tesla.service.RetrieveSubmissions;
 
 import java.util.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class RetrieveServiceTests {
 

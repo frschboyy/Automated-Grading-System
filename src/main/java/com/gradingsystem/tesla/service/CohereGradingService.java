@@ -47,6 +47,14 @@ public class CohereGradingService {
                 .build();
     }
 
+    // Setter method for tests
+    public void setApiKeyForTest(String apiKey) {
+        this.cohere = Cohere.builder()
+                .token(apiKey)
+                .clientName("grading-system")
+                .build();
+    }
+
     // Parse questions and answers from extracted text
     public Map<String, String> parseQuestionsAndAnswers(String documentText) {
         logger.debug("Hello parser 0");

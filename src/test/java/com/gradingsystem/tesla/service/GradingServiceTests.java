@@ -12,13 +12,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
-// import com.gradingsystem.tesla.service.CohereGradingService;
+import com.gradingsystem.tesla.service.CohereGradingService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SpringBootTest
+@TestPropertySource("classpath:application.properties")
 public class GradingServiceTests {
 
     private static final Logger logger = LoggerFactory.getLogger(GradingServiceTests.class);
@@ -40,6 +42,7 @@ public class GradingServiceTests {
         if (apiKey == null || apiKey.isEmpty() || model == null || model.isEmpty()) {
             throw new IllegalStateException("API key or model is not configured in application.properties");
         }
+        gradingService.setApiKeyForTest(apiKey);
     }
 
     @Tag("unit")

@@ -70,6 +70,39 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bootJar
 
+      - name: Verify JAR file existence
+        run: |
+          if [ ! -f "build/libs/tesla-0.0.1-SNAPSHOT.jar" ]; then
+            echo "::error::Build file not found!"
+            exit 1
+          fi
+
+      - name: Check JAR file size
+        run: |
+          file_size=$(stat -c%s "build/libs/tesla-0.0.1-SNAPSHOT.jar")
+          echo "JAR file size: $file_size bytes"
+          if [ "$file_size" -lt 100000 ]; then  # Adjust minimum expected size as needed
+            echo "::error::JAR file is suspiciously small!"
+            exit 1
+          fi
+
+      - name: Verify JAR contents
+        run: |
+          jar -tf build/libs/tesla-0.0.1-SNAPSHOT.jar > /dev/null
+          if [ $? -ne 0 ]; then
+            echo "::error::JAR file appears corrupted!"
+            exit 1
+          fi
+          echo "JAR file structure is valid"
+
+      - name: Verify Spring Boot executable
+        run: |
+          # Check if the JAR has the Spring Boot loader classes
+          if ! jar -tf build/libs/tesla-0.0.1-SNAPSHOT.jar | grep -q 'org/springframework/boot/loader'; then
+            echo "::error::Not a valid Spring Boot executable JAR!"
+            exit 1
+          fi
+
       - name: Run Unit Tests
         run: SPRING_PROFILES_ACTIVE=test ./gradlew test --stacktrace --info
 

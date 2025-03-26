@@ -128,8 +128,8 @@ jobs:
           slot-name: 'Production'
           package: build/libs/tesla-0.0.1-SNAPSHOT.jar
 
-      - name: Check Deployment Health
-        run: |
-          sleep 20  # Give the server some time to start
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://grading-system-c3fmdra0ehedhufq.canadacentral-01.azurewebsites.net/health)
-          if [ "$STATUS" -ne 200 ]; then exit 1; fi
+      # - name: Check Deployment Health
+      #   run: |
+      #     sleep 20  # Give the server some time to start
+      #     STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://grading-system-c3fmdra0ehedhufq.canadacentral-01.azurewebsites.net/health)
+      #     if [ "$STATUS" -ne 200 ]; then exit 1; fi

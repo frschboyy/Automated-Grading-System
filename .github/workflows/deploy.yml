@@ -77,10 +77,10 @@ jobs:
       #     STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://grading-system-c3fmdra0ehedhufq.canadacentral-01.azurewebsites.net/health)
       #     if [ "$STATUS" -ne 200 ]; then exit 1; fi
 
-    build-docker:
-      needs: test  # Only run if tests pass
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - name: Build Docker image
-          run: docker build -t grading-system .
+  build-docker:
+    needs: test  # Only run if tests pass
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t grading-system .

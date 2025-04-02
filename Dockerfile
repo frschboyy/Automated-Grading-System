@@ -2,7 +2,7 @@
 FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /workspace
 COPY . .
-RUN chmod +x gradlew && ./gradlew clean build -x test --no-daemon
+RUN chmod +x gradlew && ./gradlew clean build -x test -x apiTest --no-daemon
 
 # Stage 2: Create runtime image
 FROM eclipse-temurin:21-jdk-jammy

@@ -4,6 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Submit your assignment files through the GradeAi student portal.">
+    <meta name="keywords" content="submit assignment, upload homework, student portal, GradeAi">
+
     <title>Submit Assignment - Student Portal</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/submitAssignment.css}">
 </head>
@@ -12,7 +17,7 @@
     <header class="header">
         <div class="header-content">
             <h1>Submit Assignment</h1>
-            <button class="btn btn-secondary" onclick="backToDashboard()">Back to Dashboard</button>
+            <button class="btn btn-secondary">Back to Dashboard</button>
         </div>
     </header>
 
@@ -43,19 +48,18 @@
             <!-- File Upload -->
             <div class="card">
                 <h2 class="card-title">Upload Files</h2>
-                <div class="upload-zone" onclick="triggerFileInput()">
+                <div class="upload-zone">
                     <div class="upload-icon">📁</div>
                     <p>Drag and drop your files here</p>
                     <p>or</p>
                     <button class="btn btn-primary">Browse Files</button>
-                    <input type="file" id="file-input" hidden multiple accept=".pdf,.doc,.docx"
-                        onchange="handleFileUpload(event)">
+                    <input type="file" id="file-input" hidden multiple accept=".pdf,.doc,.docx">
                 </div>
 
                 <div class="file-list" id="file-list"></div>
 
                 <!-- Submit Button -->
-                <button class="btn btn-primary" id="submit-btn" onclick="submitFiles()">Submit Assignment</button>
+                <button class="btn btn-primary" id="submit-btn">Submit Assignment</button>
                 <div id="loader"></div>
             </div>
         </div>

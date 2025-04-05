@@ -1,20 +1,20 @@
-/* global alert */
+/* global alert, DataTransfer */
 
-// Direct to dashboard
+// Navigate back to the dashboard
 function backToDashboard() {
     window.location.href = "/dashboard";
 }
 
-// Handle file input trigger
+// Trigger file input when upload area or button is clicked
 function triggerFileInput() {
     document.getElementById("file-input").click();
 }
 
-// Handle file upload
+// Handle file uploads
 function handleFileUpload(event) {
     const fileInput = document.getElementById("file-input");
     const fileList = document.getElementById("file-list");
-    fileList.innerHTML = ""; // Clear the existing list
+    fileList.innerHTML = "";
 
     const allowedExtensions = ["pdf", "doc", "docx"];
 
@@ -38,14 +38,11 @@ function handleFileUpload(event) {
         removeButton.textContent = "Remove";
 
         removeButton.addEventListener("click", () => {
-            fileItem.remove(); // Remove from UI
+            fileItem.remove();
 
-            // Remove from file input list
             const dataTransfer = new DataTransfer();
             Array.from(fileInput.files).forEach((f) => {
-                if (f !== file) {
-                    dataTransfer.items.add(f);
-                }
+                if (f !== file) dataTransfer.items.add(f);
             });
             fileInput.files = dataTransfer.files;
         });
@@ -56,25 +53,22 @@ function handleFileUpload(event) {
     });
 }
 
-// Handle file submission
+// Submit assignment
 function submitFiles() {
     const submitButton = document.getElementById("submit-btn");
     const loading = document.getElementById("loader");
-
     const fileInput = document.getElementById("file-input");
-    const files = fileInput.files;
 
-    if (files.length === 0) {
+    if (fileInput.files.length === 0) {
         alert("Please upload at least one file before submitting.");
         return;
     }
 
-    // Disable the button to prevent further submissions
     submitButton.style.display = "none";
     loading.style.display = "block";
 
     const formData = new FormData();
-    formData.append("file", files[0]);
+    formData.append("file", fileInput.files[0]);
 
     fetch("/submissions/evaluate", {
         method: "POST",
@@ -103,3 +97,28 @@ function submitFiles() {
             alert(`Error: ${error.message}`);
         });
 }
+
+// DOMContentLoaded to attach event listeners
+document.addEventListener("DOMContentLoaded", () => {
+    const fileInput = document.getElementById("file-input");
+    const uploadZone = document.querySelector(".upload-zone");
+    const submitBtn = document.getElementById("submit-btn");
+    const backBtn = document.querySelector(".btn.btn-secondary");
+
+    if (uploadZone) {
+        uploadZone.addEventListener("click", triggerFileInput);
+    }
+
+    if (fileInput) {
+        fileInput.addEventListener("change", handleFileUpload);
+    }
+
+    if (submitBtn) {
+        submitBtn.addEventListener("click", submitFiles);
+    }
+
+    // Back to Dashboard
+    if (backBtn && backBtn.textContent.includes("Dashboard")) {
+        backBtn.addEventListener("click", backToDashboard);
+    }
+});

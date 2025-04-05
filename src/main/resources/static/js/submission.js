@@ -1,99 +1,124 @@
-// Direct to dashboard
-function backToDashboard() {
-    window.location.href = '/dashboard';
-}
-// Handle file input trigger
-function triggerFileInput() {
-    document.getElementById("fileInput").click();
+/* global alert, DataTransfer */
+
+// Navigate back to the dashboard
+function backToDashboard () {
+  window.location.href = '/dashboard'
 }
 
-// Handle file upload
-function handleFileUpload(event) {
-    const fileInput = document.getElementById("fileInput");
-    const fileList = document.getElementById("fileList");
-    fileList.innerHTML = ""; // Clear the existing list
-    const allowedExtensions = ['pdf', 'doc', 'docx'];
-
-    Array.from(event.target.files).forEach(file => {
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        if (!allowedExtensions.includes(fileExtension)) {
-            alert(`File type not allowed: ${file.name}`);
-            return;
-        }
-
-        const fileItem = document.createElement("div");
-        fileItem.classList.add("file-item");
-
-        const fileInfo = document.createElement("div");
-        fileInfo.classList.add("file-info");
-        fileInfo.innerHTML = `<span>📄</span><span>${file.name}</span><span>(${(file.size / (1024 * 1024)).toFixed(2)} MB)</span>`;
-
-        const removeButton = document.createElement("button");
-        removeButton.classList.add("btn", "btn-secondary");
-        removeButton.textContent = "Remove";
-        removeButton.onclick = () => {
-            // Remove the file from the UI
-            fileItem.remove();
-            // Remove the file from the input list
-            const dataTransfer = new DataTransfer();
-            Array.from(fileInput.files).forEach(f => {
-                if (f !== file) {
-                    dataTransfer.items.add(f);
-                }
-            });
-            fileInput.files = dataTransfer.files;
-        };
-
-        fileItem.appendChild(fileInfo);
-        fileItem.appendChild(removeButton);
-        fileList.appendChild(fileItem);
-    });
+// Trigger file input when upload area or button is clicked
+function triggerFileInput () {
+  document.getElementById('file-input').click()
 }
 
-// Handle file submission
-function submitFiles() {
-    const submitButton = document.getElementById('submit_btn');
-    const loading = document.getElementById('loader');
+// Handle file uploads
+function handleFileUpload (event) {
+  const fileInput = document.getElementById('file-input')
+  const fileList = document.getElementById('file-list')
+  fileList.innerHTML = ''
 
-    const fileInput = document.getElementById("fileInput");
-    const files = fileInput.files;
+  const allowedExtensions = ['pdf', 'doc', 'docx']
 
-    if (files.length === 0) {
-        alert("Please upload at least one file before submitting.");
-        return;
+  Array.from(event.target.files).forEach((file) => {
+    const fileExtension = file.name.split('.').pop().toLowerCase()
+
+    if (!allowedExtensions.includes(fileExtension)) {
+      alert(`File type not allowed: ${file.name}`)
+      return
     }
 
-    // Disable the button to prevent further submissions
-    submitButton.style.display = 'none';
-    loading.style.display = 'block';
+    const fileItem = document.createElement('div')
+    fileItem.classList.add('file-item')
 
-    const formData = new FormData();
-    formData.append("file", files[0]);
+    const fileInfo = document.createElement('div')
+    fileInfo.classList.add('file-info')
+    fileInfo.innerHTML = `<span>📄</span><span>${file.name}</span><span>(${(file.size / (1024 * 1024)).toFixed(2)} MB)</span>`
 
-    fetch("/submissions/evaluate", {
-        method: "POST",
-        body: formData
+    const removeButton = document.createElement('button')
+    removeButton.classList.add('btn', 'btn-secondary')
+    removeButton.textContent = 'Remove'
+
+    removeButton.addEventListener('click', () => {
+      fileItem.remove()
+
+      const dataTransfer = new DataTransfer()
+      Array.from(fileInput.files).forEach((f) => {
+        if (f !== file) dataTransfer.items.add(f)
+      })
+      fileInput.files = dataTransfer.files
     })
-            .then((response) => {
-                loading.style.display = 'none';
-                if (!response.ok) {
-                    return response.json().then((data) => {
-                        throw new Error(data.error || "Failed to upload file.");
-                    });
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (data.message) {
-                    alert(`Success: ${data.message}`);
-                    window.location.href = '/dashboard';
-                } else {
-                    alert("Unknown server response.");
-                }
-            })
-            .catch((error) => {
-                loading.style.display = 'none';
-                submitButton.style.display = 'inline';
-                alert(`Error: ${error.message}`);
-            });
+
+    fileItem.appendChild(fileInfo)
+    fileItem.appendChild(removeButton)
+    fileList.appendChild(fileItem)
+  })
 }
+
+// Submit assignment
+function submitFiles () {
+  const submitButton = document.getElementById('submit-btn')
+  const loading = document.getElementById('loader')
+  const fileInput = document.getElementById('file-input')
+
+  if (fileInput.files.length === 0) {
+    alert('Please upload at least one file before submitting.')
+    return
+  }
+
+  submitButton.style.display = 'none'
+  loading.style.display = 'block'
+
+  const formData = new FormData()
+  formData.append('file', fileInput.files[0])
+
+  fetch('/submissions/evaluate', {
+    method: 'POST',
+    body: formData
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((data) => {
+          throw new Error(data.error || 'Failed to upload file.')
+        })
+      }
+      return response.json()
+    })
+    .then((data) => {
+      loading.style.display = 'none'
+      if (data.message) {
+        alert(`Success: ${data.message}`)
+        window.location.href = '/dashboard'
+      } else {
+        alert('Unknown server response.')
+      }
+    })
+    .catch((error) => {
+      loading.style.display = 'none'
+      submitButton.style.display = 'inline'
+      alert(`Error: ${error.message}`)
+    })
+}
+
+// DOMContentLoaded to attach event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const fileInput = document.getElementById('file-input')
+  const uploadZone = document.querySelector('.upload-zone')
+  const submitBtn = document.getElementById('submit-btn')
+  const backBtn = document.querySelector('.btn.btn-secondary')
+
+  if (uploadZone) {
+    uploadZone.addEventListener('click', triggerFileInput)
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener('change', handleFileUpload)
+  }
+
+  if (submitBtn) {
+    submitBtn.addEventListener('click', submitFiles)
+  }
+
+  // Back to Dashboard
+  if (backBtn && backBtn.textContent.includes('Dashboard')) {
+    backBtn.addEventListener('click', backToDashboard)
+  }
+})

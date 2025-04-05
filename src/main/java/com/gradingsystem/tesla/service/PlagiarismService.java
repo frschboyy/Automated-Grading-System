@@ -30,12 +30,11 @@ public class PlagiarismService {
 
         // Create a Lucene in-memory directory to store the indexed data
         Directory directory = new ByteBuffersDirectory();
-        
+
         // for tokenizing text
         StandardAnalyzer analyzer = new StandardAnalyzer(CharArraySet.unmodifiableSet(
-                new CharArraySet(Arrays.asList("question", "answer"), true)
-        ));
-        
+                new CharArraySet(Arrays.asList("question", "answer"), true)));
+
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
 
         // Index the two documents
@@ -79,7 +78,8 @@ public class PlagiarismService {
         while ((term = termsEnum.next()) != null) {
             String termText = term.utf8ToString(); // Convert the term to a string
             int termFreq = (int) termsEnum.totalTermFreq(); // Get the term frequency in the document
-            int docFreq = reader.docFreq(new Term("content", termText)); // Get the number of documents containing the term
+            int docFreq = reader.docFreq(new Term("content", termText)); // Get the number of documents containing the
+                                                                         // term
 
             // Calculate Inverse Document Frequenct (IDF): log(N / (1 + DF))
             double idf = Math.log((double) reader.numDocs() / (1 + docFreq));

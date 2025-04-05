@@ -1,7 +1,11 @@
-package com.gradingsystem.tesla.DTO;
+package com.gradingsystem.tesla.dto;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +15,10 @@ public class ChatRequest {
     private String model;
     private List<Message> messages;
 
-    public ChatRequest(String model, String prompt) {
+    // Use final for parameters as they are not reassigned within the constructor
+    public ChatRequest(final String model, final String prompt) {
         this.model = model;
         this.messages = new ArrayList<>();
-        this.messages.add(new Message("user",prompt));
+        this.messages.add(new Message("user", prompt));
     }
 }

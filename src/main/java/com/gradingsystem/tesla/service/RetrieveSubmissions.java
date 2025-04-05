@@ -1,6 +1,6 @@
 package com.gradingsystem.tesla.service;
 
-import com.gradingsystem.tesla.DTO.SubmissionDTO;
+import com.gradingsystem.tesla.dto.SubmissionDTO;
 import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.repository.DocumentSubmissionRepository;
 import java.util.List;
@@ -21,11 +21,11 @@ public class RetrieveSubmissions {
         // Map DocumentSubmission entities to SubmissionDTO
         return submissions.stream()
                 .map(submission -> SubmissionDTO.builder()
-                .studentName(submission.getStudent().getUsername())
-                .studentEmail(submission.getStudent().getEmail())
-                .assignmentId(submission.getAssignment().getId())
-                .studentId(submission.getStudent().getId())
-                .build())
+                        .studentName(submission.getStudent().getUsername())
+                        .studentEmail(submission.getStudent().getEmail())
+                        .assignmentId(submission.getAssignment().getId())
+                        .studentId(submission.getStudent().getId())
+                        .build())
                 .collect(Collectors.toList());
     }
 }

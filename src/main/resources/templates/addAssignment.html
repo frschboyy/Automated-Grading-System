@@ -1,49 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Give Assignment - Admin Portal</title>
-        <link rel="stylesheet" type="text/css" th:href="@{/css/addAssignment.css}">
-    </head>
-    <body>
-        <header class="header">
-            <h1>Add Assignment</h1>
-            <!-- Back To Dashboard Button -->
-            <button class="dashboard-btn" onclick="window.location.href = '/';">Dashboard</button>
-        </header>
 
-        <div class="container">
-            <!-- Main Submission Form -->
-            <div class="main-content">
-                <!-- Assignment Details Form -->
-                <div class="card">
-                    <h2 class="card-title">Assignment Details</h2>
-                    <form id="assignmentForm" action="/api/assignments" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="assignmentName" class="form-label">Assignment Name</label>
-                            <input type="text" id="assignmentName" name="assignmentName" class="form-control" placeholder="Enter assignment name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="dueDate" class="form-label">Due Date</label>
-                            <input type="datetime-local" id="dueDate" name="dueDate" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea id="description" name="description" class="form-control" rows="4" placeholder="Enter assignment description" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="uploadFile" class="form-label">Upload Rubric (Optional):</label>
-                            <input type="file" id="uploadFile" name="uploadFile" class="form-control" accept=".pdf,.doc,.docx">
-                            <small class="form-text text-muted">Allowed formats: PDF, DOC, DOCX</small>
-                        </div>
-                        <button type="submit" id="submit_btn" class="btn btn-primary">Submit</button>
-                        <div id="loader"></div>
-                    </form>
-                </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description"
+        content="Admin portal for adding assignments to the grading system, including assignment details, due date, description, and file upload.">
+    <meta name="keywords"
+        content="admin portal, add assignment, assignment details, due date, grading system, file upload, assignment submission">
+
+    <title>Give Assignment - Admin Portal</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/addAssignment.css}">
+</head>
+
+<body>
+    <header class="header">
+        <h1>Add Assignment</h1>
+        <!-- Back To Dashboard Button -->
+        <button class="dashboard-btn" onclick="window.location.href = '/';">Dashboard</button>
+    </header>
+
+    <div class="container">
+        <!-- Main Submission Form -->
+        <div class="main-content">
+            <!-- Assignment Details Form -->
+            <div class="card">
+                <h2 class="card-title">Assignment Details</h2>
+                <form id="assignment-form" action="/api/assignments" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="assignment-name" class="form-label">Assignment Name</label>
+                        <input type="text" id="assignment-name" name="assignment-name" class="form-control"
+                            placeholder="Enter assignment name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="due-date" class="form-label">Due Date</label>
+                        <input type="datetime-local" id="due-date" name="due-date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" class="form-control" rows="4"
+                            placeholder="Enter assignment description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="upload-file" class="form-label">Upload Rubric (Optional):</label>
+                        <input type="file" id="upload-file" name="upload-file" class="form-control"
+                            accept=".pdf,.doc,.docx">
+                        <small class="form-text text-muted">Allowed formats: PDF, DOC, DOCX</small>
+                    </div>
+                    <button type="submit" id="submit-btn" class="btn btn-primary">Submit</button>
+                    <div id="loader"></div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <script type="text/javascript" th:src="@{/js/addAssignment.js}"></script>
-    </body>
+    <script type="text/javascript" th:src="@{/js/addAssignment.js}"></script>
+</body>
+
 </html>

@@ -1,7 +1,7 @@
 package com.gradingsystem.tesla.controller;
 
-import com.gradingsystem.tesla.DTO.EvaluationDetails;
-import com.gradingsystem.tesla.DTO.SubmissionDTO;
+import com.gradingsystem.tesla.dto.EvaluationDetails;
+import com.gradingsystem.tesla.dto.SubmissionDTO;
 import com.gradingsystem.tesla.model.Assignment;
 import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.model.Student;
@@ -39,18 +39,18 @@ public class SubmissionController {
     private final DocumentSubmissionRepository documentSubmissionRepository;
     private final AssignmentRepository assignmentRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(SubmissionController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmissionController.class);
 
     @Autowired
     public SubmissionController(
-            PlagiarismService plagiarismService,
-            CohereGradingService gradingService,
-            RetrieveSubmissions retrieveSubmissionService,
-            RetrieveEvaluationService retrievalService,
-            DocumentSubmissionRepository documentSubmissionRepository,
-            AssignmentRepository assignmentRepository,
-            StudentRepository studentRepository,
-            TextExtraction textExtraction) {
+            final PlagiarismService plagiarismService,
+            final CohereGradingService gradingService,
+            final RetrieveSubmissions retrieveSubmissionService,
+            final RetrieveEvaluationService retrievalService,
+            final DocumentSubmissionRepository documentSubmissionRepository,
+            final AssignmentRepository assignmentRepository,
+            final StudentRepository studentRepository,
+            final TextExtraction textExtraction) {
         this.plagiarismService = plagiarismService;
         this.gradingService = gradingService;
         this.retrieveSubmissionService = retrieveSubmissionService;
@@ -62,19 +62,19 @@ public class SubmissionController {
 
     @PostMapping("/evaluate")
     public ResponseEntity<Map<String, String>> evaluateSubmission(
-            @RequestParam("file") MultipartFile file,
-            HttpSession session) {
+            @RequestParam("file") final MultipartFile file,
+            final HttpSession session) {
 
-        Long assignmentId = (Long) session.getAttribute("assignmentId");
-        Student student = (Student) session.getAttribute("loggedInStudent");
+        final Long assignmentId = (Long) session.getAttribute("assignmentId");
+        final Student student = (Student) session.getAttribute("loggedInStudent");
 
         try {
             // Extract and hash text
-            String newSubmission = textExtraction.extractText(file);
-            String newSubmissionHash = textExtraction.generateHash(newSubmission);
+            final String newSubmission = textExtraction.extractText(file);
+            final String newSubmissionHash = textExtraction.generateHash(newSubmission);
 
             // Check for duplicate submissions
-            DocumentSubmission duplicateSubmission = documentSubmissionRepository
+            final DocumentSubmission duplicateSubmission = documentSubmissionRepository
                     .findByAssignmentIdAndStudentIdAndHashValue(assignmentId, student.getId(), newSubmissionHash);
 
             if (duplicateSubmission != null) {
@@ -84,26 +84,21 @@ public class SubmissionController {
 
             // Check for plagiarism
             double plagiarismScore = 0;
-            List<DocumentSubmission> allSubmissions = documentSubmissionRepository.findByAssignmentId(assignmentId);
-            for (DocumentSubmission submission : allSubmissions) {
+            final List<DocumentSubmission> allSubmissions = documentSubmissionRepository
+                    .findByAssignmentId(assignmentId);
+            for (final DocumentSubmission submission : allSubmissions) {
                 // Convert extracted text to string (if it's stored as bytes or other format)
-                String existingSubmission = new String(submission.getExtractedText(), StandardCharsets.UTF_8);
+                final String existingSubmission = new String(submission.getExtractedText(), StandardCharsets.UTF_8);
 
                 try {
                     // Calculate TF-IDF similarity using Cosine Similarity
-                    double score = plagiarismService.calculateTFIDFSimilarity(newSubmission, existingSubmission);
+                    final double score = plagiarismService.calculateTFIDFSimilarity(newSubmission, existingSubmission);
                     if (score > plagiarismScore) {
                         plagiarismScore = score;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//
-//                // Check if plagiarism score exceeds thresholds
-//                if (plagiarismScore >= 0.95) {
-//                    return ResponseEntity.status(HttpStatus.CONFLICT)
-//                            .body(Map.of("error", "Duplicate submission detected for this assignment."));
-//                }
             }
 
             // logging purposes
@@ -112,42 +107,40 @@ public class SubmissionController {
             }
 
             // Parse questions and answers
-            Map<String, String> answerToQuestion = gradingService.parseQuestionsAndAnswers(newSubmission);
+            final Map<String, String> answerToQuestion = gradingService.parseQuestionsAndAnswers(newSubmission);
 
-            Assignment assignment = assignmentRepository.findById(assignmentId)
+            final Assignment assignment = assignmentRepository.findById(assignmentId)
                     .orElseThrow(() -> new RuntimeException("Assignment not found"));
 
-            byte[] rubric = assignment.getRubric();
+            final byte[] rubric = assignment.getRubric();
 
             String rubricText;
             Map<String, String> evaluationResults;
 
             if (rubric != null) {
-
                 // Evaluate based on rubric
                 rubricText = new String(rubric, StandardCharsets.UTF_8);
-                logger.debug("enteringEvalRubric");
+                LOGGER.debug("enteringEvalRubric");
                 evaluationResults = gradingService.evaluateAnswersWithRubric(answerToQuestion, rubricText);
             } else {
-
                 // Evaluate without rubric
-                logger.debug("enteringEvalNoRubric");
+                LOGGER.debug("enteringEvalNoRubric");
                 evaluationResults = gradingService.evaluateAnswersWithoutRubric(answerToQuestion);
-                logger.debug("results: " + evaluationResults.toString());
+                LOGGER.debug("results: " + evaluationResults.toString());
             }
 
             // Iterate through the map and print each key-value pair
-            for (Map.Entry<String, String> entry : evaluationResults.entrySet()) {
+            for (final Map.Entry<String, String> entry : evaluationResults.entrySet()) {
                 System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
             }
 
             System.out.print("Entry Size: " + evaluationResults.entrySet().size());
 
             // Calculate student's mark for assignment
-            Integer percentage = gradingService.calculateAggregateScore(evaluationResults);
+            final Integer percentage = gradingService.calculateAggregateScore(evaluationResults);
 
             // Save document submission
-            DocumentSubmission submission = DocumentSubmission.builder()
+            final DocumentSubmission submission = DocumentSubmission.builder()
                     .student(student)
                     .assignment(assignment)
                     .hashValue(newSubmissionHash)
@@ -157,45 +150,57 @@ public class SubmissionController {
                     .evaluationResults(evaluationResults)
                     .build();
 
-            System.out.println("Assignment: " + assignment.getId() + ", " + assignment.getTitle() + ", " + assignment.getDescription());
-            System.out.println("Student: " + student.getId() + ", " + student.getUsername() + ", " + student.getEmail());
+            System.out.println("Assignment: " + assignment.getId() + ", " + assignment.getTitle() + ", "
+                    + assignment.getDescription());
+            System.out
+                    .println("Student: " + student.getId() + ", " + student.getUsername() + ", " + student.getEmail());
             System.out.println("Grade: " + percentage);
-            DecimalFormat numberFormat = new DecimalFormat("#.00");
+            final DecimalFormat numberFormat = new DecimalFormat("#.00");
             System.out.println("PlagiarismScore: " + plagiarismScore);
             System.out.println("SubmissionText: " + newSubmission);
             System.out.println("HashValue: " + newSubmissionHash);
-            System.out.println("SubmissionBytes: " + Arrays.toString(newSubmission.getBytes(StandardCharsets.UTF_8)) + "\n\n");
+            System.out.println(
+                    "SubmissionBytes: " + Arrays.toString(newSubmission.getBytes(StandardCharsets.UTF_8)) + "\n\n");
 
             documentSubmissionRepository.save(submission);
 
+            final Map<String, String> responseMap = new HashMap<>();
             if (plagiarismScore < 0.8) {
-                return ResponseEntity.ok(Map.of("message", "Submission Processed", "score", String.valueOf(percentage)));
+                responseMap.put("message", "Submission Processed");
+                responseMap.put("score", String.valueOf(percentage));
             } else {
-                return ResponseEntity.ok(Map.of("message", "Submission Processed: Plagiarism Detected!", "Similarity Score", String.valueOf(numberFormat.format(plagiarismScore * 100))));
+                responseMap.put("message", "Submission Processed: Plagiarism Detected!");
+                responseMap.put("Similarity Score", String.valueOf(numberFormat.format(plagiarismScore * 100)));
             }
-        } catch (Exception e) {
+
+            return ResponseEntity.ok(responseMap);
+
+        } catch (final Exception e) {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
-    
-    //  Fetch existing submissions for an assignment
+
+    // Fetch existing submissions for an assignment
     @GetMapping("/existing")
-    public List<SubmissionDTO> getSubmissions(HttpSession session) {
-        Long assignmentId = (Long) session.getAttribute("assignmentId");
-        return retrieveSubmissionService.getSubmissions(assignmentId);    
+    public List<SubmissionDTO> getSubmissions(final HttpSession session) {
+        final Long assignmentId = (Long) session.getAttribute("assignmentId");
+        return retrieveSubmissionService.getSubmissions(assignmentId);
     }
-    
+
     @PostMapping("/pushEvaluationDetails")
-    public ResponseEntity<Void> saveEvaluationDetails(@RequestParam Long assignmentId, @RequestParam Long studentId, HttpSession session) {
+    public ResponseEntity<Void> saveEvaluationDetails(@RequestParam final Long assignmentId,
+            @RequestParam final Long studentId,
+            final HttpSession session) {
+
         // Fetch evaluation details
-        EvaluationDetails details = retrievalService.getEvaluationDetails(assignmentId, studentId);
+        final EvaluationDetails details = retrievalService.getEvaluationDetails(assignmentId, studentId);
 
         // Save data
         session.setAttribute("grade", details.getGrade());
         session.setAttribute("plagiarism", details.getPlagiarismScore());
         session.setAttribute("results", details.getResults());
-        logger.debug("Added to session");
-        logger.debug("Evaluation Details 123:" + details.getResults());
+        LOGGER.debug("Added to session");
+        LOGGER.debug("Evaluation Details 123:" + details.getResults());
         System.out.println("Added to session");
 
         // Return HTTP 200 - OK response

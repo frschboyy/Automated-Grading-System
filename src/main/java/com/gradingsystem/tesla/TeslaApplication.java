@@ -1,20 +1,15 @@
 package com.gradingsystem.tesla;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
+@PropertySource(value = "classpath:.env", ignoreResourceNotFound = true)
+@SuppressWarnings("all")
 public class TeslaApplication {
 
-    public static void main(String[] args) {
-
-        // Load environment variables from .env file
-        Dotenv dotenv = Dotenv.load();
-
-        // Set environment variables
-        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
-
+    public static void main(final String[] args) {
         SpringApplication.run(TeslaApplication.class, args);
     }
 }

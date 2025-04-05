@@ -1,4 +1,4 @@
-package com.gradingsystem.tesla.DTO;
+package com.gradingsystem.tesla.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +12,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubmissionDTO {
+
+    // Default access modifier: package-private
     String studentName;
+
+    // Default access modifier: package-private
     String studentEmail;
+
+    // Default access modifier: package-private
     Long assignmentId;
+
+    // Default access modifier: package-private
     Long studentId;
 }
-

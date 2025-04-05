@@ -41,15 +41,16 @@ public class TextExtraction {
             throw new RuntimeException("Failed to extract text from Word document");
         }
     }
+
     // Extract text from pdf or word file
     public String extractText(MultipartFile file) throws Exception {
         // Check if file exists
         if (file == null || file.getOriginalFilename() == null) {
             throw new IllegalArgumentException("File or filename is null");
         }
-        
+
         String extractedText;
-        
+
         if (file.getOriginalFilename().endsWith(".pdf")) {
             extractedText = extractTextFromPDF(file.getInputStream());
         } else if (file.getOriginalFilename().endsWith(".docx")) {
@@ -71,7 +72,7 @@ public class TextExtraction {
         // Remove non-printable characters and extra spaces
         text = text.replaceAll("\\p{C}", "") // Remove control characters
                 .replaceAll("\\s+", " ") // Replace multiple whitespaces with a single space
-                .trim();                        // Trim leading and trailing whitespace
+                .trim(); // Trim leading and trailing whitespace
 
         return ensureUTF8(text);
     }
@@ -79,7 +80,7 @@ public class TextExtraction {
     // Convert Text to UTF String
     private String ensureUTF8(String text) {
         byte[] bytes = text.getBytes(StandardCharsets.UTF_8); // Convert to UTF-8
-        return new String(bytes, StandardCharsets.UTF_8);     // Reconstruct the String
+        return new String(bytes, StandardCharsets.UTF_8); // Reconstruct the String
     }
 
     // Generate a hash value for a text

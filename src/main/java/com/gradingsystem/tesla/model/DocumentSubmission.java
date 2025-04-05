@@ -30,28 +30,28 @@ public class DocumentSubmission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @ManyToOne
-    @JoinColumn(name = "student_id")    // Foreign Key Column
+    @JoinColumn(name = "student_id") // Foreign Key Column
     private Student student;
-    
+
     @ManyToOne
     @JoinColumn(name = "assignment_id") // Foreign Key Column
     private Assignment assignment;
-        
+
     @Lob
     @Column(nullable = false, columnDefinition = "LONGBLOB")
     private byte[] extractedText;
-    
-    @Column(nullable=false, length = 64) // SHA-256 produces 64-character hex strings
+
+    @Column(nullable = false, length = 64) // SHA-256 produces 64-character hex strings
     private String hashValue;
-    
-    @Column(nullable=true)
+
+    @Column(nullable = true)
     private Integer grade;
-    
-    @Column(nullable=true)
+
+    @Column(nullable = true)
     private Integer similarityScore;
-    
+
     @ElementCollection
     @CollectionTable(name = "evaluation_results", joinColumns = @JoinColumn(name = "submission_id"))
     @MapKeyColumn(name = "question")

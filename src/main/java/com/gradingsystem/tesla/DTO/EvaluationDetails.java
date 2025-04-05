@@ -1,4 +1,4 @@
-package com.gradingsystem.tesla.DTO;
+package com.gradingsystem.tesla.dto;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EvaluationDetails {
+
+    // Default access modifier: package-private
     int grade;
+
+    // Default access modifier: package-private
     int plagiarismScore;
+
+    // Default access modifier: package-private
     Map<String, String> results;
 }

@@ -1,5 +1,4 @@
-package com.gradingsystem.tesla.DTO;
-
+package com.gradingsystem.tesla.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

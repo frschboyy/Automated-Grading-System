@@ -1,3 +1,5 @@
+/* global alert */
+
 // Fetch and display upcoming assignments
 function fetchUpcomingAssignments() {
     fetch("/api/assignments/upcoming")
@@ -24,10 +26,16 @@ function fetchUpcomingAssignments() {
                         <div class="assignment-description">Description: ${assignment.description}</div>
                         <div class="due-date">Due: ${dueDate.toLocaleDateString()}</div>
                     </div>
-                    <button class="btn-primary" onclick="goToSubmission('${assignment.id}', '${assignment.title}', '${assignment.description}', '${assignment.dueDate}')">
+                    <button class="btn-primary" data-id="${assignment.id}" data-title="${assignment.title}" data-description="${assignment.description}" data-due-date="${assignment.dueDate}">
                         Submit Assignment
                     </button>
                 `;
+
+                // Add event listener to the button
+                const submitButton = li.querySelector("button");
+                submitButton.addEventListener("click", () => {
+                    goToSubmission(submitButton.dataset.id, submitButton.dataset.title, submitButton.dataset.description, submitButton.dataset.dueDate);
+                });
 
                 assignmentsContainer.appendChild(li);
             });
@@ -62,10 +70,16 @@ function fetchSubmittedAssignments() {
                         <div class="assignment-description">Description: ${submission.description}</div>
                         <div class="due-date">Due: ${dueDate.toLocaleDateString()}</div>
                     </div>
-                    <button class="btn-checkGrade" onclick="goToEvaluation('${submission.id}')">
+                    <button class="btn-check-grade" data-id="${submission.id}">
                         Check Evaluation
                     </button>
                 `;
+
+                // Add event listener to the button
+                const checkGradeButton = li.querySelector("button");
+                checkGradeButton.addEventListener("click", () => {
+                    goToEvaluation(checkGradeButton.dataset.id);
+                });
 
                 submissionsContainer.appendChild(li);
             });

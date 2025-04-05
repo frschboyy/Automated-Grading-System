@@ -1,12 +1,14 @@
-document.getElementById("assignmentForm").addEventListener("submit", function (event) {
+/* global alert */
+
+document.getElementById("assignment-form").addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
 
-    const assignmentName = document.getElementById("assignmentName").value.trim();
-    const dueDate = document.getElementById("dueDate").value; // No need to trim date
+    const assignmentName = document.getElementById("assignment-mame").value.trim();
+    const dueDate = document.getElementById("due-date").value; // No need to trim date
     const description = document.getElementById("description").value.trim();
-    const uploadFile = document.getElementById("uploadFile")?.files[0];
+    const uploadFile = document.getElementById("upload-file")?.files[0];
 
-    const submitButton = document.getElementById("submit_btn");
+    const submitButton = document.getElementById("submit-btn");
     const loading = document.getElementById("loader");
 
     // Check if required fields are filled
@@ -45,7 +47,7 @@ document.getElementById("assignmentForm").addEventListener("submit", function (e
             submitButton.style.display = "inline";
             alert(successMessage);
             // Clear form after success
-            document.getElementById("assignmentForm").reset();
+            document.getElementById("assignment-form").reset();
             window.location.href = "/dashboard";
         })
         .catch((error) => {

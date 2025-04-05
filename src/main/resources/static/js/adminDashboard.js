@@ -1,3 +1,5 @@
+/* global alert */
+
 // Fetch and display upcoming assignments
 function fetchAllAssignments() {
     fetch("/api/assignments/all")
@@ -24,10 +26,16 @@ function fetchAllAssignments() {
                         <div class="assignment-description">Description: ${assignment.description}</div>
                         <div class="due-date">Due: ${dueDate.toLocaleDateString()}</div>
                     </div>
-                    <button class="btn-primary" onclick="goToSubmission('${assignment.id}', '${assignment.title}', '${assignment.description}', '${assignment.dueDate}')">
+                    <button class="btn-primary" data-id="${assignment.id}" data-title="${assignment.title}" data-description="${assignment.description}" data-due-date="${assignment.dueDate}">
                         View Submissions
                     </button>
                 `;
+
+                // Add the event listener for each button
+                const viewButton = li.querySelector("button");
+                viewButton.addEventListener("click", function () {
+                    goToSubmission(viewButton.dataset.id, viewButton.dataset.title, viewButton.dataset.description, viewButton.dataset.dueDate);
+                });
 
                 assignmentsContainer.appendChild(li);
             });

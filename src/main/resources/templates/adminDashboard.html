@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description"
+        content="Admin dashboard for managing assignments in the grading system. Admins can view existing assignments, create new ones, and manage the assignment grading process.">
+    <meta name="keywords"
+        content="admin dashboard, assignment grading, assignment management, grading system, create assignment, admin portal, view assignments">
+
     <title>Admin Dashboard - Assignment Grading System</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
 </head>
@@ -12,8 +19,8 @@
     <header class="header">
         <div class="header-content">
             <div class="subheader">
-                <h4 class="welcome">Welcome Admin</span></h4>
-                <button class="btn-primary logout-button" onclick="logout()">Logout</button>
+                <h4 class="welcome">Welcome Admin</h4>
+                <button class="btn-primary logout-button">Logout</button>
             </div>
             <h1>Admin Dashboard</h1>
         </div>
@@ -29,7 +36,7 @@
             </ul>
         </div>
         <div class="action">
-            <button class="btn-checkGrade" onclick="window.location.href = '/assignment-creation';"
+            <button class="btn-check-grade" onclick="window.location.href = '/assignment-creation';"
                 aria-label="Create a new assignment">+ New Assignment</button>
         </div>
     </div>

@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description"
+        content="Login page for the Student Portal where students can securely sign in to access their assignments, grades, and dashboard.">
+    <meta name="keywords" content="student portal, login, student sign in, grades, assignments, secure login">
+
+
     <title>Login - Student Portal</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
 </head>
@@ -22,7 +29,7 @@
             <p class="card-subtitle">Please enter your details to sign in</p>
 
             <!-- Error Message -->
-            <div class="error-message" th:if="${error}" th:text="${error}" style="display: block;"></div>
+            <div class="error-message" th:if="${error}" th:text="${error}"></div>
 
             <!-- Login Form -->
             <form action="/" method="post">
@@ -37,8 +44,6 @@
                     <input type="password" id="password" name="password" class="form-input"
                         placeholder="Enter your password" required>
                 </div>
-
-
 
                 <button type="submit" class="btn btn-primary">Sign in</button>
             </form>

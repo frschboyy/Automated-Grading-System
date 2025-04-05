@@ -1,3 +1,5 @@
+/* global alert */
+
 // Fetch submissions
 function fetchSubmissions() {
     fetch("/submissions/existing")
@@ -24,7 +26,7 @@ function fetchSubmissions() {
                 `;
 
                 const button = document.createElement("button");
-                button.classList.add("btn-checkGrade");
+                button.classList.add("btn-check-grade");
                 button.textContent = "View Evaluation";
 
                 button.addEventListener("click", () => {

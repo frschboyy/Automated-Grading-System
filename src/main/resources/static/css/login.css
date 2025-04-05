@@ -146,5 +146,5 @@ body {
     border-radius: 8px;
     margin-bottom: 1rem;
     font-size: 0.875rem;
-    display: none;
+    display: block;
 }

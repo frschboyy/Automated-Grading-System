@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description"
+        content="Student dashboard for viewing and managing assignments in the grading system. Students can view upcoming assignments and track their submitted assignments.">
+    <meta name="keywords"
+        content="student dashboard, assignment grading, upcoming assignments, submitted assignments, grading system, student portal">
+
     <title>Student Dashboard - Assignment Grading System</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
 </head>
@@ -13,7 +20,7 @@
         <div class="header-content">
             <div class="subheader">
                 <h4 class="welcome">Welcome <span th:text="${username}"></span></h4>
-                <button class="btn-primary logout-button" onclick="logout()">Logout</button>
+                <button class="btn-primary logout-button">Logout</button>
             </div>
             <h1>Student Dashboard</h1>
         </div>

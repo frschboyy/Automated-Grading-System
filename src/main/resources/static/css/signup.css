@@ -137,6 +137,11 @@ body {
     text-decoration: none;
 }
 
+.signup-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
 .terms-text a:hover {
     text-decoration: underline;
 }
@@ -166,11 +171,6 @@ body {
     margin-top: 2rem;
     color: var(--text-light);
     font-size: 0.875rem;
-}
-
-.signup-footer a {
-    color: var(--primary-color);
-    text-decoration: none;
 }
 
 .signup-footer a:hover {

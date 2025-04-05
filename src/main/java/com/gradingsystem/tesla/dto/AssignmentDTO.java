@@ -16,15 +16,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AssignmentDTO {
 
-    /** Assignment ID. */
     private Long id;
-
-    /** Title of the assignment. */
     private String title;
-
-    /** Description of the assignment. */
     private String description;
-
-    /** Due date for the assignment. */
     private String dueDate;
 }

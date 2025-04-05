@@ -13,15 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SubmissionDTO {
 
-    // Default access modifier: package-private
-    String studentName;
-
-    // Default access modifier: package-private
-    String studentEmail;
-
-    // Default access modifier: package-private
-    Long assignmentId;
-
-    // Default access modifier: package-private
-    Long studentId;
+    private String studentName;
+    private String studentEmail;
+    private Long assignmentId;
+    private Long studentId;
 }

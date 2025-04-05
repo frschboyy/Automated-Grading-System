@@ -14,12 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EvaluationDetails {
 
-    // Default access modifier: package-private
-    int grade;
-
-    // Default access modifier: package-private
-    int plagiarismScore;
-
-    // Default access modifier: package-private
-    Map<String, String> results;
+    private int grade;
+    private int plagiarismScore;
+    private Map<String, String> results;
 }

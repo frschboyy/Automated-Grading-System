@@ -4,11 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+@SuppressWarnings("all")
 @Configuration
 public class AppConfig {
-
-    public AppConfig() {
-    }
 
     @Bean
     public RestTemplate restTemplate() {

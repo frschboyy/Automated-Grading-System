@@ -27,9 +27,6 @@ public class LoginController {
     @Value("${admin.password}")
     private String adminPassword;
 
-    public LoginController() {
-    }
-
     @GetMapping("/")
     public String showLoginPage(final HttpSession session, HttpServletResponse response) {
         String view;

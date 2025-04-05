@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @PropertySource(value = "classpath:.env", ignoreResourceNotFound = true)
-@SuppressWarnings("UseUtilityClass")
+@SuppressWarnings("all")
 public class TeslaApplication {
 
     public static void main(final String[] args) {

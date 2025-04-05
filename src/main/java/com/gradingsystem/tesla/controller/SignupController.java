@@ -23,9 +23,6 @@ public class SignupController {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
 
-    public SignupController() {
-    }
-
     @GetMapping("/signup")
     public String showSignupPage(final HttpSession session, final Model model) {
         String view;

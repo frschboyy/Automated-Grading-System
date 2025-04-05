@@ -29,7 +29,6 @@ import com.gradingsystem.tesla.service.TextExtraction;
 
 import jakarta.servlet.http.HttpSession;
 
-@SuppressWarnings("UnnecessaryImport")
 @RestController
 @RequestMapping("/api/assignments")
 public class AssignmentController {

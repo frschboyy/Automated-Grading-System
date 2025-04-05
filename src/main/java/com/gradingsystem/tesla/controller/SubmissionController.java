@@ -1,7 +1,7 @@
 package com.gradingsystem.tesla.controller;
 
-import com.gradingsystem.tesla.DTO.EvaluationDetails;
-import com.gradingsystem.tesla.DTO.SubmissionDTO;
+import com.gradingsystem.tesla.dto.EvaluationDetails;
+import com.gradingsystem.tesla.dto.SubmissionDTO;
 import com.gradingsystem.tesla.model.Assignment;
 import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.model.Student;
@@ -39,7 +39,7 @@ public class SubmissionController {
     private final DocumentSubmissionRepository documentSubmissionRepository;
     private final AssignmentRepository assignmentRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(SubmissionController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmissionController.class);
 
     @Autowired
     public SubmissionController(
@@ -126,14 +126,14 @@ public class SubmissionController {
 
                 // Evaluate based on rubric
                 rubricText = new String(rubric, StandardCharsets.UTF_8);
-                logger.debug("enteringEvalRubric");
+                LOGGER.debug("enteringEvalRubric");
                 evaluationResults = gradingService.evaluateAnswersWithRubric(answerToQuestion, rubricText);
             } else {
 
                 // Evaluate without rubric
-                logger.debug("enteringEvalNoRubric");
+                LOGGER.debug("enteringEvalNoRubric");
                 evaluationResults = gradingService.evaluateAnswersWithoutRubric(answerToQuestion);
-                logger.debug("results: " + evaluationResults.toString());
+                LOGGER.debug("results: " + evaluationResults.toString());
             }
 
             // Iterate through the map and print each key-value pair
@@ -200,8 +200,8 @@ public class SubmissionController {
         session.setAttribute("grade", details.getGrade());
         session.setAttribute("plagiarism", details.getPlagiarismScore());
         session.setAttribute("results", details.getResults());
-        logger.debug("Added to session");
-        logger.debug("Evaluation Details 123:" + details.getResults());
+        LOGGER.debug("Added to session");
+        LOGGER.debug("Evaluation Details 123:" + details.getResults());
         System.out.println("Added to session");
 
         // Return HTTP 200 - OK response

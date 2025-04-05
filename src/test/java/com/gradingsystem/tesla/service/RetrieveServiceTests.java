@@ -12,8 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.gradingsystem.tesla.DTO.EvaluationDetails;
-import com.gradingsystem.tesla.DTO.SubmissionDTO;
+import com.gradingsystem.tesla.dto.EvaluationDetails;
+import com.gradingsystem.tesla.dto.SubmissionDTO;
 import com.gradingsystem.tesla.model.*;
 import com.gradingsystem.tesla.repository.DocumentSubmissionRepository;
 import com.gradingsystem.tesla.service.RetrieveEvaluationService;

@@ -3,7 +3,7 @@
 document.getElementById("assignment-form").addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
 
-    const assignmentName = document.getElementById("assignment-mame").value.trim();
+    const assignmentName = document.getElementById("assignment-name").value.trim();
     const dueDate = document.getElementById("due-date").value; // No need to trim date
     const description = document.getElementById("description").value.trim();
     const uploadFile = document.getElementById("upload-file")?.files[0];

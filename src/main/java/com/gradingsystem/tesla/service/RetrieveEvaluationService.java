@@ -1,6 +1,6 @@
 package com.gradingsystem.tesla.service;
 
-import com.gradingsystem.tesla.DTO.EvaluationDetails;
+import com.gradingsystem.tesla.dto.EvaluationDetails;
 import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.repository.DocumentSubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;

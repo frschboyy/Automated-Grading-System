@@ -44,11 +44,3 @@ jobs:
           path: |
             megalinter-reports
             mega-linter.log
-
-      - name: Commit and push fixes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        if: steps.ml.outputs.has_updated_sources == '1'
-        with:
-          commit_message: "[MegaLinter] Auto-fix applied"
-          commit_user_name: "megalinter-bot"
-          commit_user_email: "megalinter-bot@example.com"

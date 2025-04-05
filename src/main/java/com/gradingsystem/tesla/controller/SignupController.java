@@ -44,8 +44,8 @@ public class SignupController {
         if (student.getUsername() == null || student.getPassword() == null) {
             return "redirect:/signup?error=Invalid input";
         }
-        //  Verify Email Format
-        if (!validateEmail(student.getEmail())){
+        // Verify Email Format
+        if (!validateEmail(student.getEmail())) {
             return "redirect:/signup?error=Invalid email";
         }
         try {
@@ -66,10 +66,10 @@ public class SignupController {
         }
     }
 
-    private boolean validateEmail(String email){
+    private boolean validateEmail(String email) {
         String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
         Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
-        
+
         if (email == null) {
             return false;
         }

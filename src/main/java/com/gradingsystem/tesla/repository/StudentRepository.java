@@ -1,6 +1,5 @@
 package com.gradingsystem.tesla.repository;
 
-
 import com.gradingsystem.tesla.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class Message {
 
     private String role;
-    private String content;//prompt
+    private String content;// prompt
 }

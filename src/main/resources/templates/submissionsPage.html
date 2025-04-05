@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Submission List - Grading System</title>
-        <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
-    </head>
-    <body>
-        <header class="header">
-            <div class="header-content">
-                <div class="subheader">
-                    <!-- Back To Dashboard Button -->
-                    <button class="btn-primary" onclick="window.location.href = '/';">Dashboard</button>
-                </div>
-                <h1><span th:text="${title}"></span></h1>
-            </div>
-        </header>
 
-        <div class="container">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission List - Grading System</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
+</head>
 
-            <!-- Submissions List-->
-            <div class="card">
-                <h2 class="card-title">Submissions</h2>
-                <ul class="submission-list">
-                    <!-- Dynamic content -->
-                </ul>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="subheader">
+                <!-- Back To Dashboard Button -->
+                <button class="btn-primary" onclick="window.location.href = '/';">Dashboard</button>
             </div>
+            <h1><span th:text="${title}"></span></h1>
         </div>
+    </header>
 
-        <script type="text/javascript" th:src="@{/js/submissions.js}"></script>
-    </body>
+    <div class="container">
+
+        <!-- Submissions List-->
+        <div class="card">
+            <h2 class="card-title">Submissions</h2>
+            <ul class="submission-list">
+                <!-- Dynamic content -->
+            </ul>
+        </div>
+    </div>
+
+    <script type="text/javascript" th:src="@{/js/submissions.js}"></script>
+</body>
+
 </html>

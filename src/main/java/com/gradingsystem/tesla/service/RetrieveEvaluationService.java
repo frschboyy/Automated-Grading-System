@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RetrieveEvaluationService {
-    
+
     @Autowired
     DocumentSubmissionRepository submissionRepository;
-    
-    public EvaluationDetails getEvaluationDetails(Long assignmentId, Long studentId){
+
+    public EvaluationDetails getEvaluationDetails(Long assignmentId, Long studentId) {
         DocumentSubmission submission = submissionRepository.findByAssignmentIdAndStudentId(assignmentId, studentId);
-        
+
         return EvaluationDetails.builder()
                 .plagiarismScore(submission.getSimilarityScore())
                 .grade(submission.getGrade())

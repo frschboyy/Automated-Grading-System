@@ -21,11 +21,11 @@ public class RetrieveSubmissions {
         // Map DocumentSubmission entities to SubmissionDTO
         return submissions.stream()
                 .map(submission -> SubmissionDTO.builder()
-                .studentName(submission.getStudent().getUsername())
-                .studentEmail(submission.getStudent().getEmail())
-                .assignmentId(submission.getAssignment().getId())
-                .studentId(submission.getStudent().getId())
-                .build())
+                        .studentName(submission.getStudent().getUsername())
+                        .studentEmail(submission.getStudent().getEmail())
+                        .assignmentId(submission.getAssignment().getId())
+                        .studentId(submission.getStudent().getId())
+                        .build())
                 .collect(Collectors.toList());
     }
 }

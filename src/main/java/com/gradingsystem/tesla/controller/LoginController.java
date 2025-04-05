@@ -27,7 +27,8 @@ public class LoginController {
         Student loggedInStudent = (Student) session.getAttribute("loggedInStudent");
         Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
 
-        // If session exists (either student or admin is logged in), redirect to dashboard
+        // If session exists (either student or admin is logged in), redirect to
+        // dashboard
         if (loggedInStudent != null || (isAdmin != null && isAdmin)) {
             return "redirect:/dashboard";
         }
@@ -52,7 +53,7 @@ public class LoginController {
         Student student = studentService.getStudent(username);
 
         if (student != null && student.getPassword().equals(password)) {
-            
+
             // Store the student in the session
             session.setAttribute("loggedInStudent", student);
             session.setAttribute("id", student.getId());

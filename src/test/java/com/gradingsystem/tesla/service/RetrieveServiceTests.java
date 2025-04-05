@@ -43,13 +43,13 @@ public class RetrieveServiceTests {
         mockSubmission.setGrade(85);
         mockSubmission.setSimilarityScore(30);
         mockSubmission.setEvaluationResults(Map.of("clarity", "good", "depth", "excellent"));
-        
+
         Student student = new Student();
         student.setId(1L);
         student.setUsername("John Doe");
         student.setEmail("johndoe@example.com");
         mockSubmission.setStudent(student);
-        
+
         Assignment assignment = new Assignment();
         assignment.setId(100L);
         mockSubmission.setAssignment(assignment);
@@ -60,10 +60,10 @@ public class RetrieveServiceTests {
     void testGetEvaluationDetails() {
         // Mock repository response
         when(submissionRepository.findByAssignmentIdAndStudentId(100L, 1L)).thenReturn(mockSubmission);
-        
+
         // Call service method
         EvaluationDetails evaluationDetails = retrieveEvaluationService.getEvaluationDetails(100L, 1L);
-        
+
         // Verify results
         assertNotNull(evaluationDetails);
         assertEquals(85, evaluationDetails.getGrade());
@@ -76,10 +76,10 @@ public class RetrieveServiceTests {
     void testGetSubmissions() {
         // Mock repository response
         when(submissionRepository.findByAssignmentId(100L)).thenReturn(List.of(mockSubmission));
-        
+
         // Call service method
         List<SubmissionDTO> submissions = retrieveSubmissions.getSubmissions(100L);
-        
+
         // Verify results
         assertNotNull(submissions);
         assertEquals(1, submissions.size());
@@ -94,7 +94,7 @@ public class RetrieveServiceTests {
     void testGetEvaluationDetails_SubmissionNotFound() {
         // Mock repository returning null
         when(submissionRepository.findByAssignmentIdAndStudentId(200L, 2L)).thenReturn(null);
-        
+
         // Call service method and assert exception
         assertThrows(NullPointerException.class, () -> retrieveEvaluationService.getEvaluationDetails(200L, 2L));
     }
@@ -104,10 +104,10 @@ public class RetrieveServiceTests {
     void testGetSubmissions_NoSubmissions() {
         // Mock repository returning empty list
         when(submissionRepository.findByAssignmentId(300L)).thenReturn(Collections.emptyList());
-        
+
         // Call service method
         List<SubmissionDTO> submissions = retrieveSubmissions.getSubmissions(300L);
-        
+
         // Verify that the result is empty
         assertNotNull(submissions);
         assertTrue(submissions.isEmpty());

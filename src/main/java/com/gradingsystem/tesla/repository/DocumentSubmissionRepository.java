@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DocumentSubmissionRepository extends JpaRepository<DocumentSubmission, Long> {    
+public interface DocumentSubmissionRepository extends JpaRepository<DocumentSubmission, Long> {
     List<DocumentSubmission> findByAssignmentId(Long assignmentId);
-    
+
     List<DocumentSubmission> findByStudentId(Long studentId);
 
     DocumentSubmission findByAssignmentIdAndStudentId(Long assignmentId, Long studentId);

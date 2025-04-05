@@ -1,6 +1,5 @@
 package com.gradingsystem.tesla.DTO;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

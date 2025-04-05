@@ -17,4 +17,3 @@ public class SubmissionDTO {
     Long assignmentId;
     Long studentId;
 }
-

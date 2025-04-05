@@ -1,6 +1,5 @@
 package com.gradingsystem.tesla.model;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

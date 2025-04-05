@@ -27,21 +27,20 @@ public class AssignmentController {
     private final TextExtraction textExtraction;
     private final AssignmentService assignmentService;
     private final RetrieveEvaluationService retrievalService;
-    
+
     private static final Logger logger = LoggerFactory.getLogger(AssignmentController.class);
 
     @Autowired
     public AssignmentController(
             AssignmentService assignmentService,
             RetrieveEvaluationService retrievalService,
-            TextExtraction textExtraction) 
-    {
+            TextExtraction textExtraction) {
         this.assignmentService = assignmentService;
         this.retrievalService = retrievalService;
         this.textExtraction = textExtraction;
     }
 
-    //  Fetch unsubmitted assignments
+    // Fetch unsubmitted assignments
     @GetMapping("/upcoming")
     public List<Assignment> getUnsubmittedAssignments(HttpSession session) {
         Long studentId = (Long) session.getAttribute("id");
@@ -49,14 +48,14 @@ public class AssignmentController {
         return assignmentService.getUpcomingAssignments(studentId);
     }
 
-    //  Fetch submitted assignments
+    // Fetch submitted assignments
     @GetMapping("/submitted")
     public List<Assignment> getSubmittedAssignments(HttpSession session) {
         Long studentId = (Long) session.getAttribute("id");
         return assignmentService.getSubmittedAssignments(studentId);
     }
-    
-    //  Fetch all assignments
+
+    // Fetch all assignments
     @GetMapping("/all")
     public List<Assignment> getAllAssignments() {
         return assignmentService.getAllAssignments();
@@ -131,7 +130,8 @@ public class AssignmentController {
     @PostMapping("/pushEvaluationDetails")
     public ResponseEntity<Void> saveEvaluationDetails(@RequestParam Long assignmentId, HttpSession session) {
         // Fetch evaluation details
-        EvaluationDetails details = retrievalService.getEvaluationDetails(assignmentId, (Long) session.getAttribute("id"));
+        EvaluationDetails details = retrievalService.getEvaluationDetails(assignmentId,
+                (Long) session.getAttribute("id"));
 
         // Save data
         session.setAttribute("grade", details.getGrade());

@@ -26,7 +26,7 @@ function fetchSubmissions() {
                 const button = document.createElement("button");
                 button.classList.add("btn-checkGrade");
                 button.textContent = "View Evaluation";
-                
+
                 button.addEventListener("click", () => {
                     goToEvaluation(submission.assignmentId, submission.studentId);
                 });

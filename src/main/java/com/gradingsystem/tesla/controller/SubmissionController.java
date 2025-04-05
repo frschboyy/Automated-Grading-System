@@ -98,12 +98,12 @@ public class SubmissionController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//
-//                // Check if plagiarism score exceeds thresholds
-//                if (plagiarismScore >= 0.95) {
-//                    return ResponseEntity.status(HttpStatus.CONFLICT)
-//                            .body(Map.of("error", "Duplicate submission detected for this assignment."));
-//                }
+                //
+                // // Check if plagiarism score exceeds thresholds
+                // if (plagiarismScore >= 0.95) {
+                // return ResponseEntity.status(HttpStatus.CONFLICT)
+                // .body(Map.of("error", "Duplicate submission detected for this assignment."));
+                // }
             }
 
             // logging purposes
@@ -157,36 +157,42 @@ public class SubmissionController {
                     .evaluationResults(evaluationResults)
                     .build();
 
-            System.out.println("Assignment: " + assignment.getId() + ", " + assignment.getTitle() + ", " + assignment.getDescription());
-            System.out.println("Student: " + student.getId() + ", " + student.getUsername() + ", " + student.getEmail());
+            System.out.println("Assignment: " + assignment.getId() + ", " + assignment.getTitle() + ", "
+                    + assignment.getDescription());
+            System.out
+                    .println("Student: " + student.getId() + ", " + student.getUsername() + ", " + student.getEmail());
             System.out.println("Grade: " + percentage);
             DecimalFormat numberFormat = new DecimalFormat("#.00");
             System.out.println("PlagiarismScore: " + plagiarismScore);
             System.out.println("SubmissionText: " + newSubmission);
             System.out.println("HashValue: " + newSubmissionHash);
-            System.out.println("SubmissionBytes: " + Arrays.toString(newSubmission.getBytes(StandardCharsets.UTF_8)) + "\n\n");
+            System.out.println(
+                    "SubmissionBytes: " + Arrays.toString(newSubmission.getBytes(StandardCharsets.UTF_8)) + "\n\n");
 
             documentSubmissionRepository.save(submission);
 
             if (plagiarismScore < 0.8) {
-                return ResponseEntity.ok(Map.of("message", "Submission Processed", "score", String.valueOf(percentage)));
+                return ResponseEntity
+                        .ok(Map.of("message", "Submission Processed", "score", String.valueOf(percentage)));
             } else {
-                return ResponseEntity.ok(Map.of("message", "Submission Processed: Plagiarism Detected!", "Similarity Score", String.valueOf(numberFormat.format(plagiarismScore * 100))));
+                return ResponseEntity.ok(Map.of("message", "Submission Processed: Plagiarism Detected!",
+                        "Similarity Score", String.valueOf(numberFormat.format(plagiarismScore * 100))));
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
-    
-    //  Fetch existing submissions for an assignment
+
+    // Fetch existing submissions for an assignment
     @GetMapping("/existing")
     public List<SubmissionDTO> getSubmissions(HttpSession session) {
         Long assignmentId = (Long) session.getAttribute("assignmentId");
-        return retrieveSubmissionService.getSubmissions(assignmentId);    
+        return retrieveSubmissionService.getSubmissions(assignmentId);
     }
-    
+
     @PostMapping("/pushEvaluationDetails")
-    public ResponseEntity<Void> saveEvaluationDetails(@RequestParam Long assignmentId, @RequestParam Long studentId, HttpSession session) {
+    public ResponseEntity<Void> saveEvaluationDetails(@RequestParam Long assignmentId, @RequestParam Long studentId,
+            HttpSession session) {
         // Fetch evaluation details
         EvaluationDetails details = retrievalService.getEvaluationDetails(assignmentId, studentId);
 

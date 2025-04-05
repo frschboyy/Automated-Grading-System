@@ -53,7 +53,7 @@ class LoginControllerTest extends BaseIntegrationTest {
 
         // When: Accessing login page
         mockMvc.perform(get("/").session(session))
-                .andExpect(status().isFound())  // 302 Redirect
+                .andExpect(status().isFound()) // 302 Redirect
                 .andExpect(redirectedUrl("/dashboard"));
     }
 
@@ -66,7 +66,7 @@ class LoginControllerTest extends BaseIntegrationTest {
 
         // When: Accessing login page
         mockMvc.perform(get("/").session(session))
-                .andExpect(status().isFound())  // 302 Redirect
+                .andExpect(status().isFound()) // 302 Redirect
                 .andExpect(redirectedUrl("/dashboard"));
     }
 
@@ -85,7 +85,7 @@ class LoginControllerTest extends BaseIntegrationTest {
                 .session(session))
 
                 // Then: Expect redirect to dashboard
-                .andExpect(status().isFound())  
+                .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/dashboard"));
 
         // Verify session attributes
@@ -101,12 +101,12 @@ class LoginControllerTest extends BaseIntegrationTest {
         MockHttpSession session = new MockHttpSession();
         mockMvc.perform(post("/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("username", "admin")  // Defined in application.properties
+                .param("username", "admin") // Defined in application.properties
                 .param("password", "admin") // Ensure this matches your @Value properties
                 .session(session))
 
                 // Then: Expect redirect to dashboard
-                .andExpect(status().isFound())  
+                .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/dashboard"));
 
         // Verify session attributes
@@ -126,7 +126,7 @@ class LoginControllerTest extends BaseIntegrationTest {
                 .param("password", "wrongpassword"))
 
                 // Then: Stay on login page with error message
-                .andExpect(status().isOk())  
+                .andExpect(status().isOk())
                 .andExpect(view().name("login"))
                 .andExpect(model().attribute("error", "Invalid username or password"));
     }
@@ -141,7 +141,7 @@ class LoginControllerTest extends BaseIntegrationTest {
                 .param("password", "password"))
 
                 // Then: Stay on login page with error message
-                .andExpect(status().isOk())  
+                .andExpect(status().isOk())
                 .andExpect(view().name("login"))
                 .andExpect(model().attribute("error", "Invalid username or password"));
     }

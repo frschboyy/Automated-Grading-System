@@ -155,19 +155,22 @@ input[type="file"] {
 }
 
 #loader {
-    border: 6px solid #f3f3f3; /* Light grey */
-    border-top: 6px solid #3498db; /* Blue */
+    border: 6px solid #f3f3f3;
+    /* Light grey */
+    border-top: 6px solid #3498db;
+    /* Blue */
     border-radius: 50%;
     width: 40px;
     height: 40px;
     animation: spin 2s linear infinite;
-    display:none;
+    display: none;
 }
 
 @keyframes spin {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -177,15 +180,17 @@ input[type="file"] {
     .main-content {
         padding: 1.5rem;
     }
+
     .form-group {
         margin-bottom: 1.25rem;
     }
+
     .form-control {
         font-size: 0.95rem;
     }
+
     .btn {
         padding: 0.75rem;
         font-size: 0.95rem;
     }
 }
-

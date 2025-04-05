@@ -22,7 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Assignment {
-        
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +30,7 @@ public class Assignment {
     private String title;
     private String description;
     private LocalDateTime dueDate;
-    
+
     @Lob
     @Column(nullable = true, columnDefinition = "LONGBLOB")
     private byte[] rubric; // Extracted answer document

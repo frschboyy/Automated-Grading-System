@@ -44,7 +44,7 @@ class SignupControllerApiTest extends BaseIntegrationTest {
                 .content(requestBody))
 
                 // Then: Expect HTTP 302 Redirect to /dashboard
-                .andExpect(status().isFound())  // 302 Found (Redirect)
+                .andExpect(status().isFound()) // 302 Found (Redirect)
                 .andExpect(redirectedUrl("/dashboard"));
     }
 
@@ -61,7 +61,7 @@ class SignupControllerApiTest extends BaseIntegrationTest {
                 .content(requestBody))
 
                 // Then: Expect HTTP 302 Redirect to /signup?error=...
-                .andExpect(status().isFound())  // 302 Found (Redirect)
+                .andExpect(status().isFound()) // 302 Found (Redirect)
                 .andExpect(redirectedUrlPattern("/signup?error=*"));
     }
 
@@ -78,7 +78,7 @@ class SignupControllerApiTest extends BaseIntegrationTest {
                 .content(requestBody))
 
                 // Then: Expect HTTP 302 Redirect to /signup?error=...
-                .andExpect(status().isFound())  // 302 Found (Redirect)
+                .andExpect(status().isFound()) // 302 Found (Redirect)
                 .andExpect(redirectedUrlPattern("/signup?error=*"));
     }
 
@@ -94,7 +94,7 @@ class SignupControllerApiTest extends BaseIntegrationTest {
                 .content(requestBody))
 
                 // Then: Expect HTTP 302 Redirect to /signup?error=...
-                .andExpect(status().isFound())  // 302 Found (Redirect)
+                .andExpect(status().isFound()) // 302 Found (Redirect)
                 .andExpect(redirectedUrlPattern("/signup?error=*"));
     }
 }

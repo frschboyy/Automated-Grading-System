@@ -92,4 +92,13 @@ public class AssignmentService {
     public List<Assignment> getAllAssignments() {
         return assignmentRepository.findAll();
     }
+
+    public boolean deleteAssignmentById(Long id) {
+        if (assignmentRepository.existsById(id)) {
+            assignmentRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

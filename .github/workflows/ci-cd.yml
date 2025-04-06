@@ -81,13 +81,13 @@ jobs:
           else
             latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
             # Extract the major, minor, and patch versions
-            major_minor=$(echo $latest_tag | awk -F. '{print $1"."$2}')  # e.g., v1.0
+            major=$(echo $latest_tag | awk -F. '{print $1}' | sed 's/^v//')  # Remove 'v' from major version
             minor=$(echo $latest_tag | awk -F. '{print $2}')
             patch=$(echo $latest_tag | awk -F. '{print $3}')
 
             # Increment the minor version
             new_minor=$((minor + 1))
-            new_tag="$major_minor.$new_minor.0"  # Reset patch to 0 and increment minor
+            new_tag="v$major.$new_minor.0"  # Reset patch to 0 and increment minor
           fi
 
           echo "new_tag=$new_tag" >> $GITHUB_ENV

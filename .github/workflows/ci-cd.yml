@@ -67,14 +67,15 @@ jobs:
         run: |
           git config user.name "Github Actions"
           git config user.email "actions@github.com"
-
+      
       - name: Create Git Tag for Versioning
-      - name: Push Code to Production Branch
         run: |
           VERSION_TAG="v1.0-${{ github.run_number }}"
           git tag $VERSION_TAG
           git push origin $VERSION_TAG
-          
+
+      - name: Push Code to Production Branch
+        run: |
           git fetch origin
           git checkout -B production
           git push origin production --force

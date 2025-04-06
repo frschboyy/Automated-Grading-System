@@ -44,4 +44,4 @@ out/
 
 megalinter-reports/
 node_modules/
-.env
+.env file

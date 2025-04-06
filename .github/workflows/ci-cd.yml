@@ -68,11 +68,20 @@ jobs:
           git config user.name "Github Actions"
           git config user.email "actions@github.com"
       
-      - name: Create Git Tag for Versioning
+      - name: Generate new version tag
+        id: versioning
         run: |
-          VERSION_TAG="v1.0-${{ github.run_number }}"
-          git tag $VERSION_TAG
-          git push origin $VERSION_TAG
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          base_version=$(echo $latest_tag | awk -F. '{print $1"."$2}')
+          patch=$(echo $latest_tag | awk -F. '{print $3}')
+          new_patch=$((patch + 1))
+          new_tag="$base_version.$new_patch"
+          echo "new_tag=v$new_tag" >> $GITHUB_ENV
+
+      - name: Create and push tag
+        run: |
+          git tag $new_tag
+          git push origin $new_tag
 
       - name: Push Code to Production Branch
         run: |
@@ -103,4 +112,4 @@ jobs:
         with:
           files: build/libs/*.jar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKE N: ${{ secrets.GITHUB_TOKEN }}

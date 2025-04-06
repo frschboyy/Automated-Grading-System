@@ -118,6 +118,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Grant execute permission to Gradle wrapper
+        run: chmod +x ./gradlew
+        
       - name: Build with Gradle
         run: ./gradlew bootJar
 

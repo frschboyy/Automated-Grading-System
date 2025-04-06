@@ -105,6 +105,8 @@ jobs:
     name: Create GitHub Release
     needs: deploy  # This will run after the `deploy` job succeeds
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # ✅ This is required for creating releases
     env:
       new_tag: ${{ needs.deploy.outputs.new_tag }}
 

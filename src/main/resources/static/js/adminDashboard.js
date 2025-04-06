@@ -1,4 +1,6 @@
 /* global alert */
+/* global confirm */
+
 
 // Fetch and display upcoming assignments
 function fetchAllAssignments () {

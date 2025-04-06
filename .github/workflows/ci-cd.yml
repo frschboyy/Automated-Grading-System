@@ -56,6 +56,8 @@ jobs:
     needs: test  # Only runs if tests pass
     if: ${{ success() && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Code
@@ -65,16 +67,14 @@ jobs:
         run: |
           git config user.name "Github Actions"
           git config user.email "actions@github.com"
-      
-      - name: Create Git Tag for Versioning
-        run: |
-          VERSION_TAG="v1.0-${{ github.run_number }}"
-          git tag $VERSION_TAG
-          git push origin $VERSION_TAG
 
       - name: Create Git Tag for Versioning
       - name: Push Code to Production Branch
         run: |
+          VERSION_TAG="v1.0-${{ github.run_number }}"
+          git tag $VERSION_TAG
+          git push origin $VERSION_TAG
+          
           git fetch origin
           git checkout -B production
           git push origin production --force

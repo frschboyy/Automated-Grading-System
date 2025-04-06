@@ -1,17 +1,7 @@
 package com.gradingsystem.tesla.model;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapKeyColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,9 +25,10 @@ public class DocumentSubmission {
     @JoinColumn(name = "student_id") // Foreign Key Column
     private Student student;
 
-    @ManyToOne
-    @JoinColumn(name = "assignment_id") // Foreign Key Column
-    private Assignment assignment;
+    @ManyToOne()
+    @JoinColumn(name = "assignment_id", nullable = false, foreignKey = @ForeignKey(name = "FKkc7avf6jcqtj1qodcb3n9ijr3")) // Foreign Key Column
+    private Assignment assignment; // Foreign Key Column
+
 
     @Lob
     @Column(nullable = false, columnDefinition = "LONGBLOB")

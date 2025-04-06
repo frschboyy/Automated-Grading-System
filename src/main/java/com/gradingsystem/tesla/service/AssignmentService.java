@@ -2,8 +2,10 @@ package com.gradingsystem.tesla.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -93,12 +95,15 @@ public class AssignmentService {
         return assignmentRepository.findAll();
     }
 
+    @Transactional
     public boolean deleteAssignmentById(Long id) {
-        if (assignmentRepository.existsById(id)) {
-            assignmentRepository.deleteById(id);
+        Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
+        if (assignmentOptional.isPresent()) {
+            Assignment assignment = assignmentOptional.get();
+            documentSubmissionRepository.deleteAllByAssignment(assignment);
+            assignmentRepository.delete(assignment);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }

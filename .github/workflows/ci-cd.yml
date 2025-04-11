@@ -137,3 +137,26 @@ jobs:
           files: build/libs/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  health-check:
+    name: Post-Deployment Health Check
+    needs: deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+
+      - name: Wait for 2 minutes
+        run: |
+          echo "Waiting 2 minutes for app to stabilize..."
+          sleep 120
+
+      - name: Check Production Health Endpoint
+        run: |
+          echo "Checking health of deployed app..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://grading-system-te3s.onrender.com/health)
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Health check failed with status code $STATUS"
+            exit 1
+          else
+            echo "Health check passed (200 OK)"
+          fi

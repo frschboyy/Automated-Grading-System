@@ -58,3 +58,5 @@ src/main/resources/.env
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+src\main\resources\automated-grading-system-a2ac0-firebase-adminsdk-fbsvc-8d54be5e6c.json

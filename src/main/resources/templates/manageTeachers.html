@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Manage Teachers</title>
+    <link rel="stylesheet" th:href="@{/css/adminManagement.css}" />
+    <link rel="stylesheet" th:href="@{/css/removeTeacher.css}" />
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Institution Admin</h2>
+            <a th:href="@{/institution-admin}">Home</a>
+            <a th:href="@{/institution-admin/manage-teachers}">Manage Teachers</a>
+            <a th:href="@{/institution-admin/manage-courses}">Manage Courses</a>
+            <a th:href="@{/institution-admin/manage-students}">Manage Students</a>
+        </div>
+        <div class="content">
+            <h1>Manage Teachers</h1>
+
+            <h2>Teachers List</h2>
+            <table class="table-view">
+                <thead>
+                    <tr>
+                        <th>Registration ID</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="teacher : ${teachers}">
+                        <td th:text="${teacher.registrationId}"></td>
+                        <td th:text="${teacher.email}"></td>
+                        <td th:text="${teacher.firstName + ' ' + teacher.lastName}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-section">
+                <h2>Add Teacher</h2>
+                <form th:action="@{/institution-admin/manage-teachers/add}" method="post">
+                    <input type="text" name="registrationId" placeholder="Registration ID" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="text" name="firstName" placeholder="First Name" required>
+                    <input type="text" name="middleName" placeholder="Middle Name">
+                    <input type="text" name="lastName" placeholder="Last Name" required>
+                    <button type="submit">Add Teacher</button>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h2>Remove Teacher</h2>
+                <input type="text" id="registrationId" placeholder="Teacher Registration ID" required>
+                <button type="button" class="btn btn-danger" onclick="removeTeacher()">Remove Teacher</button>
+            </div>
+
+            <!-- Confirmation dialog (hidden initially) -->
+            <div id="confirmDialog" class="form-section" style="display:none;">
+                <p id="confirmText"></p>
+                <button type="button" class="btn btn-warning" onclick="unassignAndRemove()">Mark All Courses Unassigned
+                    & Remove</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelRemove()">Cancel</button>
+            </div>
+
+            <div class="form-section">
+                <h2>Assign Teacher to Course</h2>
+                <form th:action="@{/institution-admin/manage-teachers/assign-course}" method="post">
+                    <input type="text" name="registrationId" placeholder="Teacher Registration ID" required>
+                    <select name="courseId" required>
+                        <option th:each="course : ${courses}" th:value="${course.id}"
+                            th:text="${course.name + ' (' + course.courseCode + ')'}"></option>
+                    </select>
+                    <button type="submit">Assign</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Unassign Teacher from Course</h2>
+            <form th:action="@{/institution-admin/manage-teachers/unassign}" method="post">
+                <select name="courseId" required>
+                    <option th:each="course : ${assignedCourses}" th:value="${course.id}"
+                        th:text="${course.name + ' (' + course.courseCode + ')' + 
+                             (course.teacher != null ? ' - ' + course.teacher.firstName + ' ' + course.teacher.lastName : ' - No Teacher')}">
+                    </option>
+                </select>
+                <button type="submit" class="btn btn-warning">Unassign Teacher</button>
+            </form>
+        </div>
+
+    </div>
+    <script type="text/javascript" th:src="@{/js/manageTeachers.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tabs.js}"></script>
+</body>
+
+</html>

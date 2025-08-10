@@ -12,9 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubmissionDTO {
-
-    private String studentName;
-    private String studentEmail;
-    private Long assignmentId;
+    private Long submissionId;
     private Long studentId;
+    private String StudentRegistrationId;
+    private String studentName;
+    private String dateSubmitted;
 }

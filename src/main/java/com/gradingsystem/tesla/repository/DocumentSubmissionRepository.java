@@ -2,6 +2,8 @@ package com.gradingsystem.tesla.repository;
 
 import com.gradingsystem.tesla.model.Assignment;
 import com.gradingsystem.tesla.model.DocumentSubmission;
+import com.gradingsystem.tesla.model.User;
+
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +16,11 @@ public interface DocumentSubmissionRepository extends JpaRepository<DocumentSubm
 
     DocumentSubmission findByAssignmentIdAndStudentId(Long assignmentId, Long studentId);
 
-    DocumentSubmission findByAssignmentIdAndStudentIdAndHashValue(Long assignmentId, Long studentId, String hashValue);
+    // DocumentSubmission findByAssignmentIdAndStudentIdAndHashValue(Long assignmentId, Long studentId, String hashValue);
 
     void deleteAllByAssignment(Assignment assignment);
+
+    DocumentSubmission findByStudentAndAssignment(User student, Assignment assignment);
+
+    DocumentSubmission findByStudent(User student);
 }

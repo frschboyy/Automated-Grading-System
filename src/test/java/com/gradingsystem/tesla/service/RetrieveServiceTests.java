@@ -16,7 +16,7 @@ import com.gradingsystem.tesla.dto.EvaluationDetails;
 import com.gradingsystem.tesla.dto.SubmissionDTO;
 import com.gradingsystem.tesla.model.*;
 import com.gradingsystem.tesla.repository.DocumentSubmissionRepository;
-import com.gradingsystem.tesla.service.RetrieveEvaluationService;
+import com.gradingsystem.tesla.service.ManageEvaluationService;
 import com.gradingsystem.tesla.service.RetrieveSubmissions;
 
 import java.util.*;
@@ -29,7 +29,7 @@ public class RetrieveServiceTests {
     private DocumentSubmissionRepository submissionRepository;
 
     @InjectMocks
-    private RetrieveEvaluationService retrieveEvaluationService;
+    private ManageEvaluationService retrieveEvaluationService;
 
     @InjectMocks
     private RetrieveSubmissions retrieveSubmissions;
@@ -44,9 +44,9 @@ public class RetrieveServiceTests {
         mockSubmission.setSimilarityScore(30);
         mockSubmission.setEvaluationResults(Map.of("clarity", "good", "depth", "excellent"));
 
-        Student student = new Student();
+        User student = new User();
         student.setId(1L);
-        student.setUsername("John Doe");
+        // student.setUsername("John Doe");
         student.setEmail("johndoe@example.com");
         mockSubmission.setStudent(student);
 

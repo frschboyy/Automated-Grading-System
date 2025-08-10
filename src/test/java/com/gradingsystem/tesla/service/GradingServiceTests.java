@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-import com.gradingsystem.tesla.service.CohereGradingService;
+import com.gradingsystem.tesla.service.notUsedService.CohereGradingService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

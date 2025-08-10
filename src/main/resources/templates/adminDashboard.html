@@ -1,40 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Meta Tags for SEO -->
-    <meta name="description"
-        content="Admin dashboard for managing assignments in the grading system. Admins can view existing assignments, create new ones, and manage the assignment grading process.">
-    <meta name="keywords"
-        content="admin dashboard, assignment grading, assignment management, grading system, create assignment, admin portal, view assignments">
-    <title>Admin Dashboard - Assignment Grading System</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
+    <title>System Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adminDashboard.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logout.css}">
+
 </head>
 
 <body>
-<header class="header">
-    <div class="header-content">
-        <h1 class="dashboard-title">Admin Dashboard</h1>
-        <h4 class="welcome center">Welcome, Admin</h4>
-        <button class="btn-primary logout-button right">Logout</button>
-    </div>
-</header>
-    <div class="container">
-        <div class="action">
-            <!-- Floating New Assignment Button -->
-            <button class="btn-primary" onclick="window.location.href = '/assignment-creation';"
-                    aria-label="Create a new assignment">New Assignment</button>
+    <div class="dashboard-container">
+        <!-- Logout form -->
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+
+        <!-- </form> -->
+        <h1 class="dashboard-title">System Admin Dashboard</h1>
+
+        <div class="card-grid">
+            <a th:href="@{/admin/manage-institutions}" class="card">
+                <h2>🏫 Manage Institutions</h2>
+                <p>Add and manage institutions in the system.</p>
+            </a>
+
+            <div class="card disabled">
+                <h2>📊 View Analytics</h2>
+                <p>Coming soon...</p>
+            </div>
         </div>
-        <!-- Assignments -->
-        <div class="card">
-            <h2 class="card-title">Assignments</h2>
-            <ul class="assignment-list">
-                <!-- Dynamic content will be injected here -->
-            </ul>
-        </div>
     </div>
-    <script type="text/javascript" th:src="@{/js/logout.js}"></script>
-    <script type="text/javascript" th:src="@{/js/adminDashboard.js}"></script>
 </body>
+
 </html>

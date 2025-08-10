@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institution Admin Dashboard</title>
+    <!-- <link rel="stylesheet" type="text/css" th:href="@{/css/adminDashboard.css}"> -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logout.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adminManagement.css}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Institution Admin</h2>
+            <a th:href="@{/institution-admin}">Home</a>
+            <a th:href="@{/institution-admin/manage-teachers}">Manage Teachers</a>
+            <a th:href="@{/institution-admin/manage-courses}">Manage Courses</a>
+            <a th:href="@{/institution-admin/manage-students}">Manage Students</a>
+        </div>
+        <div class="dashboard-container">
+            <!-- Home Title -->
+            <h1 class="dashboard-title">🏠</h1>
+            <h1 class="dashboard-title">Institution Admin Dashboard</h1>
+
+            <!-- Logout form -->
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/tabs.js}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+/* Confirmation Dialog */
+#confirmDialog {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #f5c6cb;
+    background-color: #f8d7da;
+    border-radius: 5px;
+    display: none;
+}
+
+#confirmDialog p {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #721c24;
+}
+
+/* Buttons for dialog */
+#confirmDialog .btn {
+    margin-right: 10px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#confirmDialog .btn-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+#confirmDialog .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+#confirmDialog .btn:hover {
+    opacity: 0.9;
+}
+
+/* Red styling for the Remove Teacher button */
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}

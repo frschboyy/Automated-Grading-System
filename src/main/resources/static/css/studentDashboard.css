@@ -1,0 +1,114 @@
+/* Reuse sidebar, card, list, buttons from teacher-dashboard.css */
+
+/* Add Course Form */
+.add-course-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 20px;
+    max-width:max-content;
+}
+
+.add-course-form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.btn-add {
+    width: 100%;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.btn-add:hover {
+    background: #218838;
+}
+
+/* Assignment Item */
+.assignment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    background-color: #f9f9f9;
+}
+
+.assignment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-width: 70%;
+}
+
+.assignment-info h4 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.assignment-description {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.assignment-due-date {
+    margin: 0;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.assignment-action {
+    flex-shrink: 0;
+}
+
+.selected-course {
+    background-color: #495057;
+    font-weight: bold;
+    border-left: 4px solid #2a9df4;
+    transition: background-color 0.2s ease;
+}
+
+.selected-course-summary {
+    padding: 1rem;
+    background: #f7f7f7;
+    border-left: 4px solid #2a9df4;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+}
+.selected-course-summary h4 {
+    margin: 0;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.selected-course-summary p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.download-link {
+    color: #007bff;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+.download-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}

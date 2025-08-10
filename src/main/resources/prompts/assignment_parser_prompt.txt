@@ -1,0 +1,32 @@
+Role: You are an information extraction assistant.
+
+Task:
+Extract all questions from the given teacher assignment document and return them in a structured JSON format.
+
+Instructions:
+1. Preserve exact wording of each question as it appears in the document.
+2. Determine the question number for each question:
+- If a question number is explicitly given in the document (e.g., "1", "1a", "2.ii"), use it exactly and store it in a field called "questionNumber".
+- If a question number is missing, infer one relative to surrounding numbered questions:
+    - If it appears between questions 2 and 4, assign "3".
+    - For sub-questions (a., b., i., ii., etc.), infer based on context (e.g., if "1.a" exists and the next unlabeled sub-question follows logically, assign "1.b").
+    - If numbering context is ambiguous, assign the next logical number incrementally.
+- Preserve the original ordering of questions based on their numbers and positions in the text.
+3. Classify each question as one of:
+- "objective" → factual, definitional, short-answer, or closed-ended questions
+- "subjective" → open-ended, opinion-based, essay, explanation-based, or case-study questions
+4. Scoring:
+- Suggest a "maxScore" based on the perceived difficulty of the question, unless the document explicitly states the score.
+
+Output format (JSON only):
+[
+{
+    "questionNumber": "<associated or inferred number>",
+    "question": "<exact question text>",
+    "type": "<objective|subjective>",
+    "maxScore": <integer>
+}
+]
+
+Text:
+%s

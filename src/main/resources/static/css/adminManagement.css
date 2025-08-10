@@ -1,0 +1,176 @@
+/* Reset and base styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f8f9fa;
+}
+
+/* Layout */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    background: #343a40;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.sidebar a:hover {
+    background: #495057;
+}
+
+/* Content area */
+.content,
+.dashboard-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* dashboard-container has some width constraint & center alignment */
+.dashboard-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+/* Headings */
+h1,
+h2 {
+    color: #343a40;
+}
+
+/* Table styles */
+.table-view {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-view th,
+.table-view td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table-view th {
+    background: #e9ecef;
+    text-align: left;
+}
+
+/* Form sections */
+.form-section {
+    margin-top: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Form inputs, selects, and buttons */
+input,
+select,
+button {
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+button {
+    background: #007bff;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Special button variants */
+.btn-danger {
+    background: #dc3545;
+}
+
+.btn-danger:hover {
+    background: #a71d2a;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background: #d39e00;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #565e64;
+}
+
+/* Logout button style (used on dashboard) */
+.logout-button {
+    background: #dc3545;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background: #a71d2a;
+}
+
+/* Messages (assumed used in JS for createTeacherMessage, etc.) */
+.message {
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.message.success {
+    color: green;
+}
+
+.message.error {
+    color: red;
+}
+
+a.active {
+    font-weight: bold;
+    pointer-events: none;
+    color: gray; 
+    cursor: default;
+    text-decoration: none;
+}

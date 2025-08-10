@@ -1,8 +1,8 @@
 package com.gradingsystem.tesla.controller;
 
 import com.gradingsystem.tesla.BaseIntegrationTest;
-import com.gradingsystem.tesla.model.Student;
-import com.gradingsystem.tesla.repository.StudentRepository;
+import com.gradingsystem.tesla.model.User;
+import com.gradingsystem.tesla.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class SignupControllerApiTest extends BaseIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private StudentRepository studentRepository;
+    private UserRepository studentRepository;
 
     @BeforeEach
     void setUp() {
@@ -52,7 +52,7 @@ class SignupControllerApiTest extends BaseIntegrationTest {
     @Test
     void shouldFailSignupWhenUsernameAlreadyExists() throws Exception {
         // Given: A user already exists in the database
-        studentRepository.save(new Student(null, "teststudent", "test@example.com", "password"));
+        studentRepository.save(new User(null, "teststudent", "test@example.com", "password"));
 
         // When: Sending a POST request with the same username
         String requestBody = "username=teststudent&email=newemail@example.com&password=NewPass123";
@@ -69,7 +69,7 @@ class SignupControllerApiTest extends BaseIntegrationTest {
     @Test
     void shouldFailSignupWhenEmailAlreadyExists() throws Exception {
         // Given: A user already exists with the same email
-        studentRepository.save(new Student(null, "uniqueuser", "test@example.com", "password"));
+        studentRepository.save(new User(null, "uniqueuser", "test@example.com", "password"));
 
         // When: Sending a POST request with the same email
         String requestBody = "username=newstudent&email=test@example.com&password=NewPass123";

@@ -19,9 +19,7 @@ public class TextExtraction {
     public String extractTextFromPDF(InputStream inputStream) throws Exception {
         try (PDDocument document = PDDocument.load(inputStream)) {
             PDFTextStripper textStripper = new PDFTextStripper();
-            String text = textStripper.getText(document);
-            String normalizedText = text.toLowerCase().replaceAll("\\s+", " ").trim();
-            return normalizedText;
+            return textStripper.getText(document);
         } catch (IOException e) {
             throw new RuntimeException("Failed to extract text from PDF document");
         }
@@ -34,9 +32,7 @@ public class TextExtraction {
             for (XWPFParagraph paragraph : document.getParagraphs()) {
                 text.append(paragraph.getText()).append("\n");
             }
-            // Normalize text: Convert text to lowercase and remove extra spaces
-            String normalizedText = text.toString().toLowerCase().replaceAll("\\s+", " ").trim();
-            return normalizedText;
+            return text.toString();
         } catch (IOException e) {
             throw new RuntimeException("Failed to extract text from Word document");
         }
@@ -59,20 +55,20 @@ public class TextExtraction {
             throw new IllegalArgumentException("Unsupported file type");
         }
 
-        // Clean and normalize the extracted text
-        String cleanText = cleanText(extractedText);
-        return cleanText;
+        // Normalize the extracted text
+        // extractedText = cleanText(extractedText);
+        return extractedText;
     }
 
-    private String cleanText(String text) {
+    public String cleanText(String text) {
         if (text == null) {
             return "";
         }
 
-        // Remove non-printable characters and extra spaces
-        text = text.replaceAll("\\p{C}", "") // Remove control characters
-                .replaceAll("\\s+", " ") // Replace multiple whitespaces with a single space
-                .trim(); // Trim leading and trailing whitespace
+        text = text.toLowerCase()
+                .replaceAll("\\p{C}", "") // Remove control characters
+                .replaceAll("[\\t\\x0B\\f\\r]+", " ") // Normalize horizontal whitespace
+                .trim();
 
         return ensureUTF8(text);
     }

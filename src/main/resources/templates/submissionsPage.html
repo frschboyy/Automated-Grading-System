@@ -1,41 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Submit assignment in the GradeAi grading system.">
+    <meta name="keywords" content="assignment submission, grading system, GradeAi">
 
-    <!-- Meta Tags for SEO -->
-    <meta name="description" content="View assignment submissions in the GradeAi grading system.">
-    <meta name="keywords" content="submission list, grading system, student submissions, GradeAi">
-
-    <title>Submission List - Grading System</title>
+    <title>Submit Assignment - GradeAi</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
 </head>
 
 <body>
     <header class="header">
         <div class="header-content">
-            <div class="subheader">
-                <!-- Back To Dashboard Button -->
-                <button class="btn-primary" onclick="window.location.href = '/';">Dashboard</button>
-            </div>
-            <h1><span th:text="${title}"></span></h1>
+            <button class="btn-primary" onclick="window.location.href='/dashboard'">Dashboard</button>
         </div>
     </header>
 
     <div class="container">
-
-        <!-- Submissions List-->
         <div class="card">
-            <h2 class="card-title">Submissions</h2>
-            <ul class="submission-list">
-                <!-- Dynamic content -->
+            <h1 th:text="${assignmentTitle}">Loading...</h1>
+            <p th:text="${assignmentDescription}">Fetching assignment details...</p>
+            <p><strong>Due Date:</strong>
+                <span th:text="${dueDate}">N/A</span>
+            </p>
+        </div>
+
+        <div class="card upload-section">
+            <h2>Upload Your Submission</h2>
+            <div class="upload-zone">Click or Drag & Drop file here</div>
+            <input type="file" id="file-input" style="display:none" />
+            <div id="file-list"></div>
+            <button id="submit-btn" class="btn btn-primary">Submit</button>
+            <div id="loader" style="display:none">Submitting...</div>
+        </div>
+        <div class="card">
+            <h2>Submission Guidelines</h2>
+            <ul class="guidelines-list">
+                <li>File format: PDF, DOC, or DOCX only</li>
+                <li>Maximum file size: 10MB</li>
+                <li>Include your student ID in the filename</li>
+                <li>One submission allowed per assignment</li>
             </ul>
         </div>
     </div>
-
-    <script type="text/javascript" th:src="@{/js/submissions.js}"></script>
+    <script th:src="@{/js/submission.js}"></script>
 </body>
 
 </html>

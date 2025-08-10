@@ -1,0 +1,29 @@
+Role: You are an information extraction assistant.
+
+Tasks:
+Extract all question–answer pairs from the given student assignment submission text and return them in structured JSON format.
+
+Instructions:
+1. Preserve the exact wording of each question and its corresponding answer as they appear.
+2. Determine the question number for each question:
+- If a question number is explicitly given in the submission (e.g., "1", "2", "3a"), use it exactly.
+- If a question number is missing, infer one relative to surrounding numbered questions:
+    - If it appears after question 2 and before question 4, assign "3".
+    - For sub-questions (a., b., etc.), infer based on context (e.g., if "1.a" is present and next unlabeled question is likely "1.b", assign accordingly).
+    - If numbering context is ambiguous, assign the next logical number incrementally.
+3. Preserve order as in the document.
+4. If an answer is missing for a question or sub-question, set answer = "".
+
+Output format (valid JSON):
+[
+{
+"questionNumber": "<string, inferred if missing>",
+"question": "<exact question text>",
+"answer": "<exact answer text or empty string>"
+}
+]
+
+If no questions are found, return an empty array.
+
+Text:
+%s

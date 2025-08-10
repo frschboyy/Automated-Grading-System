@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Admin page to register and manage institutions for GradeAi.">
+    <meta name="keywords" content="admin, institutions, GradeAi, register, manage">
+
+    <title>Manage Institutions</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/manageInstitution.css}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title">Register New Institution</h2>
+            <p class="card-subtitle">Fill in the details below to add an institution</p>
+
+            <div th:if="${error}" class="error-message" id="error-message">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form th:action="@{/admin/register-institution}" method="post">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label class="form-label" for="name">Institution Name <span
+                                class="required-star">*</span></label>
+                        <input type="text" id="name" name="name" class="form-input" placeholder="Enter institution name"
+                            required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="email">Institution Admin Email <span
+                                class="required-star">*</span></label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="admin@example.edu"
+                            required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="emailDomain">Email Domain (optional)</label>
+                        <input type="text" id="emailDomain" name="emailDomain" class="form-input"
+                            placeholder="example.edu">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="inviteCode">Invite Code (optional)</label>
+                        <input type="text" id="inviteCode" name="inviteCode" class="form-input"
+                            placeholder="Enter invite code">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="verificationMode">Verification Mode <span
+                                class="required-star">*</span></label>
+                        <select id="verificationMode" name="verificationMode" class="form-input form-select" required>
+                            <option value="EMAIL_DOMAIN">Email Domain</option>
+                            <option value="INVITE_CODE">Invite Code</option>
+                            <option value="EMAIL_AND_CODE">Email Domain + invite Code</option>
+                            <option value="ADMIN_APPROVAL">Admin Approval</option>
+                            <option value="OPEN">Open</option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Save Institution</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Registered Institutions</h2>
+            <table class="form-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Admin Email</th>
+                        <th>Email Domain</th>
+                        <th>Invite Code</th>
+                        <th>Verification Mode</th>
+                    </tr>
+                </thead>
+                <tbody id="institutionList">
+                    <!-- Populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="back">
+            <a href="/dashboard">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" th:src="@{/js/manageInstitution.js}"></script>
+
+</html>

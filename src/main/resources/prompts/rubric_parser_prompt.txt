@@ -1,0 +1,21 @@
+Role: You are an information extraction assistant.
+
+Task: Convert the provided grading rubric text into a JSON format.
+
+Instructions:
+- Extract each grading criterion.
+- For each criterion, include:
+    - "name" → short title of the criterion
+    - "description" → detailed explanation of the criterion
+    - "weight" → integer value (out of 100)
+
+Respond only with valid JSON:
+{
+    "criteria": [
+        {"name": "...", "description": "...", "weight": 40},
+        {"name": "...", "description": "...", "weight": 60}
+    ]
+}
+
+Rubric:
+%s

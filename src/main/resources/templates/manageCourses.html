@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Manage Courses</title>
+    <link rel="stylesheet" th:href="@{/css/adminManagement.css}" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Institution Admin</h2>
+            <a th:href="@{/institution-admin}">Home</a>
+            <a th:href="@{/institution-admin/manage-teachers}">Manage Teachers</a>
+            <a th:href="@{/institution-admin/manage-courses}">Manage Courses</a>
+            <a th:href="@{/institution-admin/manage-students}">Manage Students</a>
+        </div>
+        <div class="content">
+            <h1>Manage Courses</h1>
+
+            <h2>Courses List</h2>
+            <table class="table-view">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Name</th>
+                        <th>Assigned Teacher</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="course : ${courses}">
+                        <td th:text="${course.courseCode}"></td>
+                        <td th:text="${course.name}"></td>
+                        <td
+                            th:text="${course.teacher != null ? (course.teacher.firstName + ' ' + course.teacher.lastName + ' (' + course.teacher.registrationId + ')') : 'Unassigned'}">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-section">
+                <h2>Add Course</h2>
+                <form th:action="@{/institution-admin/manage-courses/add}" method="post">
+                    <input type="text" name="code" placeholder="Course Code" required>
+                    <input type="text" name="name" placeholder="Course Name" required>
+                    <button type="submit">Add Course</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/tabs.js}"></script>
+
+</body>
+
+</html>

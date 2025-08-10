@@ -1,8 +1,8 @@
 package com.gradingsystem.tesla.controller;
 
 import com.gradingsystem.tesla.BaseIntegrationTest;
-import com.gradingsystem.tesla.model.Student;
-import com.gradingsystem.tesla.repository.StudentRepository;
+import com.gradingsystem.tesla.model.User;
+import com.gradingsystem.tesla.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -28,7 +28,7 @@ class LoginControllerTest extends BaseIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private StudentRepository studentRepository;
+    private UserRepository studentRepository;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +47,7 @@ class LoginControllerTest extends BaseIntegrationTest {
     @Test
     void shouldRedirectToDashboardWhenAlreadyLoggedIn() throws Exception {
         // Given: A logged-in student in session
-        Student student = studentRepository.save(new Student(null, "testuser", "test@example.com", "password"));
+        User student = studentRepository.save(new User(null, "testuser", "test@example.com", "password"));
         MockHttpSession session = new MockHttpSession();
         session.setAttribute("loggedInStudent", student);
 
@@ -74,7 +74,7 @@ class LoginControllerTest extends BaseIntegrationTest {
     @Test
     void shouldLoginStudentSuccessfully() throws Exception {
         // Given: A student exists in the database
-        Student student = studentRepository.save(new Student(null, "testuser", "test@example.com", "password"));
+        User student = studentRepository.save(new User(null, "testuser", "test@example.com", "password"));
 
         // When: Logging in with correct credentials
         MockHttpSession session = new MockHttpSession();
@@ -90,7 +90,7 @@ class LoginControllerTest extends BaseIntegrationTest {
 
         // Verify session attributes
         assertThat(session.getAttribute("loggedInStudent")).isNotNull();
-        assertThat(((Student) session.getAttribute("loggedInStudent")).getUsername()).isEqualTo("testuser");
+        assertThat(((User) session.getAttribute("loggedInStudent")).getUsername()).isEqualTo("testuser");
         assertThat(session.getAttribute("id")).isEqualTo(student.getId());
     }
 
@@ -117,7 +117,7 @@ class LoginControllerTest extends BaseIntegrationTest {
     @Test
     void shouldFailLoginWithWrongPassword() throws Exception {
         // Given: A student exists
-        studentRepository.save(new Student(null, "testuser", "test@example.com", "password"));
+        studentRepository.save(new User(null, "testuser", "test@example.com", "password"));
 
         // When: Logging in with incorrect password
         mockMvc.perform(post("/")

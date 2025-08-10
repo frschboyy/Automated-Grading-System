@@ -2,10 +2,12 @@ package com.gradingsystem.tesla.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -27,11 +29,34 @@ public class Assignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private LocalDateTime dueDate;
 
-    @Lob
-    @Column(nullable = true, columnDefinition = "LONGBLOB")
-    private byte[] rubric; // Extracted answer document
+    // Firebase file path or public URL    
+    private String rubricFileUrl;
+    private String assignmentFileUrl;
+
+    private int rubricWeight;
+    
+    // Parsed Rubric file stored in JSON format
+    @Column(columnDefinition = "TEXT")
+    private String parsedRubricJson;
+
+    // Parsed Assignment file stored in JSON format
+    @Column(columnDefinition = "TEXT")
+    private String parsedAssignmentQuestions;
+
+    // Associated course
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
+    // Audit Fields
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

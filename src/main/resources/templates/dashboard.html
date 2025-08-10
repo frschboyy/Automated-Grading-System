@@ -4,51 +4,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Student dashboard for managing courses, upcoming and submitted assignments.">
+    <meta name="keywords" content="student dashboard, assignments, courses, grading system">
+    <title>Student Dashboard</title>
 
-    <!-- Meta Tags for SEO -->
-    <meta name="description"
-        content="Student dashboard for viewing and managing assignments in the grading system. Students can view upcoming assignments and track their submitted assignments.">
-    <meta name="keywords"
-        content="student dashboard, assignment grading, upcoming assignments, submitted assignments, grading system, student portal">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <title>Student Dashboard - Assignment Grading System</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/teacherDashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/studentDashboard.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logout.css}">
 </head>
 
 <body>
-    <header class="header">
-        <div class="header-content">
-            <h1>Student Dashboard</h1>
-            <div class="subheader">
-                <h4 class="welcome">Welcome <span th:text="${username}"></span></h4>
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="sidebar-title">Your Courses</h2>
+
+            <!-- Add Course Form -->
+            <form id="addCourseForm" th:action="@{/api/student/courses/enroll}" method="post" class="add-course-form">
+                <input id="courseCode" type="text" name="courseCode" placeholder="Enter Course Code" required>
+                <button type="submit" class="btn-add">Add</button>
+            </form>
+
+            <!-- Course List -->
+            <ul class="course-list">
+                <li id="noCourseSelectedMsg" th:if="${#lists.isEmpty(courses)}">No courses enrolled</li>
+                <li th:each="course : ${courses}">
+                    <a href="#" th:attr="data-id=${course.id}, 
+                                data-code=${course.courseCode}, 
+                                data-name=${course.name}">
+                        <h4><b th:text="${course.courseCode}">Code</b></h4>
+                        <!-- <i th:text="${course.name}">Name</i> -->
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Logout -->
+            <div class="sidebar-logout">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
             </div>
-            <button class="btn-primary logout-button">Logout</button>
+        </aside>
 
-        </div>
-    </header>
+        <!-- Content -->
+        <main class="content">
+            <h2 id="selectedCourseName" class="selected-course-name">
+                Select a course to view assignments
+            </h2>
 
-    <div class="container">
-
-        <!-- Upcoming Assignments -->
-        <div class="card">
-            <h2 class="card-title">Upcoming Assignments</h2>
-            <ul class="assignment-list">
-                <!-- Dynamic content will be injected here -->
-            </ul>
-        </div>
-
-        <!-- Submitted Assignments -->
-        <div class="card">
-            <h2 class="card-title">Submitted Assignments</h2>
-            <ul class="submission-list">
-                <!-- Dynamic content will be injected here -->
-            </ul>
-        </div>
-
+            <div id="courseContent">
+                <div id="assignments-container"></div>
+            </div>
+        </main>
     </div>
 
-    <script type="text/javascript" th:src="@{/js/logout.js}"></script>
-    <script type="text/javascript" th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/studentDashboard.js}"></script>
 </body>
 
 </html>

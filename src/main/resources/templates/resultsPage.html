@@ -1,52 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluation Results</title>
+    <link rel="stylesheet" th:href="@{/css/results.css}" />
 
-    <!-- Meta Tags for SEO -->
-    <meta name="description"
-        content="Grade report page displaying evaluation results, plagiarism check report, and detailed grade breakdown for assignments in the grading system.">
-    <meta name="keywords"
-        content="grade report, assignment results, grading system, plagiarism check, grade breakdown, evaluation results">
-
-    <title>Grade Report</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/results.css}">
 </head>
 
 <body>
-    <div class="report-container">
-        <h1>Assignment Results</h1>
-        <div class="section">
-            <div class="section-title">Evaluation Results</div>
-            <!-- Dynamically populate the grade from the session -->
-            <p id="grade">Grade: <span th:text="${grade}">Loading...</span></p>
-        </div>
-        <div class="section">
-            <div class="section-title">Plagiarism Check Report</div>
-            <p>Similarity Score: <span id="similarity-score" class="plagiarism-score"
-                    th:text="${plagiarism}">Loading...</span></p>
-        </div>
-        <div class="section grade-breakdown">
-            <div class="section-title">Grade Breakdown</div>
-            <table id="breakdown-table">
-                <thead>
-                    <tr>
-                        <th>Question</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Iterate over the results map -->
-                    <tr th:each="entry : ${results}">
-                        <td th:text="${entry.key}">Question</td>
-                        <td th:text="${entry.value}">Score</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="back-button">
+        <a href="/dashboard">&larr; Back to Dashboard</a>
+    </div>
+
+    <div class="assignment-header">
+        <h2 th:text="${assignmentTitle}">Assignment Title</h2>
+        <p th:text="${assignmentDescription}">Assignment description goes here...</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>Score</th>
+                <th>Max</th>
+                <th>Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="result : ${results}" th:onclick="'showModal(' + ${result.questionNumber} + ')'">
+                <td th:text="${result.questionNumber}"></td>
+                <td th:text="${result.question}"></td>
+                <td th:text="${result.answer}"></td>
+                <td th:text="${result.score}"></td>
+                <td th:text="${result.maxScore}"></td>
+                <td th:text="${result.feedback}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Modal Popup Template -->
+    <div th:each="result : ${results}" th:id="'modal-' + ${result.questionNumber}" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal(this)">&times;</span>
+            <h3>Evaluation Details</h3>
+
+            <div class="field"><span class="label">Question:</span>
+                <p th:text="${result.question}"></p>
+            </div>
+            <div class="field"><span class="label">Answer:</span>
+                <p th:text="${result.answer}"></p>
+            </div>
+            <div class="field"><span class="label">Score:</span> <span th:text="${result.score}"></span> / <span
+                    th:text="${result.maxScore}"></span></div>
+            <div class="field"><span class="label">Feedback:</span>
+                <p th:text="${result.feedback}"></p>
+            </div>
         </div>
     </div>
+    <script type="text/javascript" th:src="@{/js/results.js}"></script>
+
 </body>
 
 </html>

@@ -1,16 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Meta Tags for SEO -->
-    <meta name="description"
-        content="Sign up page for GradeAi, an assignment grading system. Create an account to access your grades, assignments, and other academic resources.">
-    <meta name="keywords"
-        content="signup, create account, student portal, GradeAi, academic portal, assignment grading, student registration">
-
+    <meta name="description" content="Sign up page for GradeAi, an assignment grading system.">
+    <meta name="keywords" content="signup, GradeAi, student registration">
     <title>Sign Up - GradeAi</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/signup.css}">
 </head>
@@ -21,44 +16,97 @@
             <div class="logo">GA</div>
             <h1>GradeAi</h1>
         </div>
-        <div class="card">
+
+        <!-- Signup Form -->
+        <div class="card" id="signup-card">
             <h2 class="card-title">Create an Account</h2>
             <p class="card-subtitle">Enter your details to get started</p>
-            <div id="error-message" class="error-message">
-                Please correct the errors in the form before proceeding.
-            </div>
-            <form action="/signup" method="post">
+
+            <!-- Error message container -->
+            <div id="error-message" class="error-message" style="display:none;"></div>
+
+            <form id="signup-form" th:object="${student}">
                 <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label class="form-label" for="username">Username</label>
-                        <input type="text" id="username" name="username" class="form-input"
-                            placeholder="Enter your full name" required>
-                    </div>
-                    <div class="form-group full-width">
-                        <label class="form-label" for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email"
-                            required>
-                    </div>
                     <div class="form-group">
-                        <label class="form-label" for="password">Password</label>
-                        <input type="password" id="password" name="password" class="form-input"
-                            placeholder="Create a password" required>
+                        <label for="firstName" class="form-label">First Name <span
+                                class="required-star">*</span></label>
+                        <input type="text" th:field="*{firstName}" id="firstName" class="form-input"
+                            placeholder="Enter your first name">
                     </div>
+
                     <div class="form-group">
-                        <label class="form-label" for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" name="confirm-password" class="form-input"
-                            placeholder="Confirm your password" required>
+                        <label for="middleName" class="form-label">Middle Name</label>
+                        <input type="text" th:field="*{middleName}" id="middleName" class="form-input"
+                            placeholder="Enter your middle name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName" class="form-label">Last Name <span class="required-star">*</span></label>
+                        <input type="text" th:field="*{lastName}" id="lastName" class="form-input"
+                            placeholder="Enter your last name">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="email" class="form-label">Email <span class="required-star">*</span></label>
+                        <input type="email" th:field="*{email}" id="email" class="form-input"
+                            placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="institutionId" class="form-label">Institution <span
+                                class="required-star">*</span></label>
+                        <select th:field="*{institutionId}" id="institutionId" class="form-input form-select">
+                            <option value="">Select your institution</option>
+                            <option th:each="inst : ${institutions}" th:value="${inst.id}" th:text="${inst.name}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="registrationId" class="form-label">Registration ID <span
+                                class="required-star">*</span></label>
+                        <input type="text" th:field="*{registrationId}" id="registrationId" class="form-input"
+                            placeholder="Enter your registration ID" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="inviteCode" class="form-label">Invitation Code (Optional)</label>
+                        <input type="text" id="inviteCode" name="inviteCode" class="form-input"
+                            placeholder="Enter invitation code (if applicable)">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="password" class="form-label">Password <span class="required-star">*</span></label>
+                        <input type="password" th:field="*{password}" id="password" class="form-input"
+                            placeholder="Create a password">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="confirmPassword" class="form-label">Confirm Password <span
+                                class="required-star">*</span></label>
+                        <input type="password" th:field="*{confirmPassword}" id="confirmPassword" class="form-input"
+                            placeholder="Confirm your password">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Create Account</button>
             </form>
         </div>
+
+        <!-- OTP Section (Initially Hidden) -->
+        <div id="otp-section" class="card" style="display:none; margin-top: 20px;">
+            <h2>Verify Your Email</h2>
+            <p>We sent a code to your email. Please enter it below.</p>
+            <input type="text" id="otp-code" placeholder="Enter OTP" required>
+            <button type="button" id="verify-otp-btn" class="btn btn-primary">Verify</button>
+            <div id="otp-error" class="error-message" style="display:none;">Invalid OTP. Try again.</div>
+        </div>
+
         <div class="signup-footer">
-            Already have an account? <a href="/">Sign in</a>
+            Already have an account? <a href="/login">Sign in</a>
         </div>
     </div>
 
-    <script type="text/javascript" th:src="@{/js/validation.js}"></script>
+    <script type="text/javascript" th:src="@{/js/signup.js}"></script>
 </body>
 
 </html>

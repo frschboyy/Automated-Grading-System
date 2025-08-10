@@ -1,0 +1,488 @@
+/* ===========================
+   BASE & GLOBAL STYLES
+=========================== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f8f9fa;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ===========================
+   LAYOUT: MAIN & SIDEBAR
+=========================== */
+.main-layout {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: #343a40;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-top: 20px;
+}
+
+.sidebar-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.course-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px;
+    list-style: none;
+}
+
+.course-list li {
+    margin-bottom: 10px;
+}
+
+.course-list a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    border-radius: 4px;
+}
+
+.course-list a:hover {
+    background: #495057;
+}
+
+.sidebar-logout {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    background-color: #464d53;
+    border-top: 0.5px solid #f8f9fa75;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+.header {
+    padding: 20px;
+    background: #343a40;
+    color: white;
+    text-align: center;
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* ===========================
+   CONTENT AREA
+=========================== */
+.content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.selected-course-name {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: #343a40;
+}
+
+/* ===========================
+   CARDS
+=========================== */
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ===========================
+   LISTS
+=========================== */
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ===========================
+   ASSIGNMENT ITEMS
+=========================== */
+.assignment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background 0.2s ease;
+}
+
+.assignment-item:hover {
+    background: #f1f3f5;
+}
+
+.assignment-item h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: #343a40;
+}
+
+.assignment-item p {
+    margin: 0 0 8px 0;
+    font-size: 0.95rem;
+    color: #495057;
+    max-width: 400px;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+
+    line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+.assignment-item small {
+    display: inline-block;
+    padding: 3px 8px;
+    background: #ffeeba;
+    color: #856404;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* ===========================
+   ASSIGNMENT FORM
+=========================== */
+.assignment-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.assignment-form h3 {
+    grid-column: 1 / -1;
+    margin-bottom: 10px;
+    color: #343a40;
+    font-size: 1.4rem;
+}
+
+.assignment-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.assignment-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.assignment-form input,
+.assignment-form textarea,
+.assignment-form select {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.assignment-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.assignment-form .form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+.btn-primary,
+.btn-view,
+.btn-edit,
+.btn-delete,
+.btn-submit,
+.btn-cancel,
+.btn-secondary {
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+/* Primary button */
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* View button */
+.btn-view {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-view:hover {
+    background: #117a8b;
+}
+
+/* Edit button */
+.btn-edit {
+    background: #ffc107;
+    color: #343a40;
+}
+
+.btn-edit:hover {
+    background: #e0a800;
+}
+
+/* Delete button */
+.btn-delete {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+
+/* Submit button */
+.btn-submit {
+    background: #28a745;
+    color: white;
+    padding: 8px 16px;
+}
+
+.btn-submit:hover {
+    background: #218838;
+}
+
+/* Cancel & Secondary buttons */
+.btn-cancel,
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-cancel:hover,
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* ===========================
+   MODALS
+=========================== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.hidden {
+    display: none !important;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.modal-actions {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.modal-actions .btn-primary,
+.modal-actions .btn-secondary {
+    padding: 6px 14px;
+    margin-left: 5px;
+}
+
+/* Improved Edit Modal Styling */
+#editAssignmentModal .modal-content {
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 420px;
+    max-width: 90%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    animation: fadeInScale 0.25s ease-in-out;
+}
+
+#editAssignmentModal h3 {
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #343a40;
+    text-align: center;
+}
+
+#editAssignmentModal form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#editAssignmentModal label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+#editAssignmentModal input,
+#editAssignmentModal textarea {
+    margin-top: 6px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+#editAssignmentModal input:focus,
+#editAssignmentModal textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+#editAssignmentModal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Button adjustments for modal */
+#editAssignmentModal .btn-primary {
+    background: #007bff;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+}
+
+#editAssignmentModal .btn-secondary {
+    background: #6c757d;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+}
+
+/* Smooth open animation */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* ===========================
+   INPUTS (GRADE & FEEDBACK)
+=========================== */
+.grade-input,
+.feedback-input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 0 5px;
+    font-size: 0.9rem;
+}
+
+.grade-input {
+    width: 80px;
+}
+
+.feedback-input {
+    width: 150px;
+}
+
+/* ===========================
+   LINKS
+=========================== */
+.download-link {
+    margin-right: 20px;
+    color: #5a5b5c;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+.download-link:hover {
+    color: #3e3f41;
+}
+
+/* ===========================
+   UTILITY CLASSES
+=========================== */
+a.disabled {
+    pointer-events: none;
+    color: gray;
+    cursor: default;
+    text-decoration: none;
+}
+
+a.active {
+    font-weight: bold;
+}

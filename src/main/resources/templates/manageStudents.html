@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Manage Students</title>
+    <link rel="stylesheet" th:href="@{/css/adminManagement.css}" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Institution Admin</h2>
+            <a th:href="@{/institution-admin}">Home</a>
+            <a th:href="@{/institution-admin/manage-teachers}">Manage Teachers</a>
+            <a th:href="@{/institution-admin/manage-courses}">Manage Courses</a>
+            <a th:href="@{/institution-admin/manage-students}">Manage Students</a>
+        </div>
+        <div class="content">
+            <h1>Manage Students</h1>
+
+            <h2>Approved Students</h2>
+            <table class="table-view">
+                <thead>
+                    <tr>
+                        <th>Registration ID</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="student : ${students}">
+                        <td th:text="${student.registrationId}"></td>
+                        <td th:text="${student.email}"></td>
+                        <td th:text="${student.firstName + ' ' + student.lastName}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Pending Students</h2>
+            <table class="table-view">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="student : ${pendingStudents}">
+                        <td th:text="${student.firstName + ' ' + student.lastName}"></td>
+                        <td th:text="${student.email}"></td>
+                        <td>
+                            <form th:action="@{/institution-admin/manage-students/approve}" method="post"
+                                style="display:inline;">
+                                <input type="hidden" name="studentId" th:value="${student.id}">
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                            <form th:action="@{/institution-admin/manage-students/deny}" method="post"
+                                style="display:inline;">
+                                <input type="hidden" name="studentId" th:value="${student.id}">
+                                <button type="submit" class="btn btn-danger">Deny</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-section">
+                <h2>Add Student</h2>
+                <form th:action="@{/institution-admin/manage-students/add}" method="post">
+                    <input type="text" name="registrationId" placeholder="Registration ID" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="text" name="firstName" placeholder="First Name" required>
+                    <input type="text" name="middleName" placeholder="Middle Name">
+                    <input type="text" name="lastName" placeholder="Last Name" required>
+                    <button type="submit">Add Student</button>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h2>Remove Student</h2>
+                <input type="text" id="studentRegistrationId" placeholder="Student Registration ID" required>
+                <button type="button" class="btn btn-danger" onclick="removeStudent()">Remove Student</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/manageStudents.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tabs.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<div th:fragment="assignmentsFragment">
+    <!-- Upcoming Assignments -->
+    <section class="card">
+        <div class="card-header">
+            <h3>Upcoming Assignments</h3>
+        </div>
+        <ul class="list">
+            <ul class="list">
+                <li th:if="${#lists.isEmpty(upcomingAssignments)}">No upcoming assignments</li>
+                <li th:each="assignment : ${upcomingAssignments}" class="assignment-item">
+                    <a th:href="@{/select-assignment(assignmentId=${assignment.id})}"
+                        style="display: block; width: 100%; text-decoration: none; color: inherit;">
+                        <div class="assignment-info">
+                            <h4 th:text="${assignment.title}"></h4>
+                            <p class="assignment-description" th:text="${assignment.description}"></p>
+                            <p class="assignment-due-date" th:text="'Due: ' + ${assignment.dueDate}"></p>
+                        </div>
+                    </a>
+                    <!-- Add download icon-->
+                    <div class="assignment-actions">
+                        <a th:href="@{/download(file=${assignment.assignmentFileUrl})}" class="download-link">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </ul>
+    </section>
+
+    <!-- Submitted Assignments -->
+    <section class="card">
+        <div class="card-header">
+            <h3>Submitted Assignments</h3>
+        </div>
+        <ul class="list">
+            <li th:if="${#lists.isEmpty(submittedAssignments)}">No submitted assignments</li>
+            <li th:each="assignment : ${submittedAssignments}" class="assignment-item">
+                <a th:href="@{/select-submission(assignmentId=${assignment.id})}"
+                    style="display: block; width: 100%; text-decoration: none; color: inherit;">
+                    <div class="assignment-info">
+                        <h4 th:text="${assignment.title}"></h4>
+                        <p class="assignment-description" th:text="${assignment.description}"></p>
+                        <p class="assignment-due-date" th:text="'Due: ' + ${assignment.dueDate}"></p>
+                    </div>
+                </a>
+                <!-- Add download icon-->
+                <div class="assignment-actions">
+                    <a th:href="@{/download(file=${assignment.assignmentFileUrl})}" class="download-link">
+                        <i class="fas fa-download"></i>
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+    </section>
+</div>

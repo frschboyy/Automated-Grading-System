@@ -1,10 +1,18 @@
 package com.gradingsystem.tesla.controller;
 
-import com.gradingsystem.tesla.model.Student;
+import com.gradingsystem.tesla.dto.AssignmentDTO;
+import com.gradingsystem.tesla.dto.CourseDTO;
+import com.gradingsystem.tesla.service.AssignmentService;
+import com.gradingsystem.tesla.service.UserService;
+import com.gradingsystem.tesla.util.CustomUserDetails;
+
 import jakarta.servlet.http.HttpSession;
-import java.util.Map;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,101 +22,104 @@ public class DashboardController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DashboardController.class);
 
-    @SuppressWarnings("null")
+    private final UserService studentService;
+    private final AssignmentService assignmentService;
+
+    public DashboardController(UserService studentService,
+            AssignmentService assignmentService) {
+        this.studentService = studentService;
+        this.assignmentService = assignmentService;
+    }
+
     @GetMapping("/dashboard")
-    public String showDashboard(final HttpSession session, final Model model) {
-        final Student loggedInStudent = (Student) session.getAttribute("loggedInStudent");
-        final Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-
-        LOGGER.debug("student: " + loggedInStudent + ", admin: " + isAdmin);
-
-        // Initialize the view variable to control which view to return
-        String view;
-
-        // Redirect to login if not authenticated
-        if (loggedInStudent == null && isAdmin == null) {
-            view = "redirect:/";
-        } else if (isAdmin == null) {
-            // Pass the username to the dashboard
-            model.addAttribute("username", loggedInStudent.getUsername());
-            view = "dashboard";
-        } else {
-            view = "adminDashboard";
+    public String showDashboard(@AuthenticationPrincipal CustomUserDetails currentUser, Model model) {
+        if (currentUser == null) {
+            return "redirect:/";
         }
 
-        return view;
+        String userRole = currentUser.getUser().getRole();
+        LOGGER.debug("Logged in user: {}, Role: {}", currentUser.getUsername(), userRole);
+
+        model.addAttribute("username",
+                currentUser.getUser().getFirstName() + " " + currentUser.getUser().getLastName());
+
+        switch (userRole) {
+            case "ADMIN":
+                return "adminDashboard";
+            case "INSTITUTION_ADMIN":
+                return "institutionAdminDashboard";
+            case "TEACHER":
+                return "teacherDashboard";
+            case "STUDENT":
+                return "redirect:/student-dashboard";
+            default:
+                return "redirect:/student-dashboard";
+        }
+    }
+
+    @GetMapping("/student-dashboard")
+    public String getDashboard(@AuthenticationPrincipal CustomUserDetails currentUser,
+            HttpSession session,
+            Model model) {
+        Long studentId = currentUser.getUser().getId();
+
+        // fetch enrolled courses
+        List<CourseDTO> courses = studentService.getCoursesForStudent(studentId);
+        model.addAttribute("courses", courses);
+
+        return "dashboard";
+    }
+
+    @GetMapping("/student-dashboard/assignments")
+    public String getAssignmentsForCourse(@AuthenticationPrincipal CustomUserDetails currentUser,
+            @RequestParam Long courseId,
+            Model model,
+            HttpSession session) {
+        Long studentId = currentUser.getUser().getId();
+        session.setAttribute("courseId", courseId);
+
+        List<AssignmentDTO> upcomingAssignments = assignmentService.getUpcomingAssignmentsForStudentAndCourse(studentId,
+                courseId);
+        List<AssignmentDTO> submittedAssignments = assignmentService
+                .getSubmittedAssignmentsForStudentAndCourse(studentId, courseId);
+
+        // Log fields of each upcoming assignment DTO
+        upcomingAssignments.forEach(dto -> {
+            LOGGER.info("Upcoming Assignment - Title: {}, URL: {}",
+                    dto.getTitle(), dto.getAssignmentFileUrl());
+        });
+
+        model.addAttribute("upcomingAssignments", upcomingAssignments);
+        model.addAttribute("submittedAssignments", submittedAssignments);
+
+        return "fragments/assignments :: assignmentsFragment";
+    }
+
+    @GetMapping("/select-assignment")
+    public String selectAssignment(@RequestParam Long assignmentId, HttpSession session) {
+        session.setAttribute("assignmentId", assignmentId);
+        LOGGER.debug("set_assignmentId: {}", (Long) session.getAttribute("assignmentId"));
+        return "redirect:/submission-page";
+    }
+
+    @GetMapping("/select-submission")
+    public String selectSubmission(@RequestParam Long assignmentId, HttpSession session) {
+        session.setAttribute("assignmentId", assignmentId);
+        LOGGER.debug("set_assignmentId: {}", (Long) session.getAttribute("assignmentId"));
+        return "redirect:/evaluation-page";
     }
 
     @GetMapping("/logout")
-    public String handleLogout(final HttpSession session) {
-        session.invalidate(); // Clear the session
+    public String handleLogout() {
+        // Spring Security handles session invalidation
         return "redirect:/";
     }
 
     @GetMapping("/assignment-creation")
-    public String showAddAssignmentPage(final HttpSession session) {
-        final Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-
-        // Initialize the view variable to control the return value
-        String view;
-
-        if (isAdmin != null && isAdmin) {
-            view = "addAssignment"; // Return the add-assignment view
-        } else {
-            view = "redirect:/"; // Redirect to login if not authenticated as admin
+    public String showAddAssignmentPage(@AuthenticationPrincipal CustomUserDetails currentUser) {
+        if (currentUser != null && "TEACHER".equals(currentUser.getUser().getRole())) {
+            return "addAssignment";
         }
-
-        return view;
-    }
-
-    @GetMapping("/submissions-page")
-    public String getSubmissionsPage(final Model model, final HttpSession session) {
-        final Student loggedInStudent = (Student) session.getAttribute("loggedInStudent");
-        final Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-
-        // Initialize the view variable to control the return value
-        String view;
-
-        // Redirect to login if not authenticated
-        if (loggedInStudent == null && isAdmin == null) {
-            view = "redirect:/";
-        } else {
-            // Add assignment details to the model
-            model.addAttribute("id", (Long) session.getAttribute("assignmentId"));
-            model.addAttribute("title", (String) session.getAttribute("title"));
-            model.addAttribute("description", (String) session.getAttribute("description"));
-            model.addAttribute("dueDate", session.getAttribute("dueDate"));
-
-            if (isAdmin == null) {
-                view = "submitAssignmentPage";
-            } else {
-                view = "submissionsPage";
-            }
-        }
-
-        return view;
-    }
-
-    @SuppressWarnings("unchecked")
-    @GetMapping("/evaluation-page")
-    public String getEvaluationPage(final Model model, final HttpSession session) {
-        // Initialize the view variable to control the return value
-        String view;
-
-        // Redirect to login if not authenticated
-        if ((Student) session.getAttribute("loggedInStudent") == null) {
-            view = "redirect:/";
-        } else {
-            // Add assignment details to the model
-            model.addAttribute("grade", (Integer) session.getAttribute("grade"));
-            model.addAttribute("plagiarism", (Integer) session.getAttribute("plagiarism"));
-            model.addAttribute("results", (Map<String, String>) session.getAttribute("results"));
-
-            // Set the view name
-            view = "resultsPage";
-        }
-
-        // Return the view
-        return view;
+        return "redirect:/";
     }
 }

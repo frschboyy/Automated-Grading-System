@@ -21,32 +21,54 @@ dependencies {
     //  Parsing Jackson
     implementation ("com.fasterxml.jackson.core:jackson-databind:2.15.1")
 
-    implementation ("com.theokanning.openai-gpt3-java:client:0.17.0")     // OpenAI API for grading
-    implementation ("com.theokanning.openai-gpt3-java:service:0.17.0")     // OpenAI API for grading
-    implementation ("com.google.cloud:google-cloud-document-ai:2.57.0")   // Google Document AI
-    implementation ("org.apache.pdfbox:pdfbox:2.0.29")                   // PDF Processing
-    implementation ("org.apache.poi:poi-ooxml:5.2.3")                    // Word Document Processing
+    implementation ("com.theokanning.openai-gpt3-java:client:0.17.0")       // OpenAI API for grading
+    implementation ("com.theokanning.openai-gpt3-java:service:0.17.0")      // OpenAI API for grading
+    implementation ("com.google.cloud:google-cloud-document-ai:2.57.0")     // Google Document AI
+    implementation ("org.apache.pdfbox:pdfbox:2.0.29")                      // PDF Processing
+    implementation ("org.apache.poi:poi-ooxml:5.2.3")                       // Word Document Processing
+    implementation ("org.apache.tika:tika-core:2.9.2")                      // File Processing
+    implementation ("org.apache.tika:tika-parsers-standard-package:2.9.2")  // File Parsing
+
+    // Firebase
+    implementation ("com.google.firebase:firebase-admin:9.1.1")
+
+    // Signed Token Authentication
+    implementation ("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly ("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly ("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
     // Cohere API 
-    implementation ("com.cohere:cohere-java:+")
+    implementation("com.cohere:cohere-java:1.7.0")
 
     // Plagiarism
     implementation ("org.apache.lucene:lucene-core:8.11.2")
     implementation ("org.apache.lucene:lucene-analyzers-common:8.11.2")
+    implementation ("org.apache.commons:commons-text:1.10.0")
+
+    // OCR
+    implementation("com.google.cloud:google-cloud-vision:3.45.0")
 
     // Natural Language Processing
     implementation ("org.apache.opennlp:opennlp-tools:2.5.0")
 
-    //  Lombok Dependency
+    // Lombok Dependency
     implementation ("org.projectlombok:lombok:1.18.36")
     compileOnly ("org.projectlombok:lombok:1.18.36")
     annotationProcessor ("org.projectlombok:lombok:1.18.36")
 
+    // Data Validtion
+    implementation("org.hibernate.validator:hibernate-validator:8.0.1.Final")
+    implementation("org.glassfish:jakarta.el:4.0.2")
+    
+    // Spring Dependencies
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-tomcat")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 	runtimeOnly("com.mysql:mysql-connector-j")
 
     //  Testing

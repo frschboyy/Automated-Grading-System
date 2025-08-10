@@ -1,62 +1,175 @@
+/* Reset & base */
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    line-height: 1.6;
-}
-
-.report-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    padding: 40px;
     background-color: #f9f9f9;
-}
-
-.section {
-    margin-bottom: 20px;
-}
-
-.section-title {
-    font-size: 1.2em;
-    margin-bottom: 10px;
     color: #333;
 }
 
-.grade-breakdown table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+/* Back button container */
+.back-button {
+    margin-bottom: 1rem;
 }
 
-.grade-breakdown th,
-.grade-breakdown td {
+/* Assignment header */
+.assignment-header {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #eaeaea;
+    border-left: 5px solid #3498db;
+}
+
+.assignment-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.assignment-header p {
+    color: #555;
+    margin-top: 0.5rem;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    table-layout: fixed;
+    /* Fix column widths */
+}
+
+th,
+td {
+    padding: 12px;
     border: 1px solid #ddd;
-    padding: 8px;
     text-align: left;
+    vertical-align: top;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    word-wrap: break-word;
+    /* fallback */
 }
 
-.grade-breakdown th {
-    background-color: #f4f4f4;
+th {
+    background-color: #3498db;
+    color: white;
+    text-transform: uppercase;
+    font-size: 12px;
 }
 
-.plagiarism-score {
-    font-weight: bold;
-    color: #d9534f;
+tr:hover {
+    background-color: #f1f1f1;
 }
 
-.good-score {
-    color: #5cb85c;
-}
-
-#breakdown-table {
+/* Modal Overlay */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
     width: 100%;
-    border-collapse: collapse;
+    height: 100%;
+    overflow-y: auto;
+    /* scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 40px 20px;
+    /* spacing around modal box */
 }
 
-#breakdown-table th,
-#breakdown-table td {
-    padding: 0.8rem;
-    border: 1px solid #ddd;
+/* Modal Content Box */
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 25px 30px;
+    max-width: 600px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Modal Header */
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 700;
+    font-size: 1.5rem;
     text-align: center;
+}
+
+/* Close button */
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+/* Field styling inside modal */
+.field {
+    margin-bottom: 15px;
+}
+
+.label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+/* Paragraphs inside modal fields */
+.modal-content p {
+    margin: 0;
+    white-space: pre-wrap;
+    /* preserve line breaks */
+    color: #444;
+}
+
+/* Fade in animation for modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    .modal-content {
+        width: 90%;
+        padding: 20px;
+        font-size: 14px;
+    }
+
+    th,
+    td {
+        font-size: 12px;
+        max-width: 100px;
+    }
 }

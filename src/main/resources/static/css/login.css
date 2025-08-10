@@ -1,3 +1,6 @@
+/* =======================
+   RESET & BASE STYLES 
+======================= */
 * {
     margin: 0;
     padding: 0;
@@ -9,7 +12,6 @@
     --primary-color: #2563eb;
     --secondary-color: #f3f4f6;
     --success-color: #059669;
-    --happiness-color: #dfe61a;
     --warning-color: #d97706;
     --danger-color: #dc2626;
     --text-dark: #1f2937;
@@ -27,12 +29,16 @@ body {
     justify-content: center;
 }
 
+/* Container */
 .login-container {
     width: 100%;
     max-width: 500px;
     padding: 2rem;
 }
 
+/* =======================
+   LOGO SECTION
+======================= */
 .logo-section {
     text-align: center;
     margin-bottom: 2rem;
@@ -52,6 +58,9 @@ body {
     font-weight: bold;
 }
 
+/* =======================
+   CARD 
+======================= */
 .card {
     background: white;
     border-radius: 12px;
@@ -73,6 +82,9 @@ body {
     margin-bottom: 2rem;
 }
 
+/* =======================
+   FORM ELEMENTS
+======================= */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -103,6 +115,9 @@ body {
     color: var(--text-light);
 }
 
+/* =======================
+   BUTTONS
+======================= */
 .btn {
     width: 100%;
     padding: 0.875rem;
@@ -123,6 +138,9 @@ body {
     background-color: #1d4ed8;
 }
 
+/* =======================
+   FOOTER
+======================= */
 .login-footer {
     text-align: center;
     margin-top: 2rem;
@@ -139,6 +157,9 @@ body {
     text-decoration: underline;
 }
 
+/* =======================
+   MESSAGES
+======================= */
 .error-message {
     background-color: #fee2e2;
     color: var(--danger-color);
@@ -147,4 +168,19 @@ body {
     margin-bottom: 1rem;
     font-size: 0.875rem;
     display: block;
+}
+
+.alert {
+    padding: 12px 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #c3e6cb;
 }

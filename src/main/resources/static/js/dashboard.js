@@ -1,138 +1,51 @@
-/* global alert */
 
-// Fetch and display upcoming assignments
-function fetchUpcomingAssignments () {
-  fetch('/api/assignments/upcoming')
-    .then((response) => response.json())
-    .then((data) => {
-      const assignmentsContainer = document.querySelector('.assignment-list')
-      if (!assignmentsContainer) {
-        console.error('Error: Assignment container not found.')
-        return
-      }
+document.addEventListener('DOMContentLoaded', () => {
+  fetchAssignments('/api/assignments/upcoming', '.assignment-list', goToSubmission, 'Submit Assignment')
+  fetchAssignments('/api/assignments/submitted', '.submission-list', goToEvaluation, 'Check Evaluation')
+})
 
-      assignmentsContainer.innerHTML = '' // Clear existing content
+async function fetchAssignments(url, containerSelector, buttonHandler, buttonText) {
+  try {
+    const response = await fetch(url)
+    const data = await response.json()
 
-      // Loop through the assignments and create a list item for each one
-      data.forEach((assignment) => {
-        const li = document.createElement('li')
-        li.classList.add('assignment-item')
-
-        const dueDate = new Date(assignment.dueDate?.toString() || '')
-
-        li.innerHTML = `
-                    <div class="details">
-                        <div class="assignment-title">${assignment.title}</div>
-                        <div class="assignment-description">Description: ${assignment.description}</div>
-                        <div class="due-date">Due: ${dueDate.toLocaleDateString()}</div>
-                    </div>
-                    <button class="btn-primary" data-id="${assignment.id}" data-title="${assignment.title}" data-description="${assignment.description}" data-due-date="${assignment.dueDate}">
-                        Submit Assignment
-                    </button>
-                `
-
-        // Add event listener to the button
-        const submitButton = li.querySelector('button')
-        submitButton.addEventListener('click', () => {
-          goToSubmission(submitButton.dataset.id, submitButton.dataset.title, submitButton.dataset.description, submitButton.dataset.dueDate)
-        })
-
-        assignmentsContainer.appendChild(li)
-      })
-    })
-    .catch((error) => {
-      console.error('Error fetching assignments:', error)
-    })
-}
-
-// Fetch and display submitted assignments
-function fetchSubmittedAssignments () {
-  fetch('/api/assignments/submitted')
-    .then((response) => response.json())
-    .then((data) => {
-      const submissionsContainer = document.querySelector('.submission-list')
-      if (!submissionsContainer) {
-        console.error('Error: Submission container not found.')
-        return
-      }
-
-      submissionsContainer.innerHTML = '' // Clear existing content
-
-      data.forEach((submission) => {
-        const li = document.createElement('li')
-        li.classList.add('submission-item')
-
-        const dueDate = new Date(submission.dueDate?.toString() || '')
-
-        li.innerHTML = `
-                    <div class="details">
-                        <div class="assignment-title">${submission.title}</div>
-                        <div class="assignment-description">Description: ${submission.description}</div>
-                        <div class="due-date">Due: ${dueDate.toLocaleDateString()}</div>
-                    </div>
-                    <button class="btn-check-grade" data-id="${submission.id}">
-                        Check Evaluation
-                    </button>
-                `
-
-        // Add event listener to the button
-        const checkGradeButton = li.querySelector('button')
-        checkGradeButton.addEventListener('click', () => {
-          goToEvaluation(checkGradeButton.dataset.id)
-        })
-
-        submissionsContainer.appendChild(li)
-      })
-    })
-    .catch((error) => {
-      console.error('Error fetching submitted assignments:', error)
-    })
-}
-
-fetchUpcomingAssignments()
-fetchSubmittedAssignments()
-
-// Redirect to the submit assignment page
-function goToSubmission (id, title, description, dueDate) {
-  const assignmentData = { id, title, description, dueDate }
-
-  fetch('/api/assignments/pushAssignmentDetails', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(assignmentData)
-  })
-    .then((response) => {
-      if (response.ok) {
-        window.location.href = '/submissions-page'
-      } else {
-        throw new Error('Failed to save assignment details.')
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error)
-      alert('An error occurred while saving assignment details.')
-    })
-}
-
-// Redirect to the evaluation page
-function goToEvaluation (id) {
-  fetch(`/api/assignments/pushEvaluationDetails?assignmentId=${id}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
+    const container = document.querySelector(containerSelector)
+    if (!container) {
+      console.error(`Error: ${containerSelector} not found.`)
+      return
     }
-  })
-    .then((response) => {
-      if (response.ok) {
-        window.location.href = '/evaluation-page'
-      } else {
-        throw new Error('Failed to save assignment details.')
-      }
+
+    container.innerHTML = ''
+    data.forEach(assignment => {
+      const li = document.createElement('li')
+      li.classList.add(containerSelector.includes('assignment') ? 'assignment-item' : 'submission-item')
+
+      const dueDate = new Date(assignment.dueDate || '')
+      li.innerHTML = `
+        <div class="details">
+            <div class="assignment-title">${assignment.title}</div>
+            <div class="assignment-description">Description: ${assignment.description}</div>
+            <div class="due-date">Due: ${dueDate.toLocaleDateString()}</div>
+        </div>
+        <button class="btn-primary" data-id="${assignment.id}">
+            ${buttonText}
+        </button>
+      `
+
+      li.querySelector('button').addEventListener('click', () => buttonHandler(assignment.id))
+      container.appendChild(li)
     })
-    .catch((error) => {
-      console.error('Error:', error)
-      alert('An error occurred while saving assignment details.')
-    })
+  } catch (error) {
+    console.error(`Error fetching from ${url}:`, error)
+  }
+}
+
+// Redirect to the submision page w/ assignment id
+function goToSubmission(id) {
+  window.location.href = `/submissionsPage?assignmentId=${id}`
+}
+
+// Redirect to the evaluation page w/ assignment id
+function goToEvaluation(id) {
+  window.location.href = `/resultsPage?assignmentId=${id}`
 }

@@ -1,0 +1,96 @@
+/* Reset & base */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f5f9;
+    color: #111827;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    /* horizontally center */
+    align-items: center;
+    /* vertically center */
+}
+
+/* Container holds everything */
+.dashboard-container {
+    width: 90%;
+    max-width: 1000px;
+    text-align: center;
+}
+
+/* Title */
+.dashboard-title {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #1e40af;
+}
+
+/* Grid for cards */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    justify-items: center;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 2px solid #0c1f44;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card title */
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Card description */
+.card p {
+    font-size: 1rem;
+    color: #6b7280;
+}
+
+/* Hover effect on enabled cards */
+.card:hover:not(.disabled) {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Disabled cards style */
+.card.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: #999999;
+}
+
+/* Logout button */
+.logout-button {
+    background-color: #6A6A6A;
+    margin-left: auto;
+    align-self: flex-end;
+    transition: background-color 0.3s ease-out;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: #6A89A7;
+}

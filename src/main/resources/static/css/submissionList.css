@@ -1,0 +1,116 @@
+/* General page styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9fafc;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Page title */
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+}
+
+/* Section headings */
+h2 {
+    margin-top: 40px;
+    color: #34495e;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* Table container */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Table header */
+thead {
+    background-color: #2b6cb0;
+    color: white;
+}
+
+thead th {
+    text-align: left;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* Table body */
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+/* Alternate row shading */
+tbody tr:nth-child(even) {
+    background-color: #f7f9fc;
+}
+
+/* Hover highlight */
+tbody tr:hover {
+    background-color: #eaf3ff;
+}
+
+/* View/Evaluate button */
+a.button-link {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+a.button-link:hover {
+    background-color: #217dbb;
+}
+
+/* Back link */
+.back {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.back a {
+    text-decoration: none;
+    color: #3182ce;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.back a:hover {
+    color: #2b6cb0;
+}
+
+/* View Evaluation button - standout action */
+a.button-link {
+    display: inline-block;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #3498db, #2c80b4);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 0.4px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    transition: background 0.3s ease, transform 0.15s ease;
+}
+
+a.button-link:hover {
+    background: linear-gradient(135deg, #217dbb, #19618d);
+    transform: translateY(-1px);
+}

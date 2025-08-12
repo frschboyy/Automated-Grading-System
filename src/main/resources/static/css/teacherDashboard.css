@@ -1,277 +1,234 @@
-/* ===========================
-   BASE & GLOBAL STYLES
-=========================== */
+/* ======= BASE ======= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     background: #f8f9fa;
-}
-
-.hidden {
-    display: none;
-}
-
-/* ===========================
-   LAYOUT: MAIN & SIDEBAR
-=========================== */
-.main-layout {
-    display: flex;
-    height: 100vh;
-}
-
-.sidebar {
-    width: 250px;
-    background: #343a40;
-    color: white;
+    color: #343a40;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    position: relative;
-    padding-top: 20px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ======= HEADER ======= */
+header.header {
+    background: #343a40;
+    color: white;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+header.header .dashboard-title {
+    font-size: 1.8rem;
+}
+
+/* ======= MAIN LAYOUT ======= */
+.main-layout {
+    flex: 1 1 auto;
+    display: flex;
+    height: calc(100vh - 72px);
+    /* header height approx */
+    overflow: hidden;
+}
+
+/* Sidebar */
+aside.sidebar {
+    background: #343a40;
+    color: white;
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    flex-shrink: 0;
 }
 
 .sidebar-title {
-    text-align: center;
-    margin-bottom: 20px;
     font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    user-select: none;
 }
 
 .course-list {
     flex: 1;
     overflow-y: auto;
-    padding: 0 20px;
-    list-style: none;
+    margin-bottom: 1rem;
 }
 
-.course-list li {
-    margin-bottom: 10px;
+.course-list li+li {
+    margin-top: 0.5rem;
 }
 
-.course-list a {
-    color: white;
-    text-decoration: none;
-    padding: 10px;
+.course-list a.course-tab {
     display: block;
-    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    background-color: #495057;
+    transition: background-color 0.2s ease;
 }
 
-.course-list a:hover {
-    background: #495057;
+.course-list a.course-tab:hover,
+.course-list a.course-tab.active {
+    background-color: #6c757d;
+    font-weight: bold;
 }
 
 .sidebar-logout {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
+    margin-top: auto;
     text-align: center;
-    padding: 20px 0;
-    background-color: #464d53;
-    border-top: 0.5px solid #f8f9fa75;
 }
 
-/* ===========================
-   HEADER
-=========================== */
-.header {
-    padding: 20px;
-    background: #343a40;
+.logout-button {
+    background-color: #dc3545;
+    border: none;
     color: white;
-    text-align: center;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    width: 100%;
 }
 
-.dashboard-title {
-    margin: 0;
-    font-size: 1.8rem;
+.logout-button:hover {
+    background-color: #b02a37;
 }
 
-/* ===========================
-   CONTENT AREA
-=========================== */
-.content {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
+/* ======= CONTENT ======= */
+main.content {
+    flex: 1 1 auto;
     background: #f8f9fa;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .selected-course-name {
     font-size: 1.4rem;
-    margin-bottom: 1rem;
-    color: #343a40;
+    margin-bottom: 1.5rem;
 }
 
-/* ===========================
-   CARDS
-=========================== */
+/* Cards */
 .card {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
 }
 
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* ===========================
-   LISTS
-=========================== */
-.list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
+/* Lists inside cards */
 .list li {
-    padding: 10px;
+    padding: 0.5rem 0;
     border-bottom: 1px solid #ddd;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    word-break: break-word;
 }
 
-/* ===========================
-   ASSIGNMENT ITEMS
-=========================== */
+/* Assignments list item */
 .assignment-item {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 15px;
-    border-bottom: 1px solid #e0e0e0;
-    transition: background 0.2s ease;
+    padding: 1rem 0;
+    border-bottom: 1px solid #ddd;
 }
 
-.assignment-item:hover {
-    background: #f1f3f5;
+.assignment-item div:first-child {
+    flex: 1 1 60%;
+    min-width: 200px;
 }
 
 .assignment-item h4 {
-    margin: 0 0 5px 0;
+    margin-bottom: 0.3rem;
     font-size: 1.1rem;
     color: #343a40;
 }
 
 .assignment-item p {
-    margin: 0 0 8px 0;
-    font-size: 0.95rem;
+    margin: 0;
     color: #495057;
-    max-width: 400px;
-
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-
-    line-clamp: 1;
+    font-size: 0.95rem;
+    max-height: 2.4em;
     overflow: hidden;
     text-overflow: ellipsis;
-    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    
+    display: box;
+    box-orient: vertical;
+    line-clamp: 2;
 }
+
 
 .assignment-item small {
-    display: inline-block;
-    padding: 3px 8px;
     background: #ffeeba;
     color: #856404;
-    font-weight: bold;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: inline-block;
 }
 
-/* ===========================
-   ASSIGNMENT FORM
-=========================== */
-.assignment-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-
-.assignment-form h3 {
-    grid-column: 1 / -1;
-    margin-bottom: 10px;
-    color: #343a40;
-    font-size: 1.4rem;
-}
-
-.assignment-form .form-group {
+.assignment-item div:last-child {
+    flex: 1 1 35%;
     display: flex;
-    flex-direction: column;
-}
-
-.assignment-form label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #495057;
-}
-
-.assignment-form input,
-.assignment-form textarea,
-.assignment-form select {
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-}
-
-.assignment-form textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-.assignment-form .form-actions {
-    grid-column: 1 / -1;
-    display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 0.5rem;
+    min-width: 160px;
+    margin-top: 0.5rem;
 }
 
-/* ===========================
-   BUTTONS
-=========================== */
-.btn-primary,
-.btn-view,
-.btn-edit,
-.btn-delete,
-.btn-submit,
-.btn-cancel,
-.btn-secondary {
+/* Buttons in assignment list */
+.btn,
+a.button-link,
+.download-link {
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
+    font-weight: 600;
     cursor: pointer;
-    padding: 6px 12px;
+    transition: background-color 0.25s ease;
     font-size: 0.9rem;
-}
-
-/* Primary button */
-.btn-primary {
-    background: #007bff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
     color: white;
+    text-align: center;
 }
 
-.btn-primary:hover {
-    background: #0056b3;
-}
-
-/* View button */
-.btn-view {
-    background: #17a2b8;
-    color: white;
-}
-
-.btn-view:hover {
-    background: #117a8b;
-}
-
-/* Edit button */
 .btn-edit {
     background: #ffc107;
     color: #343a40;
@@ -281,208 +238,358 @@ body {
     background: #e0a800;
 }
 
-/* Delete button */
 .btn-delete {
-    background: #dc3545;
-    color: white;
+    background: #d3061a;
 }
 
 .btn-delete:hover {
-    background: #c82333;
+    background: #9b0a18;
 }
 
-/* Submit button */
-.btn-submit {
-    background: #28a745;
-    color: white;
-    padding: 8px 16px;
+a.button-link {
+    background-color: #007bff;
 }
 
-.btn-submit:hover {
-    background: #218838;
+a.button-link:hover {
+    background-color: #0056b3;
 }
 
-/* Cancel & Secondary buttons */
-.btn-cancel,
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-    padding: 8px 16px;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.btn-cancel:hover,
-.btn-secondary:hover {
-    background: #5a6268;
-}
-
-/* ===========================
-   MODALS
-=========================== */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal.hidden {
-    display: none !important;
-}
-
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.modal-actions {
-    text-align: right;
-    margin-top: 10px;
-}
-
-.modal-actions .btn-primary,
-.modal-actions .btn-secondary {
-    padding: 6px 14px;
-    margin-left: 5px;
-}
-
-/* Improved Edit Modal Styling */
-#editAssignmentModal .modal-content {
-    background: #ffffff;
-    padding: 25px 30px;
-    border-radius: 12px;
-    width: 420px;
-    max-width: 90%;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    animation: fadeInScale 0.25s ease-in-out;
-}
-
-#editAssignmentModal h3 {
-    margin-bottom: 15px;
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #343a40;
-    text-align: center;
-}
-
-#editAssignmentModal form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-#editAssignmentModal label {
-    display: flex;
-    flex-direction: column;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.95rem;
-}
-
-#editAssignmentModal input,
-#editAssignmentModal textarea {
-    margin-top: 6px;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 0.95rem;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
-}
-
-#editAssignmentModal input:focus,
-#editAssignmentModal textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
-    outline: none;
-}
-
-#editAssignmentModal .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* Button adjustments for modal */
-#editAssignmentModal .btn-primary {
-    background: #007bff;
-    padding: 8px 18px;
-    font-size: 0.95rem;
-}
-
-#editAssignmentModal .btn-secondary {
-    background: #6c757d;
-    padding: 8px 18px;
-    font-size: 0.95rem;
-}
-
-/* Smooth open animation */
-@keyframes fadeInScale {
-    0% {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-
-/* ===========================
-   INPUTS (GRADE & FEEDBACK)
-=========================== */
-.grade-input,
-.feedback-input {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 5px;
-    margin: 0 5px;
-    font-size: 0.9rem;
-}
-
-.grade-input {
-    width: 80px;
-}
-
-.feedback-input {
-    width: 150px;
-}
-
-/* ===========================
-   LINKS
-=========================== */
 .download-link {
-    margin-right: 20px;
     color: #5a5b5c;
     font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    background-color: #e9ecef;
+    color: #343a40;
     text-decoration: none;
 }
 
 .download-link:hover {
-    color: #3e3f41;
+    background-color: #ced4da;
+    color: #212529;
 }
 
-/* ===========================
-   UTILITY CLASSES
-=========================== */
-a.disabled {
-    pointer-events: none;
-    color: gray;
-    cursor: default;
+/* Assignment Form */
+form.assignment-form {
+    background: white;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 1.5rem;
+    margin-top: auto;
+    width: 100%;
+}
+
+form.assignment-form h3 {
+    grid-column: 1 / -1;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+form.assignment-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+form.assignment-form label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #495057;
+}
+
+form.assignment-form input[type="text"],
+form.assignment-form input[type="datetime-local"],
+form.assignment-form input[type="file"],
+form.assignment-form textarea,
+form.assignment-form input[type="range"],
+form.assignment-form input[type="number"] {
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+form.assignment-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+form.assignment-form .form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+form.assignment-form button,
+form.assignment-form a.btn-cancel {
+    background-color: #28a745;
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+    user-select: none;
+    transition: background-color 0.25s ease;
+    display: inline-block;
+}
+
+form.assignment-form a.btn-cancel {
+    background-color: #6c757d;
     text-decoration: none;
+    line-height: 2.2;
 }
 
-a.active {
+form.assignment-form button:hover {
+    background-color: #218838;
+}
+
+form.assignment-form a.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+/* Rubric Weight label + range alignment */
+.form-group label span {
+    font-weight: 700;
+    margin-left: 0.4rem;
     font-weight: bold;
+}
+
+/* Modal (basic) */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.35);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    z-index: 9999;
+    overflow-y: auto;
+}
+
+.modal.visible {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 10px;
+    max-width: 420px;
+    width: 100%;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal-content h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal-content label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.modal-content input,
+.modal-content textarea {
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgb(0 123 255 / 0.3);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+
+/* SECONDARY LOGOUT */
+.top-logout {
+    display: none;
+    /* hidden by default */
+    top: 1rem;
+    left: 1rem;
+    z-index: 10000;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================
+    RESPONSIVE MEDIA QUERIES
+============================ */
+@media (max-width: 1024px) {
+
+    /* Make sidebar narrower */
+    aside.sidebar {
+        width: 200px;
+        padding: 1rem 0.75rem;
+    }
+
+    form.assignment-form {
+        max-width: 100%;
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+        height: auto;
+    }
+
+    aside.sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 0.5rem 1rem;
+        overflow-x: auto;
+    }
+
+    .sidebar-title {
+        flex: 1 0 100%;
+        font-size: 1rem;
+        text-align: left;
+        margin-left: 10px; 
+        margin-bottom: 0.75rem;
+    }
+
+    .course-list {
+        flex: 1 1 auto;
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        margin-bottom: 0.5rem;
+    }
+
+    .course-list li {
+        margin: 0;
+    }
+
+    .course-list a.course-tab {
+        white-space: nowrap;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .sidebar-logout {
+        display: none;
+    }
+
+    .top-logout {
+        display: block;
+        max-width: 150px;
+        margin-bottom: 30px;
+        justify-content: center;
+        justify-items: center;
+        justify-self: center;
+    }
+
+    header.header {
+        padding-left: 5rem;
+    }
+
+    main.content {
+        padding: 1rem;
+        height: auto;
+    }
+
+    .assignment-item div:first-child,
+    .assignment-item div:last-child {
+        flex: 1 1 100%;
+        justify-content: flex-start !important;
+        margin-top: 0.3rem;
+    }
+
+    .assignment-item div:last-child {
+        gap: 0.5rem;
+    }
+
+    .assignment-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    header.header .dashboard-title {
+        font-size: 1.5rem;
+    }
+
+    form.assignment-form {
+        padding: 1rem;
+    }
+
+    form.assignment-form h3 {
+        font-size: 1.2rem;
+    }
 }

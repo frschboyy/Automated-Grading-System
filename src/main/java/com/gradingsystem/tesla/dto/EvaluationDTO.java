@@ -14,7 +14,7 @@ public class EvaluationDTO {
     private int questionNumber;
     private String question;
     private String answer;
-    private String score;
-    private String maxScore;
+    private double score;
+    private double maxScore;
     private String feedback;
 }

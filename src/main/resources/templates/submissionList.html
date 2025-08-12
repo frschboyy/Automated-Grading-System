@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Submissions List</title>
+    <link rel="stylesheet" th:href="@{/css/submissionList.css}">
+</head>
+
+<body>
+    <div class="back">
+        <a href="/dashboard">Back to Dashboard</a>
+    </div>
+    <h1>Assignment Submissions</h1>
+
+    <h2>Submitted</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Reg ID</th>
+                <th>Date Submitted</th>
+                <th>View Evaluation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="s : ${submission}">
+                <td th:text="${s.studentName}"></td>
+                <td th:text="${s.studentRegistrationId}"></td>
+                <td th:text="${s.dateSubmitted}"></td>
+                <td>
+                    <a th:href="@{'/teacher/submissions/' + ${s.submissionId}}">View Evaluation</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Pending Submissions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Reg ID</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${pendingSubmission}">
+                <td th:text="${p.name}"></td>
+                <td th:text="${p.registrationId}"></td>
+                <td th:text="${p.email}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

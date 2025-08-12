@@ -52,14 +52,14 @@ function renderAssignments(assignments) {
                     <a href="/download?file=${encodeURIComponent(a.assignmentFileUrl)}" class="download-link" title="Download Assignment" target="_blank">
                       <i class="fas fa-download"></i>
                     </a>
-                    <button class="btn btn-view" data-id="${a.id}" data-title="${a.title}">View Submissions</button>
+                    <a href="/teacher/assignments/${a.id}/submissions" class="button-link">
+                      View Submissions
+                    </a>
                     <button class="btn btn-edit" data-id="${a.id}">Edit</button>
                     <button class="btn btn-delete" data-id="${a.id}">Delete</button>
                 </div>`;
     container.appendChild(li);
   });
-  container.querySelectorAll('.btn-view').forEach(btn =>
-    btn.addEventListener('click', () => viewSubmissions(btn.dataset.id, btn.dataset.title)));
   container.querySelectorAll('.btn-edit').forEach(btn =>
     btn.addEventListener('click', () => editAssignment(btn.dataset.id)));
   container.querySelectorAll('.btn-delete').forEach(btn =>
@@ -96,7 +96,7 @@ function editAssignment(assignmentId) {
     document.getElementById('editDescription').value = assignment.description;
     document.getElementById('editDueDate').value = assignment.dueDate;
     document.getElementById('editRubricWeight').value = assignment.rubricWeight;
-    document.getElementById('editAssignmentModal').classList.remove('hidden');
+    document.getElementById('editAssignmentModal').classList.add('visible');
   });
 }
 
@@ -128,8 +128,14 @@ document.getElementById('editAssignmentForm').addEventListener('submit', e => {
 
 
 function closeEditModal() {
-  document.getElementById('editAssignmentModal').classList.add('hidden');
+  document.getElementById('editAssignmentModal').classList.remove('visible');
 }
+
+document.getElementById('editAssignmentModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) {
+    closeEditModal();
+  }
+});
 
 // Delete Assignment
 function deleteAssignment(assignmentId) {
@@ -184,36 +190,3 @@ document.getElementById('createAssignmentForm').addEventListener('submit', async
     submitButton.innerText = 'Create Assignment';
   }
 });
-
-
-// Submissions
-function viewSubmissions(assignmentId, assignmentTitle) {
-  document.getElementById('assignmentTitle').textContent = assignmentTitle;
-  fetch(`/teacher/assignments/${assignmentId}/submissions`).then(res => res.json()).then(data => renderSubmissions(data));
-  document.getElementById('submissionsSection').classList.remove('hidden');
-}
-
-function renderSubmissions(submissions) {
-  const container = document.getElementById('submissionList');
-  container.innerHTML = '';
-  submissions.forEach(s => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-              <span>${s.studentName}</span>
-              <a href="${s.filePath}" target="_blank">View File</a>
-              <input type="number" step="0.1" value="${s.grade || ''}" data-id="${s.id}" class="grade-input"/>
-              <input type="text" value="${s.feedback || ''}" data-id="${s.id}" class="feedback-input"/>
-              <button class="btn btn-save" data-id="${s.id}">Save</button>`;
-    container.appendChild(li);
-  });
-  container.querySelectorAll('.btn-save').forEach(btn => btn.addEventListener('click', () => {
-    const id = btn.dataset.id;
-    const grade = container.querySelector(`.grade-input[data-id="${id}"]`).value;
-    const feedback = container.querySelector(`.feedback-input[data-id="${id}"]`).value;
-    fetch(`/teacher/evaluations/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ grade: parseFloat(grade), feedback })
-    }).then(res => { if (res.ok) alert('Evaluation updated'); else alert('Error updating evaluation'); });
-  }));
-}

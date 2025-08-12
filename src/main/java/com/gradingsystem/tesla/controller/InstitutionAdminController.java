@@ -29,23 +29,17 @@ import com.gradingsystem.tesla.util.CustomUserDetails;
 import com.gradingsystem.tesla.util.PasswordGenerator;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/institution-admin")
 @PreAuthorize("hasRole('INSTITUTION_ADMIN')")
+@RequiredArgsConstructor
 public class InstitutionAdminController {
 
     private final UserService userService;
     private final CourseService courseService;
     private final EmailService emailService;
-
-    public InstitutionAdminController(UserService userService,
-            CourseService courseService,
-            EmailService emailService) {
-        this.userService = userService;
-        this.courseService = courseService;
-        this.emailService = emailService;
-    }
 
     // MANAGE TEACHERS
 

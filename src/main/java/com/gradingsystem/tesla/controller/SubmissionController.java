@@ -11,22 +11,23 @@ import com.gradingsystem.tesla.service.SubmissionService;
 import com.gradingsystem.tesla.util.CustomUserDetails;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
 import com.gradingsystem.tesla.util.PathUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/submissions")
+@RequiredArgsConstructor
 public class SubmissionController {
     private final FirebaseStorageService firebaseStorageService;
     private final AssignmentService assignmentService;
@@ -35,25 +36,6 @@ public class SubmissionController {
     private final SubmissionParserService submissionParserService;
     private final GradingService gradingService;
     private final MatchingService matchingService;
-
-    private static final Logger log = LoggerFactory.getLogger(SubmissionController.class);
-
-    @Autowired
-    public SubmissionController(FirebaseStorageService firebaseStorageService,
-            AssignmentService assignmentService,
-            SubmissionService submissionService,
-            CourseService courseService,
-            SubmissionParserService submissionParserService,
-            GradingService gradingService,
-            MatchingService matchingService) {
-        this.firebaseStorageService = firebaseStorageService;
-        this.assignmentService = assignmentService;
-        this.submissionService = submissionService;
-        this.courseService = courseService;
-        this.submissionParserService = submissionParserService;
-        this.gradingService = gradingService;
-        this.matchingService = matchingService;
-    }
 
     @PostMapping
     public ResponseEntity<Map<String, String>> submitAssignment(
@@ -92,8 +74,8 @@ public class SubmissionController {
             // Send to grading service for evaluation
             String evaluationResponse = gradingService.evaluate(matchedJson);
 
-            // Update submission with evaluation results
-            submissionService.updateEvaluation(submission.getId(), evaluationResponse);
+            // Parse Json string and save in evaluation db
+            submissionService.migrateJson(submission.getId(), evaluationResponse);
 
             return ResponseEntity.ok(Map.of("message", "Submission uploaded and evaluation started"));
 

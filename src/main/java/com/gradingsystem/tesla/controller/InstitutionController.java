@@ -3,7 +3,6 @@ package com.gradingsystem.tesla.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,12 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gradingsystem.tesla.dto.InstitutionDTO;
 import com.gradingsystem.tesla.repository.InstitutionRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class InstitutionController {
 
-    @Autowired
-    private InstitutionRepository institutionRepository;
+    private final InstitutionRepository institutionRepository;
 
     @GetMapping("/institutions")
     public List<InstitutionDTO> getAllInstitutions() {

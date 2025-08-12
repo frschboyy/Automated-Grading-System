@@ -3,8 +3,8 @@ package com.gradingsystem.tesla.controller;
 import com.gradingsystem.tesla.dto.AssignmentDTO;
 import com.gradingsystem.tesla.dto.AssignmentForm;
 import com.gradingsystem.tesla.dto.CourseDTO;
+import com.gradingsystem.tesla.dto.EvaluationUpdateRequest;
 import com.gradingsystem.tesla.dto.StudentDTO;
-import com.gradingsystem.tesla.dto.SubmissionDTO;
 import com.gradingsystem.tesla.util.CustomUserDetails;
 
 import jakarta.servlet.http.HttpSession;
@@ -15,11 +15,11 @@ import com.gradingsystem.tesla.service.UserService;
 import com.gradingsystem.tesla.service.CourseService;
 import com.gradingsystem.tesla.service.SubmissionService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,7 +57,7 @@ public class TeacherController {
         Long teacherId = currentUser.getUser().getId();
         session.setAttribute("courseId", courseId);
         List<AssignmentDTO> assignments = assignmentService.getAssignmentsForTeacherCourse(teacherId, courseId);
-                
+
         return ResponseEntity.ok(assignments);
     }
 
@@ -95,31 +95,6 @@ public class TeacherController {
         return ResponseEntity.ok("Assignment deleted successfully");
     }
 
-    // Query all submissions for an assignment
-    @GetMapping("/assignments/{assignmentId}/submissions")
-    public String getSubmissions(@PathVariable Long assignmentId,
-            Model model,
-            HttpSession session) {
-
-        Long courseId = (Long) session.getAttribute("courseId");
-        List<SubmissionDTO> submissions = submissionService.getAllSubmissions(assignmentId, courseId);
-        List<StudentDTO> pendingSubmissions = submissionService.getAllPendingSubmissions(assignmentId, courseId);
-
-        model.addAttribute("submission", submissions);
-        model.addAttribute("pendingSubmission", pendingSubmissions);
-
-        return "submissionList";
-    }
-
-    // @PutMapping("/evaluations/{submissionId}")
-    // public ResponseEntity<String> updateEvaluation(@PathVariable Long
-    // submissionId,
-    // @RequestBody EvaluationDTO dto) {
-    // manageEvaluationService.updateEvaluation(submissionId, dto.getGrade(),
-    // "feedback");
-    // return ResponseEntity.ok("Evaluation updated successfully");
-    // }
-
     // Query all students for a course
     @GetMapping("/students/course/{courseId}")
     public ResponseEntity<List<StudentDTO>> getStudents(@PathVariable Long courseId) {
@@ -130,5 +105,28 @@ public class TeacherController {
                         s.getEmail()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(students);
+    }
+
+    // Update evaluation for a question
+    @PostMapping("evaluation/update/{questionNumber}")
+    public ResponseEntity<?> updateEvaluation(
+            @PathVariable int questionNumber,
+            @RequestBody EvaluationUpdateRequest updateRequest,
+            HttpSession session) {
+        
+        Long submissionId = (Long) session.getAttribute("submissionId");
+        
+        try {
+            boolean updated = submissionService.updateEvaluation(submissionId, questionNumber, updateRequest);
+            if (updated) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Evaluation not found");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating evaluation");
+        }
     }
 }

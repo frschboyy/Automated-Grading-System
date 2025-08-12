@@ -10,27 +10,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.gradingsystem.tesla.dto.AssignmentDTO;
 import com.gradingsystem.tesla.dto.EvaluationDTO;
 import com.gradingsystem.tesla.model.Assignment;
+import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.service.AssignmentService;
 import com.gradingsystem.tesla.service.RetrieveEvaluationService;
 import com.gradingsystem.tesla.service.SubmissionService;
 import com.gradingsystem.tesla.util.CustomUserDetails;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class PageController {
 
     private final AssignmentService assignmentService;
     private final SubmissionService submissionService;
     private final RetrieveEvaluationService retrieveEvaluationService;
-
-    public PageController(AssignmentService assignmentService,
-            SubmissionService submissionService,
-            RetrieveEvaluationService retrieveEvaluationService) {
-        this.assignmentService = assignmentService;
-        this.submissionService = submissionService;
-        this.retrieveEvaluationService = retrieveEvaluationService;
-    }
 
     @GetMapping("/submission-page")
     public String submissionsPage(HttpSession session, Model model) {
@@ -63,9 +58,10 @@ public class PageController {
         model.addAttribute("assignmentDescription", dto.getDescription());
 
         Assignment assignment = assignmentService.getAssignment(assignmentId);
+        DocumentSubmission submission = submissionService.findSubmission(currentUser.getUser(), assignment);
 
         // SubmissionDTO submission =
-        List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(assignment, currentUser.getUser());
+        List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submission.getId());
         model.addAttribute("results", results);
 
         return "resultsPage";

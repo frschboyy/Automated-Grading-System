@@ -4,9 +4,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gradingsystem.tesla.dto.EvaluationUpdateRequest;
 import com.gradingsystem.tesla.dto.StudentDTO;
 import com.gradingsystem.tesla.dto.SubmissionDTO;
 import com.gradingsystem.tesla.model.Assignment;
@@ -14,6 +19,7 @@ import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.model.Evaluation;
 import com.gradingsystem.tesla.model.User;
 import com.gradingsystem.tesla.repository.DocumentSubmissionRepository;
+import com.gradingsystem.tesla.repository.EvaluationRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class SubmissionService {
 
     private final DocumentSubmissionRepository submissionRepository;
+    private final EvaluationRepository evaluationRepository;
     private final AssignmentService assignmentService;
     private final UserService studentService;
 
@@ -39,27 +46,27 @@ public class SubmissionService {
         return submissionRepository.save(submission);
     }
 
-    public void updateEvaluation(Long submissionId, String evaluationJson) {
-        try {
-            DocumentSubmission submission = submissionRepository.findById(submissionId)
-                    .orElseThrow(() -> new RuntimeException("Submission not found"));
-
-            // Create Evaluation object
-            Evaluation evaluation = Evaluation.builder()
-                    .id(submissionId)
-                    .evaluationJson(evaluationJson)
-                    .submission(submission)
-                    .build();
-
-            // Link back to submission
-            submission.setEvaluation(evaluation);
-
-            // Save
-            submissionRepository.save(submission);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to save evaluation", e);
+    @Transactional
+    public boolean updateEvaluation(Long submissionId, int questionNumber, EvaluationUpdateRequest updateRequest) {
+        Optional<Evaluation> eval = evaluationRepository.findBySubmissionIdAndQuestionNumber(submissionId,
+                questionNumber);
+        if (eval.isEmpty()) {
+            return false;
         }
+        Evaluation evaluation = eval.get();
+
+        if (updateRequest.getScore() != null) {
+            evaluation.setScore(updateRequest.getScore());
+        }
+        if (updateRequest.getFeedback() != null) {
+            evaluation.setFeedback(updateRequest.getFeedback());
+        }
+        if (updateRequest.getMaxScore() != null) {
+            evaluation.setMaxScore(updateRequest.getMaxScore());
+        }
+
+        evaluationRepository.save(evaluation);
+        return true;
     }
 
     public List<SubmissionDTO> getAllSubmissions(Long assignmentId, Long courseId) {
@@ -96,5 +103,33 @@ public class SubmissionService {
             }
         }
         return pendingList;
+    }
+
+    public DocumentSubmission findSubmission(User user, Assignment assignment) {
+        return submissionRepository.findByStudentAndAssignment(user, assignment);
+    }
+
+    public void migrateJson(Long submissionId, String evaluationJson) throws Exception {
+        DocumentSubmission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new RuntimeException("Submission not found"));
+
+        JsonNode arrayNode = new ObjectMapper().readTree(evaluationJson);
+        if (!arrayNode.isArray())
+            throw new RuntimeException("Evaluation JSON not array");
+
+        List<Evaluation> evaluations = new ArrayList<>();
+        for (JsonNode node : arrayNode) {
+            evaluations.add(Evaluation.builder()
+                    .questionNumber(node.path("questionNumber").asInt())
+                    .question(node.path("question").asText())
+                    .answer(node.path("answer").asText())
+                    .maxScore(node.path("maxScore").asInt())
+                    .score(node.path("evaluation").path("score").asInt())
+                    .feedback(node.path("evaluation").path("feedback").asText())
+                    .submission(submission)
+                    .build());
+        }
+
+        evaluationRepository.saveAll(evaluations);
     }
 }

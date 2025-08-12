@@ -51,6 +51,23 @@ body {
     font-weight: bold;
 }
 
+/* Back link */
+.back {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.back a {
+    text-decoration: none;
+    color: #3182ce;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.back a:hover {
+    color: #2b6cb0;
+}
+
 /* =======================
    CONTAINER & LAYOUT
 ======================= */

@@ -14,7 +14,7 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void init() throws IOException {
-        InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("automated-grading-system-a2ac0-firebase-adminsdk-fbsvc-8d54be5e6c.json");
+        InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("automated-grading-system-a2ac0-firebase-adminsdk-fbsvc-fe1f23459a.json");
 
         if (serviceAccount == null) {
             throw new IOException("Firebase service account key not found");

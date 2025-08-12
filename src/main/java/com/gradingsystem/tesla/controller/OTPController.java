@@ -4,15 +4,14 @@ import org.springframework.web.bind.annotation.*;
 
 import com.gradingsystem.tesla.service.OTPService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/otp")
+@RequiredArgsConstructor
 public class OTPController {
 
     private final OTPService otpService;
-
-    public OTPController(OTPService otpService) {
-        this.otpService = otpService;
-    }
 
     @PostMapping("/send")
     public String sendOTP(@RequestParam String email) {

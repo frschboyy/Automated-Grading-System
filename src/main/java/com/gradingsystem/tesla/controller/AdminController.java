@@ -1,6 +1,5 @@
 package com.gradingsystem.tesla.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,23 +15,17 @@ import com.gradingsystem.tesla.service.EmailService;
 import com.gradingsystem.tesla.service.UserService;
 import com.gradingsystem.tesla.util.PasswordGenerator;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class AdminController {
 
     private final InstitutionRepository institutionRepository;
     private final UserService userService;
     private final EmailService emailService;
-
-    @Autowired
-    public AdminController(InstitutionRepository institutionRepository,
-                           UserService userService,
-                           EmailService emailService) {
-        this.institutionRepository = institutionRepository;
-        this.userService = userService;
-        this.emailService = emailService;
-    }
 
     @GetMapping("/manage-institutions")
     public String showInstitutionsPage() {

@@ -37,9 +37,6 @@ public class DocumentSubmission {
     @Column(nullable = true)
     private Integer grade;
 
-    @OneToOne(mappedBy = "submission", cascade = CascadeType.ALL)
-    private Evaluation evaluation;
-
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime submittedAt;
 }

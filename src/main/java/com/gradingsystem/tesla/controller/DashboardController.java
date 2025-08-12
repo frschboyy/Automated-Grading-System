@@ -2,34 +2,36 @@ package com.gradingsystem.tesla.controller;
 
 import com.gradingsystem.tesla.dto.AssignmentDTO;
 import com.gradingsystem.tesla.dto.CourseDTO;
+import com.gradingsystem.tesla.dto.EvaluationDTO;
+import com.gradingsystem.tesla.dto.StudentDTO;
+import com.gradingsystem.tesla.dto.SubmissionDTO;
+import com.gradingsystem.tesla.model.Assignment;
 import com.gradingsystem.tesla.service.AssignmentService;
+import com.gradingsystem.tesla.service.RetrieveEvaluationService;
+import com.gradingsystem.tesla.service.SubmissionService;
 import com.gradingsystem.tesla.service.UserService;
 import com.gradingsystem.tesla.util.CustomUserDetails;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 public class DashboardController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DashboardController.class);
 
     private final UserService studentService;
     private final AssignmentService assignmentService;
-
-    public DashboardController(UserService studentService,
-            AssignmentService assignmentService) {
-        this.studentService = studentService;
-        this.assignmentService = assignmentService;
-    }
+    private final SubmissionService submissionService;
+    private final RetrieveEvaluationService retrieveEvaluationService;
 
     @GetMapping("/dashboard")
     public String showDashboard(@AuthenticationPrincipal CustomUserDetails currentUser, Model model) {
@@ -38,7 +40,7 @@ public class DashboardController {
         }
 
         String userRole = currentUser.getUser().getRole();
-        LOGGER.debug("Logged in user: {}, Role: {}", currentUser.getUsername(), userRole);
+        log.debug("Logged in user: {}, Role: {}", currentUser.getUsername(), userRole);
 
         model.addAttribute("username",
                 currentUser.getUser().getFirstName() + " " + currentUser.getUser().getLastName());
@@ -85,7 +87,7 @@ public class DashboardController {
 
         // Log fields of each upcoming assignment DTO
         upcomingAssignments.forEach(dto -> {
-            LOGGER.info("Upcoming Assignment - Title: {}, URL: {}",
+            log.info("Upcoming Assignment - Title: {}, URL: {}",
                     dto.getTitle(), dto.getAssignmentFileUrl());
         });
 
@@ -98,21 +100,51 @@ public class DashboardController {
     @GetMapping("/select-assignment")
     public String selectAssignment(@RequestParam Long assignmentId, HttpSession session) {
         session.setAttribute("assignmentId", assignmentId);
-        LOGGER.debug("set_assignmentId: {}", (Long) session.getAttribute("assignmentId"));
+        log.debug("set_assignmentId: {}", (Long) session.getAttribute("assignmentId"));
         return "redirect:/submission-page";
     }
 
     @GetMapping("/select-submission")
     public String selectSubmission(@RequestParam Long assignmentId, HttpSession session) {
         session.setAttribute("assignmentId", assignmentId);
-        LOGGER.debug("set_assignmentId: {}", (Long) session.getAttribute("assignmentId"));
+        log.debug("set_assignmentId: {}", (Long) session.getAttribute("assignmentId"));
         return "redirect:/evaluation-page";
     }
 
-    @GetMapping("/logout")
-    public String handleLogout() {
-        // Spring Security handles session invalidation
-        return "redirect:/";
+    // TEACHER
+
+    // Query all submissions for an assignment
+    @GetMapping("teacher/assignments/{assignmentId}/submissions")
+    public String getSubmissions(@PathVariable Long assignmentId,
+            Model model,
+            HttpSession session) {
+
+        session.setAttribute("assignmentId", assignmentId);
+
+        Long courseId = (Long) session.getAttribute("courseId");
+        List<SubmissionDTO> submissions = submissionService.getAllSubmissions(assignmentId, courseId);
+        List<StudentDTO> pendingSubmissions = submissionService.getAllPendingSubmissions(assignmentId, courseId);
+
+        model.addAttribute("submission", submissions);
+        model.addAttribute("pendingSubmission", pendingSubmissions);
+
+        return "submissionList";
+    }
+
+    // Query evaluation for a a student
+    @GetMapping("teacher/submissions/{submissionId}")
+    public String getEvaluation(@PathVariable Long submissionId,
+            Model model,
+            HttpSession session) {
+
+        Long assignmentId = (Long) session.getAttribute("assignmentId");
+        Assignment assignment = assignmentService.getAssignment(assignmentId);
+
+        List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submissionId);
+
+        model.addAttribute("results", results);
+
+        return "evaluationPage";
     }
 
     @GetMapping("/assignment-creation")
@@ -122,4 +154,11 @@ public class DashboardController {
         }
         return "redirect:/";
     }
+
+    @GetMapping("/logout")
+    public String handleLogout() {
+        // Spring Security handles session invalidation
+        return "redirect:/";
+    }
+
 }

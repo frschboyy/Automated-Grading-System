@@ -11,13 +11,12 @@ import com.gradingsystem.tesla.service.PendingRegistrationService;
 import com.gradingsystem.tesla.service.UserService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,29 +28,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 public class SignupController {
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final OTPService otpService;
     private final InstitutionRepository institutionRepository;
     private final PendingRegistrationService pendingRegistrationService;
-
-    private static final Logger log = LoggerFactory.getLogger(OTPService.class);
-
-    @Autowired
-    public SignupController(AuthenticationManager authenticationManager,
-            UserService userService,
-            OTPService otpService,
-            InstitutionRepository institutionRepository,
-            PendingRegistrationService pendingRegistrationService) {
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-        this.otpService = otpService;
-        this.institutionRepository = institutionRepository;
-        this.pendingRegistrationService = pendingRegistrationService;
-    }
 
     @GetMapping("/signup")
     public String showSignupPage(Model model, Authentication auth) {

@@ -59,4 +59,8 @@ src/main/resources/.env
 hs_err_pid*
 replay_pid*
 
-src\main\resources\automated-grading-system-a2ac0-firebase-adminsdk-fbsvc-8d54be5e6c.json
+# Ignore service accounts
+src/main/resources/*.json
+
+fc_secret.txt
+fc_secret.txt.pub

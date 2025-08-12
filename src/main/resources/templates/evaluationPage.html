@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Evaluation Results</title>
+    <link rel="stylesheet" th:href="@{/css/results.css}" />
+
+</head>
+
+<body>
+    <div class="back-button">
+        <a href="/dashboard">&larr; Back to Dashboard</a>
+    </div>
+
+    <div class="assignment-header">
+        <h2 th:text="${assignmentTitle}">Assignment Title</h2>
+        <p th:text="${assignmentDescription}">Assignment description goes here...</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>Score</th>
+                <th>Max</th>
+                <th>Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="result : ${results}" th:onclick="'showModal(' + ${result.questionNumber} + ')'">
+                <td th:text="${result.questionNumber}"></td>
+                <td th:text="${result.question}"></td>
+                <td th:text="${result.answer}"></td>
+                <td>
+                    <span class="score-text" th:text="${result.score}"></span>
+                    <input class="score-input" type="number" min="0" th:attr="max=${result.maxScore}"
+                        th:value="${result.score}" style="display:none;" />
+                </td>
+                <td>
+                    <span class="maxscore-text" th:text="${result.maxScore}"></span>
+                    <input class="maxscore-input" type="number" min="0" th:value="${result.maxScore}"
+                        style="display:none;" />
+                </td>
+                <td>
+                    <span class="feedback-text" th:text="${result.feedback}"></span>
+                    <textarea class="feedback-input" style="display:none;" th:text="${result.feedback}"></textarea>
+                </td>
+                <td>
+                    <button class="edit-btn" type="button" th:onclick="'startEdit(' + ${result.questionNumber} + ')'"
+                        title="Edit evaluation">Edit</button>
+                    <button class="save-btn" type="button" th:onclick="'saveEdit(' + ${result.questionNumber} + ')'"
+                        style="display:none;" title="Save changes">Save</button>
+                    <button class="cancel-btn" type="button" th:onclick="'cancelEdit(' + ${result.questionNumber} + ')'"
+                        style="display:none;" title="Cancel editing">Cancel</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- View details Popup -->
+    <div th:each="result : ${results}" th:id="'modal-' + ${result.questionNumber}" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal(this)">&times;</span>
+            <h3>Evaluation Details</h3>
+
+            <div class="field"><span class="label">Question:</span>
+                <p th:text="${result.question}"></p>
+            </div>
+            <div class="field"><span class="label">Answer:</span>
+                <p th:text="${result.answer}"></p>
+            </div>
+            <div class="field"><span class="label">Score:</span> <span th:text="${result.score}"></span> / <span
+                    th:text="${result.maxScore}"></span></div>
+            <div class="field"><span class="label">Feedback:</span>
+                <p th:text="${result.feedback}"></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" th:src="@{/js/evaluation.js}"></script>
+</body>
+
+</html>

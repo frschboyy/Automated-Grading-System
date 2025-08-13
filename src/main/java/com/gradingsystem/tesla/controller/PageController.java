@@ -64,6 +64,8 @@ public class PageController {
         List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submission.getId());
         model.addAttribute("results", results);
 
+        model.addAttribute("downloadUrl", submission.getFileUrl());
+
         return "resultsPage";
     }
 }

@@ -78,6 +78,8 @@ aside.sidebar {
     flex: 1;
     overflow-y: auto;
     margin-bottom: 1rem;
+    list-style: none;
+    padding: 0;
 }
 
 .course-list li+li {
@@ -89,12 +91,14 @@ aside.sidebar {
     padding: 0.6rem 1rem;
     border-radius: 6px;
     background-color: #495057;
+    color: white;
     transition: background-color 0.2s ease;
+    text-decoration: none;
 }
 
 .course-list a.course-tab:hover,
 .course-list a.course-tab.active {
-    background-color: #6c757d;
+    background-color: #495057;
     font-weight: bold;
 }
 
@@ -183,7 +187,7 @@ main.content {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    
+
     display: box;
     box-orient: vertical;
     line-clamp: 2;
@@ -481,7 +485,7 @@ form.assignment-form a.btn-cancel:hover {
 }
 
 .hidden {
-  display: none !important;
+    display: none !important;
 }
 
 /* ============================
@@ -520,7 +524,7 @@ form.assignment-form a.btn-cancel:hover {
         flex: 1 0 100%;
         font-size: 1rem;
         text-align: left;
-        margin-left: 10px; 
+        margin-left: 10px;
         margin-bottom: 0.75rem;
     }
 
@@ -535,6 +539,7 @@ form.assignment-form a.btn-cancel:hover {
     .course-list li {
         margin: 0;
     }
+
 
     .course-list a.course-tab {
         white-space: nowrap;

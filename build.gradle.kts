@@ -9,7 +9,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(19)
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
@@ -52,9 +52,9 @@ dependencies {
     implementation ("org.apache.opennlp:opennlp-tools:2.5.0")
 
     // Lombok Dependency
-    implementation ("org.projectlombok:lombok:1.18.36")
-    compileOnly ("org.projectlombok:lombok:1.18.36")
-    annotationProcessor ("org.projectlombok:lombok:1.18.36")
+    implementation ("org.projectlombok:lombok:1.18.38")
+    compileOnly ("org.projectlombok:lombok:1.18.38")
+    annotationProcessor ("org.projectlombok:lombok:1.18.38")
 
     // Data Validtion
     implementation("org.hibernate.validator:hibernate-validator:8.0.1.Final")

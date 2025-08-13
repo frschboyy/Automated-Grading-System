@@ -30,7 +30,7 @@
             <ul class="course-list">
                 <li id="noCourseSelectedMsg" th:if="${#lists.isEmpty(courses)}">No courses enrolled</li>
                 <li th:each="course : ${courses}">
-                    <a href="#" th:attr="data-id=${course.id}, 
+                    <a href="#" th:title="${course.name}" th:attr="data-id=${course.id}, 
                                 data-code=${course.courseCode}, 
                                 data-name=${course.name}">
                         <h4><b th:text="${course.courseCode}">Code</b></h4>
@@ -50,7 +50,7 @@
         <!-- Content -->
         <main class="content">
             <h2 id="selectedCourseName" class="selected-course-name">
-                Select a course to view assignments
+                📖...
             </h2>
 
             <div id="courseContent">

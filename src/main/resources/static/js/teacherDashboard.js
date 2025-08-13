@@ -1,19 +1,81 @@
 // Sidebar
-fetch('/teacher/courses').then(res => res.json()).then(courses => {
-  const courseList = document.getElementById('courseList');
-  courseList.innerHTML = '';
-  courses.forEach(c => {
-    const li = document.createElement('li');
-    li.innerHTML = `<a href="#" class="course-tab" data-id="${c.id}">${c.courseCode}</a>`;
-    courseList.appendChild(li);
-  });
-  document.querySelectorAll('.course-tab').forEach(tab => {
-    tab.addEventListener('click', e => {
-      e.preventDefault();
-      loadCourse(tab.dataset.id, tab.textContent);
+// fetch('/teacher/courses')
+//   .then(res => res.json())
+//   .then(courses => {
+//     const courseList = document.getElementById('courseList');
+//     courseList.innerHTML = '';
+
+//     courses.forEach((c, index) => {
+//       const li = document.createElement('li');
+//       li.innerHTML = `<a href="#" class="course-tab" data-id="${c.id}" title="${c.name}">${c.courseCode}</a>`;
+//       courseList.appendChild(li);
+
+//       // Automatically select first course
+//       if (index === 0) {
+//         li.querySelector('a').classList.add('active');
+//         loadCourse(c.id, c.courseCode);
+//       }
+//     });
+
+//     document.querySelectorAll('.course-tab').forEach(tab => {
+//       tab.addEventListener('click', e => {
+//         e.preventDefault();
+
+//         // Remove active from all tabs
+//         document.querySelectorAll('.course-tab').forEach(t => t.classList.remove('active'));
+
+//         // Add active to clicked tab
+//         tab.classList.add('active');
+
+//         loadCourse(tab.dataset.id, tab.textContent);
+//       });
+//     });
+//   });
+
+// Sidebar
+fetch('/teacher/courses')
+  .then(res => res.json())
+  .then(courses => {
+    const courseList = document.getElementById('courseList');
+    courseList.innerHTML = '';
+
+    courses.forEach(c => {
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#" class="course-tab" data-id="${c.id}" title="${c.name}">${c.courseCode}</a>`;
+      courseList.appendChild(li);
+    });
+
+    const storedCourseId = sessionStorage.getItem('currentCourseId');
+
+    if (storedCourseId) {
+      // Select stored course
+      const tab = courseList.querySelector(`a.course-tab[data-id="${storedCourseId}"]`);
+      if (tab) {
+        tab.classList.add('active');
+        loadCourse(tab.dataset.id, tab.textContent);
+      }
+    } else if (courses.length > 0) {
+      // Select first course if nothing stored
+      const firstTab = courseList.querySelector('a.course-tab');
+      firstTab.classList.add('active');
+      loadCourse(firstTab.dataset.id, firstTab.textContent);
+    }
+
+    // Tab click event
+    document.querySelectorAll('.course-tab').forEach(tab => {
+      tab.addEventListener('click', e => {
+        e.preventDefault();
+
+        // Remove active from all tabs
+        document.querySelectorAll('.course-tab').forEach(t => t.classList.remove('active'));
+
+        // Add active to clicked tab
+        tab.classList.add('active');
+
+        loadCourse(tab.dataset.id, tab.textContent);
+      });
     });
   });
-});
 
 // Courses
 function loadCourse(courseId, courseCode) {
@@ -24,13 +86,17 @@ function loadCourse(courseId, courseCode) {
   document.getElementById('courseId').value = courseId;
 
   document.getElementById('courseContent').classList.remove('hidden');
+
+  // Store current course in session
+  sessionStorage.setItem('currentCourseId', courseId);
+
   loadAssignments(courseId);
   loadStudents(courseId);
 }
 
 // Assignments
 function loadAssignments(courseId) {
-  fetch(`/teacher/assignments/course/${courseId}`)
+  fetch(`/teacher/course/${courseId}/assignments`)
     .then(res => res.json())
     .then(data => renderAssignments(data));
 }
@@ -76,16 +142,30 @@ function clearAssignmentForm() {
 }
 
 // Students
+// function loadStudents(courseId) {
+//   fetch(`/teacher/students/course/${courseId}`).then(res => res.json()).then(data => {
+//     const container = document.getElementById('studentList');
+//     container.innerHTML = '';
+//     data.forEach(s => {
+//       const li = document.createElement('li');
+//       li.textContent = `${s.name} [ ${s.registrationId} ]`;
+//       container.appendChild(li);
+//     });
+//   });
+// }
+
 function loadStudents(courseId) {
-  fetch(`/teacher/students/course/${courseId}`).then(res => res.json()).then(data => {
-    const container = document.getElementById('studentList');
-    container.innerHTML = '';
-    data.forEach(s => {
-      const li = document.createElement('li');
-      li.textContent = `${s.name} [ ${s.registrationId} ]`;
-      container.appendChild(li);
+  fetch(`/teacher/students/course/${courseId}`)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('studentList');
+      container.innerHTML = '';
+      data.forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = `${s.name} [ ${s.registrationId} ]`;
+        container.appendChild(li);
+      });
     });
-  });
 }
 
 // Edit Assignment

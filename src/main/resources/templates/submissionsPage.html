@@ -14,10 +14,9 @@
 <body>
     <header class="header">
         <div class="header-content back">
-            <a href="/dashboard">Back to Dashboard</a>
+            <a href="#" id="backToDashboard" class="button-link">Back to Dashboard</a>
         </div>
     </header>
-
     <div class="container">
         <div class="card">
             <h1 th:text="${assignmentTitle}">Loading...</h1>
@@ -46,6 +45,7 @@
         </div>
     </div>
     <script th:src="@{/js/submission.js}"></script>
+    <script type="text/javascript" th:src="@{/js/backToDashboard.js}"></script>
 </body>
 
 </html>

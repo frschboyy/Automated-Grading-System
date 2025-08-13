@@ -112,7 +112,6 @@ public class DashboardController {
     }
 
     // TEACHER
-
     // Query all submissions for an assignment
     @GetMapping("teacher/assignments/{assignmentId}/submissions")
     public String getSubmissions(@PathVariable Long assignmentId,
@@ -131,14 +130,23 @@ public class DashboardController {
         return "submissionList";
     }
 
-    // Query evaluation for a a student
+    // Query evaluation for a student
     @GetMapping("teacher/submissions/{submissionId}")
     public String getEvaluation(@PathVariable Long submissionId,
             Model model,
             HttpSession session) {
+        session.setAttribute("submissionId", submissionId);
 
         Long assignmentId = (Long) session.getAttribute("assignmentId");
-        Assignment assignment = assignmentService.getAssignment(assignmentId);
+
+        AssignmentDTO dto = assignmentService.getAssignmentById(assignmentId);
+        model.addAttribute("assignmentId", dto.getId());
+        model.addAttribute("assignmentTitle", dto.getTitle());
+        model.addAttribute("assignmentDescription", dto.getDescription());
+
+        // Assignment assignment = assignmentService.getAssignment(assignmentId);
+        String downloadUrl = submissionService.getSubmissionUrl(submissionId);
+        model.addAttribute("downloadUrl", downloadUrl);
 
         List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submissionId);
 

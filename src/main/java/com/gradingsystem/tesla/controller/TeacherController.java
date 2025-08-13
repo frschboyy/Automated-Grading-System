@@ -50,7 +50,7 @@ public class TeacherController {
     }
 
     // ASSIGNMENTS
-    @GetMapping("/assignments/course/{courseId}")
+    @GetMapping("/course/{courseId}/assignments")
     public ResponseEntity<List<AssignmentDTO>> getAssignmentsByCourse(@PathVariable Long courseId,
             @AuthenticationPrincipal CustomUserDetails currentUser,
             HttpSession session) {
@@ -108,7 +108,7 @@ public class TeacherController {
     }
 
     // Update evaluation for a question
-    @PostMapping("evaluation/update/{questionNumber}")
+    @PostMapping("/evaluation/update/{questionNumber}")
     public ResponseEntity<?> updateEvaluation(
             @PathVariable int questionNumber,
             @RequestBody EvaluationUpdateRequest updateRequest,

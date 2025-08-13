@@ -28,15 +28,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserRoleValidator userRoleValidator;
     private final CourseRepository courseRepository;
-
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public User saveUser(User user) {
 
         // Hash Password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Validate role-based fields before saving
         userRoleValidator.validate(user);
 
         return userRepository.save(user);

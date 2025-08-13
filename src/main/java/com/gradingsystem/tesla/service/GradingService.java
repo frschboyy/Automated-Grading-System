@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -80,7 +82,7 @@ public class GradingService {
             log.debug("Grading-Service: Final graded result JSON: {}", resultJson);
             return resultJson;
 
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
             log.error("Grading-Service: Error during evaluation", e);
             throw new RuntimeException("Error evaluating submission: " + e.getMessage(), e);
         }

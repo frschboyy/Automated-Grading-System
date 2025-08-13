@@ -4,6 +4,7 @@
 <head>
     <title>Evaluation Results</title>
     <link rel="stylesheet" th:href="@{/css/results.css}" />
+    <link rel="stylesheet" th:href="@{/css/evaluation.css}" />
 
 </head>
 
@@ -13,8 +14,17 @@
     </div>
 
     <div class="assignment-header">
-        <h2 th:text="${assignmentTitle}">Assignment Title</h2>
-        <p th:text="${assignmentDescription}">Assignment description goes here...</p>
+        <div>
+            <h2 th:text="${assignmentTitle}">Assignment Title</h2>
+            <p th:text="${assignmentDescription}">Assignment description goes here...</p>
+        </div>
+        <div>
+            <h2>
+                <a class="download-link" th:href="@{/download(file=${downloadUrl})}">
+                    Download
+                </a>
+            </h2>
+        </div>
     </div>
 
     <table>
@@ -29,32 +39,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="result : ${results}" th:onclick="'showModal(' + ${result.questionNumber} + ')'">
+            <tr th:id="'row-' + ${result.questionNumber}" th:each="result : ${results}"
+                th:onclick="'showModal(' + ${result.questionNumber} + ')'">
                 <td th:text="${result.questionNumber}"></td>
                 <td th:text="${result.question}"></td>
                 <td th:text="${result.answer}"></td>
-                <td>
-                    <span class="score-text" th:text="${result.score}"></span>
-                    <input class="score-input" type="number" min="0" th:attr="max=${result.maxScore}"
-                        th:value="${result.score}" style="display:none;" />
-                </td>
-                <td>
-                    <span class="maxscore-text" th:text="${result.maxScore}"></span>
-                    <input class="maxscore-input" type="number" min="0" th:value="${result.maxScore}"
-                        style="display:none;" />
-                </td>
-                <td>
-                    <span class="feedback-text" th:text="${result.feedback}"></span>
-                    <textarea class="feedback-input" style="display:none;" th:text="${result.feedback}"></textarea>
-                </td>
-                <td>
-                    <button class="edit-btn" type="button" th:onclick="'startEdit(' + ${result.questionNumber} + ')'"
-                        title="Edit evaluation">Edit</button>
-                    <button class="save-btn" type="button" th:onclick="'saveEdit(' + ${result.questionNumber} + ')'"
-                        style="display:none;" title="Save changes">Save</button>
-                    <button class="cancel-btn" type="button" th:onclick="'cancelEdit(' + ${result.questionNumber} + ')'"
-                        style="display:none;" title="Cancel editing">Cancel</button>
-                </td>
+                <td class="score-cell" th:text="${result.score}"></td>
+                <td class="maxscore-cell" th:text="${result.maxScore}"></td>
+                <td class="feedback-cell" th:text="${result.feedback}"></td>
             </tr>
         </tbody>
     </table>
@@ -71,10 +63,27 @@
             <div class="field"><span class="label">Answer:</span>
                 <p th:text="${result.answer}"></p>
             </div>
-            <div class="field"><span class="label">Score:</span> <span th:text="${result.score}"></span> / <span
-                    th:text="${result.maxScore}"></span></div>
-            <div class="field"><span class="label">Feedback:</span>
-                <p th:text="${result.feedback}"></p>
+            <div class="field">
+                <span class="label">Score:</span>
+                <span class="score-text" th:text="${result.score}"></span>
+                <input type="number" class="score-input" th:value="${result.score}" step="0.1" />
+                /
+                <span class="maxscore-text" th:text="${result.maxScore}"></span>
+                <input type="number" class="maxscore-input" th:value="${result.maxScore}" step="0.1" />
+            </div>
+            <div class="field">
+                <span class="label">Feedback:</span>
+                <span class="feedback-text" th:text="${result.feedback}"></span>
+                <textarea class="feedback-input" th:text="${result.feedback}"></textarea>
+            </div>
+
+            <div>
+                <button class="edit-btn" type="button" th:onclick="'startEdit(' + ${result.questionNumber} + ')'"
+                    title="Edit evaluation">Re-evaluate</button>
+                <button class="save-btn" type="button" th:onclick="'saveEdit(' + ${result.questionNumber} + ')'"
+                    style="display:none;" title="Save changes">Save</button>
+                <button class="cancel-btn" type="button" th:onclick="'cancelEdit(' + ${result.questionNumber} + ')'"
+                    style="display:none;" title="Cancel editing">Cancel</button>
             </div>
         </div>
     </div>

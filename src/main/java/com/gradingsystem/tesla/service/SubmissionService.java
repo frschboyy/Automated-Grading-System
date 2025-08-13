@@ -20,6 +20,7 @@ import com.gradingsystem.tesla.model.Evaluation;
 import com.gradingsystem.tesla.model.User;
 import com.gradingsystem.tesla.repository.DocumentSubmissionRepository;
 import com.gradingsystem.tesla.repository.EvaluationRepository;
+import com.gradingsystem.tesla.repository.AssignmentRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +30,7 @@ public class SubmissionService {
 
     private final DocumentSubmissionRepository submissionRepository;
     private final EvaluationRepository evaluationRepository;
+    private final AssignmentRepository assignmentRepository;
     private final AssignmentService assignmentService;
     private final UserService studentService;
 
@@ -70,11 +72,15 @@ public class SubmissionService {
     }
 
     public List<SubmissionDTO> getAllSubmissions(Long assignmentId, Long courseId) {
-        List<SubmissionDTO> submissionList = new ArrayList<SubmissionDTO>();
+        List<SubmissionDTO> submissionList = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
         List<User> students = studentService.getStudentsForCourse(courseId);
+
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+            .orElseThrow(() -> new RuntimeException("Assignment not found"));;
+
         for (User student : students) {
-            DocumentSubmission submission = submissionRepository.findByStudent(student);
+            DocumentSubmission submission = submissionRepository.findByStudentAndAssignment(student, assignment);
             if (submission != null) {
                 SubmissionDTO dto = new SubmissionDTO();
                 dto.setSubmissionId(submission.getId());
@@ -90,10 +96,14 @@ public class SubmissionService {
     }
 
     public List<StudentDTO> getAllPendingSubmissions(Long assignmentId, Long courseId) {
-        List<StudentDTO> pendingList = new ArrayList<StudentDTO>();
+        List<StudentDTO> pendingList = new ArrayList<>();
         List<User> students = studentService.getStudentsForCourse(courseId);
+        
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+            .orElseThrow(() -> new RuntimeException("Assignment not found"));
+
         for (User student : students) {
-            DocumentSubmission submission = submissionRepository.findByStudent(student);
+            DocumentSubmission submission = submissionRepository.findByStudentAndAssignment(student, assignment);
             if (submission == null) {
                 StudentDTO dto = new StudentDTO();
                 dto.setRegistrationId(student.getRegistrationId());
@@ -109,13 +119,11 @@ public class SubmissionService {
         return submissionRepository.findByStudentAndAssignment(user, assignment);
     }
 
-    public void migrateJson(Long submissionId, String evaluationJson) throws Exception {
-        DocumentSubmission submission = submissionRepository.findById(submissionId)
-                .orElseThrow(() -> new RuntimeException("Submission not found"));
-
+    public void migrateJson(DocumentSubmission submission, String evaluationJson) throws Exception {
         JsonNode arrayNode = new ObjectMapper().readTree(evaluationJson);
-        if (!arrayNode.isArray())
+        if (!arrayNode.isArray()) {
             throw new RuntimeException("Evaluation JSON not array");
+        }
 
         List<Evaluation> evaluations = new ArrayList<>();
         for (JsonNode node : arrayNode) {
@@ -131,5 +139,11 @@ public class SubmissionService {
         }
 
         evaluationRepository.saveAll(evaluations);
+    }
+
+    public String getSubmissionUrl(Long submissionId){
+        DocumentSubmission submission = submissionRepository.findById(submissionId)
+            .orElseThrow(() -> new RuntimeException("Submission not found"));
+        return submission.getFileUrl();
     }
 }

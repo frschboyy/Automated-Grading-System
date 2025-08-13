@@ -31,7 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.querySelectorAll('.course-list a').forEach(link => {
+    const courseLinks = document.querySelectorAll('.course-list a');
+
+
+    courseLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const courseId = link.dataset.id;
@@ -40,6 +43,35 @@ document.addEventListener('DOMContentLoaded', () => {
             loadAssignments(courseId, courseCode, courseName);
         });
     });
+
+    // Determine selected course: query param > sessionStorage > first link
+    const urlParams = new URLSearchParams(window.location.search);
+    let courseIdToSelect = urlParams.get('courseId') || sessionStorage.getItem('currentCourseId') || null;
+
+    if (!courseIdToSelect && courseLinks.length > 0) {
+        courseIdToSelect = courseLinks[0].dataset.id;
+    }
+
+    courseLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const courseId = link.dataset.id;
+            const courseCode = link.dataset.code;
+            const courseName = link.dataset.name;
+
+            sessionStorage.setItem('currentCourseId', courseId);
+            loadAssignments(courseId, courseCode, courseName);
+        });
+    });
+
+    // Auto-select the stored course
+    if (courseIdToSelect) {
+        const linkToSelect = Array.from(courseLinks).find(link => link.dataset.id === courseIdToSelect);
+        if (linkToSelect) {
+            sessionStorage.setItem('studentCurrentCourseId', courseIdToSelect);
+            loadAssignments(linkToSelect.dataset.id, linkToSelect.dataset.code, linkToSelect.dataset.name);
+        }
+    }
 });
 
 // Fetch Assignments For Course Selected

@@ -10,12 +10,14 @@ import java.net.URI;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('TEACHER', 'STUDENT', 'INSTITUTIONAL_ADMIN', 'ADMIN')")
 public class DownloadController {
 
     private final FirebaseStorageService firebaseStorageService;

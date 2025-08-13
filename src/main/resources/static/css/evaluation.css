@@ -1,0 +1,161 @@
+/* --------------------------------------------- */
+/* Toggle Edit Inputs - Hidden by default         */
+/* --------------------------------------------- */
+.score-input,
+.maxscore-input,
+.feedback-input {
+    display: none;
+}
+
+/* --------------------------------------------- */
+/* Input Fields Styling                            */
+/* --------------------------------------------- */
+/* Inline number inputs for score/maxScore */
+.score-input,
+.maxscore-input {
+    width: 70px;
+    padding: 8px 10px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    box-sizing: border-box;
+}
+
+/* Feedback textarea */
+.feedback-input {
+    width: 100%;
+    min-height: 10em;
+    padding: 12px 14px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
+    resize: vertical;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+/* --------------------------------------------- */
+/* Input Focus States                             */
+/* --------------------------------------------- */
+.score-input:focus,
+.maxscore-input:focus,
+.feedback-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 6px rgba(52, 152, 219, 0.4);
+    outline: none;
+}
+
+/* --------------------------------------------- */
+/* Placeholder Styling                            */
+/* --------------------------------------------- */
+.score-input::placeholder,
+.maxscore-input::placeholder,
+.feedback-input::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* --------------------------------------------- */
+/* Text Display for Score, Max Score & Feedback  */
+/* --------------------------------------------- */
+.score-text,
+.maxscore-text,
+.feedback-text {
+    font-size: 1rem;
+    line-height: 1.4;
+    display: inline-block;
+    vertical-align: middle;
+    word-wrap: break-word;
+    max-width: 100%;
+    white-space: normal;
+}
+
+/* --------------------------------------------- */
+/* Modal Action Buttons Container Margin         */
+/* --------------------------------------------- */
+.modal-content .edit-btn,
+.modal-content .save-btn,
+.modal-content .cancel-btn {
+    margin-top: 10px;
+}
+
+/* --------------------------------------------- */
+/* Edit, Save & Cancel Buttons Styling            */
+/* --------------------------------------------- */
+.edit-btn,
+.save-btn,
+.cancel-btn {
+    margin-right: 8px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    user-select: none;
+}
+
+/* Focus Outline for Accessibility */
+.edit-btn:focus-visible,
+.save-btn:focus-visible,
+.cancel-btn:focus-visible {
+    outline: 3px solid #3498db;
+    outline-offset: 2px;
+}
+
+/* Hover Effects */
+.edit-btn:hover,
+.save-btn:hover,
+.cancel-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* --------------------------------------------- */
+/* Individual Button Colors and Hover Effects    */
+/* --------------------------------------------- */
+/* Edit Button */
+.edit-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.edit-btn:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 86, 179, 0.5);
+}
+
+/* Save Button */
+.save-btn {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.save-btn:hover {
+    background-color: #1e7e34;
+    box-shadow: 0 4px 12px rgba(30, 126, 52, 0.5);
+}
+
+.save-btn:disabled {
+    background-color: #94d3a2;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Cancel Button */
+.cancel-btn {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+    box-shadow: 0 4px 12px rgba(90, 98, 104, 0.5);
+}

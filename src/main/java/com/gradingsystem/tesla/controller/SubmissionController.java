@@ -1,5 +1,16 @@
 package com.gradingsystem.tesla.controller;
 
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.service.AssignmentService;
 import com.gradingsystem.tesla.service.CourseService;
@@ -9,26 +20,18 @@ import com.gradingsystem.tesla.service.MatchingService;
 import com.gradingsystem.tesla.service.SubmissionParserService;
 import com.gradingsystem.tesla.service.SubmissionService;
 import com.gradingsystem.tesla.util.CustomUserDetails;
+import com.gradingsystem.tesla.util.PathUtils;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.*;
-
-import com.gradingsystem.tesla.util.PathUtils;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/submissions")
 @RequiredArgsConstructor
 public class SubmissionController {
+
     private final FirebaseStorageService firebaseStorageService;
     private final AssignmentService assignmentService;
     private final SubmissionService submissionService;
@@ -59,7 +62,7 @@ public class SubmissionController {
             String parsedSubmissionJson = submissionParserService.parseSubmission(file);
 
             // Get teacher assignment JSON
-            String teacherAssignmentJson = assignmentService.getAssignmentJson(Long.valueOf(assignmentId));
+            String teacherAssignmentJson = assignmentService.getAssignmentJson(assignmentId);
 
             // Match student answers to teacher questions
             String matchedJson = matchingService.matchQuestions(teacherAssignmentJson, parsedSubmissionJson);
@@ -75,7 +78,7 @@ public class SubmissionController {
             String evaluationResponse = gradingService.evaluate(matchedJson);
 
             // Parse Json string and save in evaluation db
-            submissionService.migrateJson(submission.getId(), evaluationResponse);
+            submissionService.migrateJson(submission, evaluationResponse);
 
             return ResponseEntity.ok(Map.of("message", "Submission uploaded and evaluation started"));
 
@@ -87,13 +90,13 @@ public class SubmissionController {
     }
 
     private String buildFirebasePath(Long assignmentId, Long studentId, String originalFileName, Long courseId) {
-        String couseCode = courseService.getCourseCode(courseId);
+        String courseCode = courseService.getCourseCode(courseId);
         return String.format("%s/%s/%s/%s_%s",
-                couseCode,
+                courseCode,
                 assignmentId + "_"
-                        + PathUtils.sanitizePathPart(assignmentService.getAssignment(assignmentId).getTitle()),
+                + PathUtils.sanitizePathPart(assignmentService.getAssignment(assignmentId).getTitle()),
                 "submissions",
-                UUID.randomUUID(),
+                studentId.toString(),
                 assignmentId + "_" + PathUtils.sanitizePathPart(originalFileName));
     }
 }

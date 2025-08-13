@@ -13,11 +13,40 @@ body {
 
 /* Assignment header */
 .assignment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 30px;
     padding: 20px;
     background-color: #eaeaea;
     border-left: 5px solid #3498db;
 }
+
+.download-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white; 
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.download-link:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.download-link:active {
+    background-color: #3e8e41;
+}
+
+.download-link::after {
+    content: " 📂";
+}
+
 
 .assignment-header h2 {
     margin: 0;

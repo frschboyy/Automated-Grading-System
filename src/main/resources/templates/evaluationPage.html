@@ -44,12 +44,25 @@
                 <td th:text="${result.questionNumber}"></td>
                 <td th:text="${result.question}"></td>
                 <td th:text="${result.answer}"></td>
-                <td class="score-cell" th:text="${result.score}"></td>
-                <td class="maxscore-cell" th:text="${result.maxScore}"></td>
+                <td class="score-cell" data-value="${result.score}" th:text="${result.score}"></td>
+                <td class="maxscore-cell" data-value="${result.maxScore}" th:text="${result.maxScore}"></td>
                 <td class="feedback-cell" th:text="${result.feedback}"></td>
             </tr>
         </tbody>
     </table>
+
+    <!-- Score Card -->
+    <div class="score-card">
+        <div class="score-percentage">
+            <span id="total-percent"
+                th:text="${#numbers.formatPercent(scoreCard.score / scoreCard.maxScore, 0, 0)}"></span>
+        </div>
+        <div class="score-values">
+            <span id="total-score" th:text="${#numbers.formatInteger(scoreCard.score, 0)}"></span>
+            /
+            <span id="total-max" th:text="${#numbers.formatInteger(scoreCard.maxScore, 0)}"></span>
+        </div>
+    </div>
 
     <!-- View details Popup -->
     <div th:each="result : ${results}" th:id="'modal-' + ${result.questionNumber}" class="modal">

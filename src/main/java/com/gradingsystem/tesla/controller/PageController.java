@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.gradingsystem.tesla.dto.AssignmentDTO;
 import com.gradingsystem.tesla.dto.EvaluationDTO;
+import com.gradingsystem.tesla.dto.ScoreCard;
 import com.gradingsystem.tesla.model.Assignment;
 import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.service.AssignmentService;
@@ -61,6 +62,9 @@ public class PageController {
 
         Assignment assignment = assignmentService.getAssignment(assignmentId);
         DocumentSubmission submission = submissionService.findSubmission(currentUser.getUser(), assignment);
+
+        ScoreCard scores = submissionService.getScoreCard(submission.getId());
+        model.addAttribute("scoreCard", scores); 
 
         // SubmissionDTO submission =
         List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submission.getId(), currentUser);

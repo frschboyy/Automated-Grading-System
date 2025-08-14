@@ -15,4 +15,6 @@ public class EvaluationUpdateRequest {
     private Double score;
     private Double maxScore;
     private String feedback;
+    private Double oldScore;
+    private Double oldMaxScore;
 }

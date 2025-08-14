@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gradingsystem.tesla.dto.EvaluationUpdateRequest;
+import com.gradingsystem.tesla.dto.ScoreCard;
 import com.gradingsystem.tesla.dto.StudentDTO;
 import com.gradingsystem.tesla.dto.SubmissionDTO;
 import com.gradingsystem.tesla.model.Assignment;
@@ -26,7 +27,9 @@ import com.gradingsystem.tesla.repository.AssignmentRepository;
 import com.gradingsystem.tesla.util.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubmissionService {
@@ -62,16 +65,41 @@ public class SubmissionService {
         }
 
         if (updateRequest.getScore() != null) {
+            log.info("Updating score from {} to {}", evaluation.getScore(), updateRequest.getScore());
+
             evaluation.setScore(updateRequest.getScore());
         }
         if (updateRequest.getFeedback() != null) {
             evaluation.setFeedback(updateRequest.getFeedback());
         }
         if (updateRequest.getMaxScore() != null) {
+            log.info("Updating maxScore from {} to {}", evaluation.getMaxScore(), updateRequest.getMaxScore());
+
             evaluation.setMaxScore(updateRequest.getMaxScore());
         }
 
         evaluationRepository.save(evaluation);
+
+        DocumentSubmission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new RuntimeException("submission not found"));
+
+        Double oldScore = updateRequest.getOldScore() != null ? updateRequest.getOldScore() : 0.0;
+        Double oldMaxScore = updateRequest.getOldMaxScore() != null ? updateRequest.getOldMaxScore() : 0.0;
+
+        Double scoreDiff = updateRequest.getScore() - oldScore;
+        Double maxScoreDiff = updateRequest.getMaxScore() - oldMaxScore;
+
+        log.info("OldScore={} OldMaxScore={} NewScore={} NewMaxScore={} ScoreDiff={} MaxScoreDiff={}",
+                oldScore, oldMaxScore, updateRequest.getScore(), updateRequest.getMaxScore(), scoreDiff, maxScoreDiff);
+
+        // Update submission
+        submission.setTotalScore(submission.getTotalScore() + scoreDiff);
+        submission.setTotalMaxScore(submission.getTotalMaxScore() + maxScoreDiff);
+        submission.setPercentage((submission.getTotalScore() / submission.getTotalMaxScore()));
+
+        log.info("Updated submission totals: totalScore={} totalMaxScore={} percentage={}",
+                submission.getTotalScore(), submission.getTotalMaxScore(), submission.getPercentage());
+
         return true;
     }
 
@@ -124,6 +152,9 @@ public class SubmissionService {
     }
 
     public void migrateJson(DocumentSubmission submission, String evaluationJson) throws Exception {
+        double totalScore = 0;
+        double totalMaxScore = 0;
+
         JsonNode arrayNode = new ObjectMapper().readTree(evaluationJson);
         if (!arrayNode.isArray()) {
             throw new RuntimeException("Evaluation JSON not array");
@@ -131,17 +162,25 @@ public class SubmissionService {
 
         List<Evaluation> evaluations = new ArrayList<>();
         for (JsonNode node : arrayNode) {
+            totalScore += node.path("evaluation").path("score").asDouble();
+            totalMaxScore += node.path("maxScore").asDouble();
             evaluations.add(Evaluation.builder()
                     .questionNumber(node.path("questionNumber").asInt())
                     .question(node.path("question").asText())
                     .answer(node.path("answer").asText())
-                    .maxScore(node.path("maxScore").asInt())
-                    .score(node.path("evaluation").path("score").asInt())
+                    .maxScore(node.path("maxScore").asDouble())
+                    .score(node.path("evaluation").path("score").asDouble())
                     .feedback(node.path("evaluation").path("feedback").asText())
                     .submission(submission)
                     .build());
         }
 
+        // Update submission
+        submission.setTotalScore(totalScore);
+        submission.setTotalMaxScore(totalMaxScore);
+        submission.setPercentage((totalScore / totalMaxScore) * 100);
+
+        // Save evaluations
         evaluationRepository.saveAll(evaluations);
     }
 
@@ -149,5 +188,17 @@ public class SubmissionService {
         DocumentSubmission submission = submissionRepository.findById(submissionId)
                 .orElseThrow(() -> new RuntimeException("Submission not found"));
         return submission.getFileUrl();
+    }
+
+    public ScoreCard getScoreCard(Long submissionId) {
+        DocumentSubmission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new RuntimeException("Submission not found"));
+        ScoreCard card = ScoreCard.builder()
+                .score(submission.getTotalScore())
+                .maxScore(submission.getTotalMaxScore())
+                .percentage(submission.getPercentage())
+                .build();
+
+        return card;
     }
 }

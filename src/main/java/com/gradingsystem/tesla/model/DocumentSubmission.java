@@ -39,8 +39,9 @@ public class DocumentSubmission {
     @Column(columnDefinition = "TEXT")
     private String parsedJson;
 
-    @Column(nullable = true)
-    private Integer grade;
+    private Double totalScore;
+    private Double totalMaxScore;
+    private Double percentage;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime submittedAt;

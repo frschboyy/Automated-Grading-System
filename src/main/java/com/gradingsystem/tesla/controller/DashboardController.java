@@ -5,6 +5,7 @@ import com.gradingsystem.tesla.dto.CourseDTO;
 import com.gradingsystem.tesla.dto.EvaluationDTO;
 import com.gradingsystem.tesla.dto.StudentDTO;
 import com.gradingsystem.tesla.dto.SubmissionDTO;
+import com.gradingsystem.tesla.dto.ScoreCard;
 import com.gradingsystem.tesla.model.Assignment;
 import com.gradingsystem.tesla.service.AssignmentService;
 import com.gradingsystem.tesla.service.RetrieveEvaluationService;
@@ -139,8 +140,11 @@ public class DashboardController {
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         
         List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submissionId, currentUser);
-
         model.addAttribute("results", results);
+
+        ScoreCard scores = submissionService.getScoreCard(submissionId);
+        model.addAttribute("scoreCard", scores);
+
         session.setAttribute("submissionId", submissionId);
 
         Long assignmentId = (Long) session.getAttribute("assignmentId");

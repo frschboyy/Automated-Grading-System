@@ -67,10 +67,21 @@ function saveEdit(qNum) {
         return;
     }
 
+    // Get old values from table row dataset
+    const row = document.getElementById('row-' + qNum);
+    const oldScore = Number(row.querySelector('.score-cell').textContent.trim()) || 0;
+    const oldMaxScore = Number(row.querySelector('.maxscore-cell').textContent.trim()) || 0;
+
     fetch(`/teacher/evaluation/update/${qNum}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ score: newScore, maxScore: newMaxScore, feedback: newFeedback })
+        body: JSON.stringify({
+            score: newScore,
+            maxScore: newMaxScore,
+            feedback: newFeedback,
+            oldScore: oldScore,
+            oldMaxScore: oldMaxScore
+        })
     }).then(res => {
         if (res.ok) {
             // Format numbers with 1 decimal place
@@ -82,13 +93,35 @@ function saveEdit(qNum) {
             modal.querySelector('.maxscore-text').textContent = displayMaxScore;
             modal.querySelector('.feedback-text').textContent = newFeedback;
 
-            // Also update table row for consistency
-            const row = document.getElementById('row-' + qNum);
-            if (row) {
-                row.querySelector('.score-cell').textContent = displayScore;
-                row.querySelector('.maxscore-cell').textContent = displayMaxScore;
-                row.querySelector('.feedback-cell').textContent = newFeedback;
-            }
+            // Update table row
+
+            row.querySelector('.score-cell').textContent = displayScore;
+            row.querySelector('.maxscore-cell').textContent = displayMaxScore;
+            row.querySelector('.feedback-cell').textContent = newFeedback;
+
+            // Save new values in dataset for future edits
+            row.querySelector('.score-cell').dataset.value = newScore;
+            row.querySelector('.maxscore-cell').dataset.value = newMaxScore;
+
+            // Update score card
+            const totalScoreEl = document.getElementById('total-score');
+            const totalMaxEl = document.getElementById('total-max');
+            const totalPercentEl = document.getElementById('total-percent');
+
+            let totalScore = Number(totalScoreEl.textContent.trim()) || 0;
+            let totalMax = Number(totalMaxEl.textContent.trim()) || 0;
+
+            // Adjust totals: remove old, add new
+            totalScore = Number(totalScoreEl.textContent.trim()) - oldScore + newScore;
+            totalMax = Number(totalMaxEl.textContent.trim()) - oldMaxScore + newMaxScore;
+
+            // Update DOM
+            totalScoreEl.textContent = Math.round(totalScore);
+            totalMaxEl.textContent = Math.round(totalMax);
+            totalPercentEl.textContent = totalMax > 0
+                ? Math.round((totalScore / totalMax) * 100) + '%'
+                : '0%';
+
 
             cancelEdit(qNum);
             alert('Evaluation updated successfully');

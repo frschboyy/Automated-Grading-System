@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.EntityNotFoundException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +23,7 @@ import com.gradingsystem.tesla.model.User;
 import com.gradingsystem.tesla.repository.DocumentSubmissionRepository;
 import com.gradingsystem.tesla.repository.EvaluationRepository;
 import com.gradingsystem.tesla.repository.AssignmentRepository;
+import com.gradingsystem.tesla.util.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,13 +52,14 @@ public class SubmissionService {
     }
 
     @Transactional
-    public boolean updateEvaluation(Long submissionId, int questionNumber, EvaluationUpdateRequest updateRequest) {
-        Optional<Evaluation> eval = evaluationRepository.findBySubmissionIdAndQuestionNumber(submissionId,
-                questionNumber);
-        if (eval.isEmpty()) {
-            return false;
+    public boolean updateEvaluation(Long submissionId, int questionNumber, EvaluationUpdateRequest updateRequest, CustomUserDetails currentUser) {
+        Evaluation evaluation = evaluationRepository
+                .findBySubmissionIdAndQuestionNumber(submissionId, questionNumber)
+                .orElseThrow(() -> new EntityNotFoundException("Evaluation not found"));
+
+        if (!(evaluation.getSubmission().getAssignment().getCourse().getTeacher().getId().equals(currentUser.getUser().getId()))) {
+            throw new AccessDeniedException("Not your course");
         }
-        Evaluation evaluation = eval.get();
 
         if (updateRequest.getScore() != null) {
             evaluation.setScore(updateRequest.getScore());
@@ -71,13 +75,13 @@ public class SubmissionService {
         return true;
     }
 
-    public List<SubmissionDTO> getAllSubmissions(Long assignmentId, Long courseId) {
+    public List<SubmissionDTO> getAllSubmissions(Long assignmentId, Long courseId, CustomUserDetails currentUser) {
         List<SubmissionDTO> submissionList = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
-        List<User> students = studentService.getStudentsForCourse(courseId);
+        List<User> students = studentService.getStudentsForCourse(courseId, currentUser);
 
         Assignment assignment = assignmentRepository.findById(assignmentId)
-            .orElseThrow(() -> new RuntimeException("Assignment not found"));;
+                .orElseThrow(() -> new RuntimeException("Assignment not found"));
 
         for (User student : students) {
             DocumentSubmission submission = submissionRepository.findByStudentAndAssignment(student, assignment);
@@ -95,12 +99,12 @@ public class SubmissionService {
         return submissionList;
     }
 
-    public List<StudentDTO> getAllPendingSubmissions(Long assignmentId, Long courseId) {
+    public List<StudentDTO> getAllPendingSubmissions(Long assignmentId, Long courseId, CustomUserDetails currentUser) {
         List<StudentDTO> pendingList = new ArrayList<>();
-        List<User> students = studentService.getStudentsForCourse(courseId);
-        
+        List<User> students = studentService.getStudentsForCourse(courseId, currentUser);
+
         Assignment assignment = assignmentRepository.findById(assignmentId)
-            .orElseThrow(() -> new RuntimeException("Assignment not found"));
+                .orElseThrow(() -> new RuntimeException("Assignment not found"));
 
         for (User student : students) {
             DocumentSubmission submission = submissionRepository.findByStudentAndAssignment(student, assignment);
@@ -141,9 +145,9 @@ public class SubmissionService {
         evaluationRepository.saveAll(evaluations);
     }
 
-    public String getSubmissionUrl(Long submissionId){
+    public String getSubmissionUrl(Long submissionId) {
         DocumentSubmission submission = submissionRepository.findById(submissionId)
-            .orElseThrow(() -> new RuntimeException("Submission not found"));
+                .orElseThrow(() -> new RuntimeException("Submission not found"));
         return submission.getFileUrl();
     }
 }

@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gradingsystem.tesla.model.DocumentSubmission;
+import com.gradingsystem.tesla.model.Course;
+import com.gradingsystem.tesla.model.User;
 import com.gradingsystem.tesla.service.AssignmentService;
 import com.gradingsystem.tesla.service.CourseService;
 import com.gradingsystem.tesla.service.FirebaseStorageService;
@@ -19,6 +23,7 @@ import com.gradingsystem.tesla.service.GradingService;
 import com.gradingsystem.tesla.service.MatchingService;
 import com.gradingsystem.tesla.service.SubmissionParserService;
 import com.gradingsystem.tesla.service.SubmissionService;
+import com.gradingsystem.tesla.service.UserService;
 import com.gradingsystem.tesla.util.CustomUserDetails;
 import com.gradingsystem.tesla.util.PathUtils;
 
@@ -29,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/submissions")
+@PreAuthorize("hasRole('STUDENT')")
 @RequiredArgsConstructor
 public class SubmissionController {
 
@@ -38,6 +44,7 @@ public class SubmissionController {
     private final CourseService courseService;
     private final SubmissionParserService submissionParserService;
     private final GradingService gradingService;
+    private final UserService studentService;
     private final MatchingService matchingService;
 
     @PostMapping
@@ -54,6 +61,15 @@ public class SubmissionController {
         log.debug("Submissions - Student Id: {}", userId);
 
         try {
+            Course course = courseService.findById(courseId);
+
+            // Load student with enrolled courses
+            User student = studentService.getStudentWithCourses(currentUser.getUser().getId());
+
+            if (!student.getEnrolledCourses().contains(course)) {
+                throw new AccessDeniedException("Student not enrolled in this course");
+            }
+
             // Save file to Firebase
             String filePath = buildFirebasePath(assignmentId, userId, file.getOriginalFilename(), courseId);
             firebaseStorageService.uploadFile(file.getBytes(), filePath, file.getContentType());

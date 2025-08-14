@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/student")
+@PreAuthorize("hasRole('STUDENT')")
 @RequiredArgsConstructor
 public class StudentController {
 
@@ -37,7 +39,7 @@ public class StudentController {
         Long studentId = currentUser.getUser().getId();
         log.info("Student with ID {} attempting to enroll in course with code '{}'", studentId, courseCode);
 
-        boolean enrolled = studentService.enrollStudentInCourse(studentId, courseCode.trim());
+        boolean enrolled = studentService.enrollStudentInCourse(studentId, courseCode.trim(), currentUser);
 
         if (enrolled) {
             log.info("Student with ID {} successfully enrolled in course '{}'", studentId, courseCode);

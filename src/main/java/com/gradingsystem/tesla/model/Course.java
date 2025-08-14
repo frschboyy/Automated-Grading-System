@@ -51,10 +51,6 @@ public class Course {
     @JoinColumn(name = "teacher_id", nullable = true)
     private User teacher;
 
-    @ManyToOne
-    @JoinColumn(name = "institution_id", nullable = false)
-    private Institution institution;
-
     // Students enrolled
     @Builder.Default
     @ManyToMany
@@ -65,6 +61,10 @@ public class Course {
     @Builder.Default
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Assignment> assignments = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "institution_id", nullable = false)
+    private Institution institution;
 
     // Helper methods ----
 

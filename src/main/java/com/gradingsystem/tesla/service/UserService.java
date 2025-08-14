@@ -6,21 +6,24 @@ import com.gradingsystem.tesla.model.Institution;
 import com.gradingsystem.tesla.model.User;
 import com.gradingsystem.tesla.repository.CourseRepository;
 import com.gradingsystem.tesla.repository.UserRepository;
+import com.gradingsystem.tesla.util.CustomUserDetails;
 import com.gradingsystem.tesla.validation.UserRoleValidator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -84,9 +87,20 @@ public class UserService {
         return userRepository.findByIdAndInstitution(id, institution);
     }
 
-    public List<User> getStudentsForCourse(Long courseId) {
+    public List<User> getStudentsForCourse(Long courseId, CustomUserDetails currentUser) {
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> {
+                    log.error("Course not found: {}", courseId);
+                    return new RuntimeException("Course not found");
+                });
+
+        if (!(currentUser.getUser().getId().equals(course.getTeacher().getId()))) {
+            log.warn("User {} tried to access an assignment in course {} without permission", currentUser.getUser().getId(), courseId);
+            throw new AccessDeniedException("Not your course");
+        }
+
+        log.info("found students for course");
+        
         return new ArrayList<>(course.getStudents());
     }
 
@@ -105,15 +119,16 @@ public class UserService {
 
     // Enroll student into a course by course code
     @Transactional
-    public boolean enrollStudentInCourse(Long studentId, String courseCode) {
-        User student = userRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
-        Optional<Course> courseOpt = courseRepository.findByCourseCode(courseCode);
+    public boolean enrollStudentInCourse(Long studentId, String courseCode, CustomUserDetails currentUser) {
+        User student = userRepository.findById(studentId)
+            .orElseThrow(() -> new RuntimeException("Student not found"));
+        
+        Course course = courseRepository.findByCourseCode(courseCode)
+            .orElseThrow(() -> new RuntimeException("Course not found"));
 
-        if (courseOpt.isEmpty()) {
-            return false; // Course code not found
+        if (!student.getInstitution().getCourses().contains(course)) {
+            throw new AccessDeniedException("Course not found");
         }
-
-        Course course = courseOpt.get();
 
         // Check if already enrolled
         if (student.getEnrolledCourses().contains(course)) {
@@ -128,5 +143,11 @@ public class UserService {
         course.getStudents().add(student);
 
         return true;
+    }
+
+    @Transactional(readOnly = true)
+    public User getStudentWithCourses(Long studentId) {
+        return userRepository.findByIdWithCourses(studentId)
+            .orElseThrow(() -> new RuntimeException("Student not found"));
     }
 }

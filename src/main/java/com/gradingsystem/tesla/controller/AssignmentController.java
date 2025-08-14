@@ -20,14 +20,4 @@ public class AssignmentController {
         AssignmentDTO dto = assignmentService.getAssignmentById(assignmentId);
         return ResponseEntity.ok(dto);
     }
-
-    // Get evaluation details for a student's assignment
-    // @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER')")
-    // @GetMapping("/evaluation/{assignmentId}")
-    // public ResponseEntity<EvaluationDetails> getEvaluationDetails(@PathVariable Long assignmentId,
-            // @AuthenticationPrincipal CustomUserDetails currentUser) {
-        // Long studentId = currentUser.getUser().getId();
-        // EvaluationDetails details = retrievalService.getEvaluationDetails(assignmentId, studentId);
-        // return ResponseEntity.ok(details);
-    // }
 }

@@ -2,11 +2,12 @@ package com.gradingsystem.tesla.repository;
 
 import com.gradingsystem.tesla.model.Institution;
 import com.gradingsystem.tesla.model.User;
-
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -24,5 +25,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByRegistrationIdAndInstitution(String registrationId, Institution institution);
 
     User findByIdAndInstitution(Long id, Institution institution);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.enrolledCourses WHERE u.id = :id")
+    Optional<User> findByIdWithCourses(@Param("id") Long id);
 
 }

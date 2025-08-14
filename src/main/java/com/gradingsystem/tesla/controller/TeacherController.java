@@ -83,22 +83,25 @@ public class TeacherController {
             @RequestParam("dueDate") String dueDate,
             @RequestParam("rubricWeight") int rubricWeight,
             @RequestParam(value = "rubricDocument", required = false) MultipartFile rubricFile,
-            @RequestParam(value = "assignmentDocument", required = false) MultipartFile assignmentFile)
-            throws Exception {
-        assignmentService.updateAssignment(id, title, description, dueDate, rubricWeight, rubricFile, assignmentFile);
+            @RequestParam(value = "assignmentDocument", required = false) MultipartFile assignmentFile,
+            @AuthenticationPrincipal CustomUserDetails currentUser) throws Exception {
+        assignmentService.updateAssignment(id, title, description, dueDate, rubricWeight, rubricFile, assignmentFile, currentUser);
         return ResponseEntity.ok("Assignment updated successfully");
     }
 
     @DeleteMapping("/assignments/{id}")
-    public ResponseEntity<String> deleteAssignment(@PathVariable Long id) {
-        assignmentService.deleteAssignmentById(id);
+    public ResponseEntity<String> deleteAssignment(@PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        assignmentService.deleteAssignmentById(id, currentUser);
         return ResponseEntity.ok("Assignment deleted successfully");
     }
 
     // Query all students for a course
     @GetMapping("/students/course/{courseId}")
-    public ResponseEntity<List<StudentDTO>> getStudents(@PathVariable Long courseId) {
-        List<StudentDTO> students = userService.getStudentsForCourse(courseId)
+    public ResponseEntity<List<StudentDTO>> getStudents(@PathVariable Long courseId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+                
+        List<StudentDTO> students = userService.getStudentsForCourse(courseId, currentUser)
                 .stream()
                 .map(s -> new StudentDTO(s.getId(), s.getRegistrationId(),
                         s.getFirstName() + " " + s.getMiddleName() + " " + s.getLastName(),
@@ -112,12 +115,13 @@ public class TeacherController {
     public ResponseEntity<?> updateEvaluation(
             @PathVariable int questionNumber,
             @RequestBody EvaluationUpdateRequest updateRequest,
-            HttpSession session) {
+            HttpSession session,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
         
         Long submissionId = (Long) session.getAttribute("submissionId");
         
         try {
-            boolean updated = submissionService.updateEvaluation(submissionId, questionNumber, updateRequest);
+            boolean updated = submissionService.updateEvaluation(submissionId, questionNumber, updateRequest, currentUser);
             if (updated) {
                 return ResponseEntity.ok().build();
             } else {

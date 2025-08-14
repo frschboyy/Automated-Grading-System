@@ -2,6 +2,7 @@ package com.gradingsystem.tesla.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
+@PreAuthorize("hasRole('STUDENT')")
 @RequiredArgsConstructor
 public class PageController {
 
@@ -61,7 +63,7 @@ public class PageController {
         DocumentSubmission submission = submissionService.findSubmission(currentUser.getUser(), assignment);
 
         // SubmissionDTO submission =
-        List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submission.getId());
+        List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submission.getId(), currentUser);
         model.addAttribute("results", results);
 
         model.addAttribute("downloadUrl", submission.getFileUrl());

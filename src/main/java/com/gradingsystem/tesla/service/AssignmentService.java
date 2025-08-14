@@ -5,7 +5,6 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
@@ -23,7 +22,10 @@ import com.gradingsystem.tesla.model.DocumentSubmission;
 import com.gradingsystem.tesla.repository.AssignmentRepository;
 import com.gradingsystem.tesla.repository.CourseRepository;
 import com.gradingsystem.tesla.repository.DocumentSubmissionRepository;
+import com.gradingsystem.tesla.util.CustomUserDetails;
 import com.gradingsystem.tesla.util.PathUtils;
+
+import org.springframework.security.access.AccessDeniedException;
 
 @Slf4j
 @Service
@@ -107,9 +109,15 @@ public class AssignmentService {
 
     // Update assignment, upload rubric file to Firebase Storage and save path
     public void updateAssignment(Long id, String title, String description, String dueDate,
-            int rubricWeight, MultipartFile rubricFile, MultipartFile assignmentFile) throws IOException {
+            int rubricWeight, MultipartFile rubricFile, MultipartFile assignmentFile,
+            CustomUserDetails currentUser) throws IOException {
+
         Assignment assignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Assignment not found"));
+
+        if (assignment.getCourse().getTeacher().getId().equals(currentUser.getUser().getId())) {
+            throw new AccessDeniedException("Not your assignment");
+        }
 
         assignment.setTitle(title);
         assignment.setDescription(description);
@@ -167,9 +175,12 @@ public class AssignmentService {
     }
 
     // Delete an assignment
-    public void deleteAssignment(Long assignmentId) {
-        if (!assignmentRepository.existsById(assignmentId)) {
-            throw new RuntimeException("Assignment not found with ID: " + assignmentId);
+    public void deleteAssignment(Long assignmentId, CustomUserDetails currentUser) {
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new RuntimeException("Assignment not found"));
+
+        if (assignment.getCourse().getTeacher().getId().equals(currentUser.getUser().getId())) {
+            throw new AccessDeniedException("Not your assignment");
         }
         assignmentRepository.deleteById(assignmentId);
     }
@@ -237,13 +248,13 @@ public class AssignmentService {
 
         return assignmentRepository.findByTeacherAndCourse(teacherId, courseId).stream()
                 .map(a -> AssignmentDTO.builder()
-                        .id(a.getId())
-                        .courseId(courseId)
-                        .title(a.getTitle())
-                        .description(a.getDescription())
-                        .dueDate(a.getDueDate().format(formatter))
-                        .assignmentFileUrl(a.getAssignmentFileUrl())
-                        .build())
+                .id(a.getId())
+                .courseId(courseId)
+                .title(a.getTitle())
+                .description(a.getDescription())
+                .dueDate(a.getDueDate().format(formatter))
+                .assignmentFileUrl(a.getAssignmentFileUrl())
+                .build())
                 .collect(Collectors.toList());
     }
 
@@ -253,16 +264,18 @@ public class AssignmentService {
     }
 
     @Transactional
-    public boolean deleteAssignmentById(Long id) {
-        Optional<Assignment> assignmentOptional = assignmentRepository.findById(id);
-        if (assignmentOptional.isPresent()) {
-            Assignment assignment = assignmentOptional.get();
-            firebaseStorageService.deleteFile(assignment.getAssignmentFileUrl());
-            documentSubmissionRepository.deleteAllByAssignment(assignment);
-            assignmentRepository.delete(assignment);
-            return true;
+    public boolean deleteAssignmentById(Long id, CustomUserDetails currentUser) {
+        Assignment assignment = assignmentRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Assignment not found"));
+
+        if (assignment.getCourse().getTeacher().getId().equals(currentUser.getUser().getId())) {
+            throw new AccessDeniedException("Not your assignment");
         }
-        return false;
+        
+        firebaseStorageService.deleteFile(assignment.getAssignmentFileUrl());
+        documentSubmissionRepository.deleteAllByAssignment(assignment);
+        assignmentRepository.delete(assignment);
+        return true;
     }
 
     public URL getAssignmentDownloadUrl(Long assignmentId) {

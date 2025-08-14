@@ -1,9 +1,9 @@
 package com.gradingsystem.tesla.model;
 
+import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -60,10 +60,7 @@ public class User {
     @Column(nullable = false)
     private boolean approvedByAdmin;
 
-    @ManyToOne
-    @JoinColumn(name = "institution_id", nullable = true)
-    @JsonBackReference
-    private Institution institution;
+
 
     @Column(nullable = false)
     private String role; // STUDENT, TEACHER
@@ -75,4 +72,11 @@ public class User {
     // Only for teachers
     @OneToMany(mappedBy = "teacher")
     private Set<Course> teachingCourses;
+
+    @ManyToOne
+    @JoinColumn(name = "institution_id", nullable = true)
+    private Institution institution;
+    
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DocumentSubmission> submissions;
 }

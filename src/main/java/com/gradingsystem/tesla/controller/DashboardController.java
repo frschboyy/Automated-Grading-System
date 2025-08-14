@@ -116,13 +116,14 @@ public class DashboardController {
     @GetMapping("teacher/assignments/{assignmentId}/submissions")
     public String getSubmissions(@PathVariable Long assignmentId,
             Model model,
-            HttpSession session) {
+            HttpSession session,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
 
         session.setAttribute("assignmentId", assignmentId);
 
         Long courseId = (Long) session.getAttribute("courseId");
-        List<SubmissionDTO> submissions = submissionService.getAllSubmissions(assignmentId, courseId);
-        List<StudentDTO> pendingSubmissions = submissionService.getAllPendingSubmissions(assignmentId, courseId);
+        List<SubmissionDTO> submissions = submissionService.getAllSubmissions(assignmentId, courseId, currentUser);
+        List<StudentDTO> pendingSubmissions = submissionService.getAllPendingSubmissions(assignmentId, courseId, currentUser);
 
         model.addAttribute("submission", submissions);
         model.addAttribute("pendingSubmission", pendingSubmissions);
@@ -134,7 +135,12 @@ public class DashboardController {
     @GetMapping("teacher/submissions/{submissionId}")
     public String getEvaluation(@PathVariable Long submissionId,
             Model model,
-            HttpSession session) {
+            HttpSession session,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        
+        List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submissionId, currentUser);
+
+        model.addAttribute("results", results);
         session.setAttribute("submissionId", submissionId);
 
         Long assignmentId = (Long) session.getAttribute("assignmentId");
@@ -148,9 +154,6 @@ public class DashboardController {
         String downloadUrl = submissionService.getSubmissionUrl(submissionId);
         model.addAttribute("downloadUrl", downloadUrl);
 
-        List<EvaluationDTO> results = retrieveEvaluationService.getEvaluationData(submissionId);
-
-        model.addAttribute("results", results);
 
         return "evaluationPage";
     }
@@ -168,5 +171,4 @@ public class DashboardController {
         // Spring Security handles session invalidation
         return "redirect:/";
     }
-
 }

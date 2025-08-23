@@ -64,3 +64,5 @@ src/main/resources/*.json
 
 fc_secret.txt
 fc_secret.txt.pub
+
+.env
